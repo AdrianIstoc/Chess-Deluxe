@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingStart="50dp"
+    android:paddingEnd="50dp">
+
+    <TextView
+        android:id="@+id/menu_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/chess_delux"
+        android:textSize="40sp"
+        android:textColor="@color/cheese"
+        android:shadowColor="@color/black"
+        android:shadowDx="-2"
+        android:shadowDy="8"
+        android:shadowRadius="10"
+        android:layout_marginBottom="100dp"
+        android:rotation="-10"/>
+
+    <Button
+        android:id="@+id/play_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/play"
+        android:layout_margin="10dp"
+        android:background="@color/cheese"/>
+    <Button
+        android:id="@+id/credits_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/credits"
+        android:layout_margin="10dp"
+        android:background="@color/cheese"/>
+    <Button
+        android:id="@+id/how_to_play_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/how_to_play"
+        android:layout_margin="10dp"
+        android:background="@color/cheese"/>
+
+
+
+
+</LinearLayout>
