@@ -18,6 +18,7 @@ class Game {
     private var selectedSpot: Spot? = null              // the spot that has been currently selected
     private var currentPieceSpot: Spot? = null          // the spot of the piece that is currently selected
     private var possibleMoves = mutableListOf<Spot>()   // list of possible moves that the current piece can make
+    private var possibleKills = mutableListOf<Spot>()   // list of possible kills that the current piece can make
     private val movesPlayed = mutableListOf<Move>()     // list of moves that the players have done
 
     fun initialize(p1: Player, p2: Player) {            // initialize the game
@@ -37,44 +38,8 @@ class Game {
         movesPlayed.clear()                             // clear the list of moves that the players have done
     }
 
-    fun getCurrentPlayer(): Player {
-        return currentTurn
-    }
-
-    fun getpossibleMoves(): List<Spot> {                // returns the list of possible spots
-        return this.possibleMoves
-    }
-
-    fun setCurrentPieceSpot(spot: Spot) {               // sets the current piece spot
-        currentPieceSpot = spot
-    }
-
-    fun getCurrentPieceSpot(): Spot? {                  // returns the current piece spot
-        return currentPieceSpot
-    }
-
-    fun isEnd(): Boolean {                              // check if game ended
-        return getStatus() != GameStatus.ACTIVE
-    }
-
-    private fun getStatus(): GameStatus {               // returns the game status
-        return status
-    }
-
-    fun setStatus(status: GameStatus) {                 // sets the game status
-        this.status = status
-    }
-
-    fun getBoard(): Board {                             // returns the board
-        return board
-    }
-
     private fun setSelectedSpot(i: Int, j: Int) {       // sets the selected spot
         selectedSpot = board.getBox(i, j)
-    }
-
-    private fun resetSelectedSpot() {                   // resets the selected spot to null
-        selectedSpot = null
     }
 
     // update the current piece spot
@@ -87,15 +52,6 @@ class Game {
         if (selectedSpot != null && selectedSpot?.getPiece()?.isWhite() == currentTurn.isWhiteSide()) {
             currentPieceSpot = selectedSpot                 // set current piece spot as the selected spot
             currentPieceSpot?.getPiece()?.setSelected(true) // set the piece as selected
-
-            // nu cred ca mai trebuie
-//            try {
-//                // set the possible moves of the current piece
-//                possibleMoves = currentPieceSpot?.getPiece()?.moveOptions(board, currentPieceSpot!!) as MutableList<Spot>
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//                Log.e("MoveOptionsError", "Error getting move options: ${e.message}")
-//            }
         }
         else {
             currentPieceSpot = null
@@ -103,7 +59,7 @@ class Game {
     }
 
     // render the pieces on the board
-    private fun renderPieces(chessboard: GridLayout, cellSize: Int, white: Int, black: Int) {
+    private fun renderPieces(chessboard: GridLayout) {
         for (i in 0 until 8) {
             for (j in 0 until 8) {
                 val cell = chessboard.getChildAt(i * 8 + j) as ImageView
@@ -140,38 +96,14 @@ class Game {
                 cell.setBackgroundColor(if ((i + j) % 2 == 0) white else black)
                 chessboard.addView(cell)
 
-
-                // next the game proceeds
-
-                // check for user input
-//                cell.setOnClickListener {
-//                    // set the selected spot
-//                    this.setSelectedSpot(i, j)
-//                    // check if the selected spot indicated a player moving a piece
-//                    this.checkIfPlayerMoves()
-//                    // update the game
-//                    this.updateCurrentPieceSpot()
-//                    // selects the current piece spot as the selected spot
-//                    this.setPossibleMoves()
-//                    // check if the player is in check and if the current piece is not a king
-//                    // if not, enter the code block
-//                    if(!(checkIfInCheck() && currentPieceSpot?.getPiece() !is King)){
-//                        // updates the colors of the chessboard to indicate the possible moves of the selected piece
-//                        this.changeBoardOnSelection(chessboard, context)
-//                        // renders the pieces
-//                        this.renderPieces(chessboard, cellSize, white, black)
-//                    }
-//                }
             }
         }
         // renders the pieces again for some reason
-        this.renderPieces(chessboard, cellSize, white, black)
+        this.renderPieces(chessboard)
     }
 
     // listens for user activity and updates the game based on it
-    fun proceedWithTheGame(chessboard: GridLayout, cellSize: Int, context: MainActivity){
-        val white = ContextCompat.getColor(context, R.color.white)
-        val black = ContextCompat.getColor(context, R.color.cheese)
+    fun proceedWithTheGame(chessboard: GridLayout, context: MainActivity){
 
         for(i in 0 until 8){
             for(j in 0 until 8){
@@ -189,7 +121,7 @@ class Game {
                     // updates the colors of the chessboard to indicate the possible moves of the selected piece
                     this.changeBoardOnSelection(chessboard, context)
                     // renders the pieces
-                    this.renderPieces(chessboard, cellSize, white, black)
+                    this.renderPieces(chessboard)
                 }
             }
         }
@@ -197,26 +129,13 @@ class Game {
 
     // check if the selected spot is one of the possible moves of the selected piece
     private fun checkValidMove(): Boolean {
-        for(spot in possibleMoves)
+        for(spot in possibleMoves + possibleKills)
             if(selectedSpot == spot)
                 return true
         return false
     }
 
-    // check if the player is in check
-    private fun checkIfInCheck(): Boolean {
-        for (i in 0 until 8){
-            for (j in 0 until 8) {
-                val piece = board.getBox(i, j).getPiece()
-                if(piece is King)                                               // check for every piece that is a king
-                    if (piece.isWhite() == currentTurn.isWhiteSide()) {         // check for every piece that is the same color as the user
-                        if (piece.checkIfKingInCheck(this))// check if the player will be in check on the spot of the piece (king)
-                            return true
-                    }
-            }
-        }
-        return false
-    }
+
 
     // check if player move and make the move
     private fun checkIfPlayerMoves() {
@@ -225,23 +144,13 @@ class Game {
                 if(checkValidMove()){           // check if the selected spot is one of the move options of the current piece
                     // check if the pawn moved two spaces
                     checkPawnSkipped(currentPieceSpot!!, selectedSpot!!)
-                    try {
-                        // check if any "important" piece moved
-                        checkImportantPieceMove()
-                    }
-                    catch (e: Exception){
-                        Log.e("ObscureMove", "checkImportantPieceMove problem e -> ${e.message}")
-                    }
 
-                    // makes a move object to store the historic of the game
-                    val move = Move(currentTurn, currentPieceSpot!!, selectedSpot!!)
-                    try{
-                        // check if the pawn is doing an en passant
-                        checkIfEnPassant(currentPieceSpot!!, selectedSpot!!)
-                    }
-                    catch (e: Exception){
-                        Log.e("ObscureMove", "checkIfEnPassant problem e -> ${e.message}")
-                    }
+                    // check for important moves
+                    checkImportantPieceMove()
+
+                    // check if the pawn can make an en passant
+                    checkIfEnPassant(currentPieceSpot!!)
+
 
                     // check if the king is castling
                     // if so, move the king and the rook properly
@@ -257,8 +166,6 @@ class Game {
                     else {
                         board.movePiece(currentPieceSpot!!, selectedSpot!!)
                     }
-                    // adds the move to the historic of the game
-                    movesPlayed.add(move)
                     // change the turn of the players
                     currentTurn = if (currentTurn.isWhiteSide()) {
                         players[1]!!
@@ -271,7 +178,7 @@ class Game {
     }
 
     // check if the pawn is doing an en passant
-    private fun checkIfEnPassant(start: Spot, end: Spot){
+    private fun checkIfEnPassant(start: Spot){
         // check if a white pawn is going to the left
         if(start.getPiece()?.isWhite() == true && start.getX() == 3 ){
             if(board.getBox(start.getX(), start.getY()-1).getPiece() is Pawn)
@@ -367,24 +274,44 @@ class Game {
     // set the spots that show to possible moves of a selected piece
     private fun setPossibleMoves(){
         // set the list of possible moves of the current piece
-        var moves = mutableListOf<Spot>()
+        possibleMoves = mutableListOf()
+        possibleKills = mutableListOf()
         if(currentPieceSpot?.getPiece() != null) {
             // get the possible moves
             possibleMoves = currentPieceSpot?.getPiece()?.moveOptions(board, currentPieceSpot!!) as MutableList<Spot>
-            // filter the possible moves
-            moves = validMoves(currentPieceSpot!!)
+            possibleMoves = validMoves()
+            // get the possible kills
+            possibleKills = currentPieceSpot?.getPiece()?.killOptions(board, currentPieceSpot!!) as MutableList<Spot>
         }
-        possibleMoves = moves
 
         // deselect all spots
         for (i in 0 until 8)
-            for (j in 0 until 8)
+            for (j in 0 until 8) {
                 board.getBox(i, j).setSelectableSpot(false)
+                board.getBox(i, j).setKillableSpot(false)
+            }
 
         // select the spots that represent the moves of the current piece
         for (spot in possibleMoves)
             board.getBox(spot.getX(), spot.getY()).setSelectableSpot(true)
 
+        for (spot in possibleKills)
+            board.getBox(spot.getX(), spot.getY()).setKillableSpot(true)
+
+    }
+
+    private fun validMoves(): MutableList<Spot>{
+        val moves = mutableListOf<Spot>()
+        val currentPiece = currentPieceSpot?.getPiece()
+        if(currentPiece !is King){
+            for (option in possibleMoves + possibleKills){
+                if(!checkIfMovePutsPlayerInCheck(currentPieceSpot!!, option)){
+                    moves.add(option)
+                }
+            }
+        }
+
+        return moves
     }
 
     // change the colors of the chessboard to show the current piece movement
@@ -393,8 +320,6 @@ class Game {
         val black = ContextCompat.getColor(context, R.color.cheese)
         val whiteGreen = ContextCompat.getColor(context, R.color.green)
         val blackGreen = ContextCompat.getColor(context, R.color.mold_cheese)
-        val whiteRed = ContextCompat.getColor(context, R.color.red)
-        val blackRed = ContextCompat.getColor(context, R.color.cursed_cheese)
 
 
         for (i in 0 until 8)
@@ -402,11 +327,11 @@ class Game {
                 if((i+j) % 2 == 0) {
                     // white
                     // if the spot is not on the list it stays white
-                    if(possibleMoves.size == 0)
+                    if(possibleMoves.size == 0 && possibleKills.size == 0)
                         chessboard.getChildAt(i*8+j).setBackgroundColor(white)
                     else
                         // else it changes into green
-                        for(pair in possibleMoves)
+                        for(pair in possibleMoves + possibleKills)
                             if(pair.getX() == i && pair.getY() == j) {
                                 chessboard.getChildAt(i * 8 + j).setBackgroundColor(whiteGreen)
                                 break
@@ -417,11 +342,11 @@ class Game {
                 else {
                     // black
                     //if the spot is not on the list it stays black
-                    if(possibleMoves.size == 0)
+                    if(possibleMoves.size == 0 && possibleKills.size == 0)
                         chessboard.getChildAt(i*8+j).setBackgroundColor(black)
                     else
                         // else it changes into a greenish black
-                        for(pair in possibleMoves)
+                        for(pair in possibleMoves + possibleKills)
                             if(pair.getX() == i && pair.getY() == j) {
                                 chessboard.getChildAt(i * 8 + j).setBackgroundColor(blackGreen)
                                 break
@@ -431,78 +356,30 @@ class Game {
                 }
             }
     }
-    
-    // checks if the player moves a piece will result in his king being in check
-    private fun checkIfKingInCheckAfterPieceMove(start: Spot, end: Spot): Boolean {
-        val startPiece = start.getPiece()   // save the piece that wants to move
-        val endPiece = end.getPiece()       // save the piece (if any) on the spot that is targeted
-        board.movePiece(start, end)         // make the move
-        val kingSpot = board.getKingSpot(currentTurn.isWhiteSide())  // get the king
-        // check if the player is in check
-        if((kingSpot.getPiece() as King).checkIfKingInCheck(this)) {
-            // if so, reset the move and declare that the move is not a valid move
-            start.setPiece(startPiece)
-            end.setPiece(endPiece)
-            end.getPiece()?.setKilled(false)
-            return true
-        }
 
 
-        start.setPiece(startPiece)
-        end.setPiece(endPiece)
-        end.getPiece()?.setKilled(false)
-        return false
-    }
+
     
     // checks if a move will benefit the king (king will no longer be in check)
-    private fun checkIfMoveHelpsKing(start: Spot, end: Spot): Boolean {
+    private fun checkIfMovePutsPlayerInCheck(start: Spot, end: Spot): Boolean {
         val startPiece = start.getPiece()               // save the piece that wants to move
         val endPiece = end.getPiece()                   // save the piece (if any) on the targeted spot
         board.movePiece(start, end)                     // moves the piece
         val kingSpot = board.getKingSpot(currentTurn.isWhiteSide())  // get the king
+        val king = kingSpot.getPiece() as King
         // check if the player is in check
-        if(!(kingSpot.getPiece() as King).checkIfKingInCheck(this)){
+        if(king.checkIfKingInCheck(board, kingSpot)){
             // if not, reset the move and declare that the move is a valid move
             start.setPiece(startPiece)
             end.setPiece(endPiece)
             end.getPiece()?.setKilled(false)
             return true
         }
-        start.setPiece(startPiece)
-        end.setPiece(endPiece)
-        end.getPiece()?.setKilled(false)
-        return false
-    }
-    
-    // filters the move options of a piece
-    private fun validMoves(start: Spot): MutableList<Spot> {
-        val moves = mutableListOf<Spot>()
-        // if the piece is not a king
-        if(start.getPiece() !is King){
-            val kingSpot = board.getKingSpot(currentTurn.isWhiteSide())
-            // check if the player is in check
-            if((kingSpot.getPiece() as King).checkIfKingInCheck(this)){
-                for (option in possibleMoves)
-                // checks every move to find out if it helps the king
-                    if(checkIfMoveHelpsKing(start, option))
-                        moves.add(option)
-            }
-            else{
-                for (options in possibleMoves)
-                // checks every move to find out if the king will not be in check
-                    if (!checkIfKingInCheckAfterPieceMove(start, options))
-                        moves.add(options)
-
-            }
-        }
         else {
-            val king = start.getPiece() as King
-            for (option in possibleMoves)
-                // check if the king moves into check
-                if(!checkIfKingInCheckAfterPieceMove(start, option))
-                    moves.add(option)
+            start.setPiece(startPiece)
+            end.setPiece(endPiece)
+            end.getPiece()?.setKilled(false)
+            return false
         }
-        
-        return moves        // return the valid moves
     }
 }

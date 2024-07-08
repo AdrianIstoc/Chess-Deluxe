@@ -4,6 +4,15 @@ import com.example.chessdelux.pieces.Piece
 
 class Spot(private var x: Int,private var y: Int,private var piece: Piece?) {
     private var selectableSpot: Boolean = false     // shows if the spot is selectable for a move
+    private var killableSpot: Boolean = false       // shows if the spot is selectable for a kill
+
+    fun isKillableSpot(): Boolean {                 // returns if the spot is killable or not
+        return killableSpot
+    }
+
+    fun setKillableSpot(killable: Boolean) {       // sets the killable state of the spot
+        this.killableSpot = killable
+    }
 
     fun isSelectableSpot(): Boolean {               // returns if the spot is selectable or not
         return selectableSpot

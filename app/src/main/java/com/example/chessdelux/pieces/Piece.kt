@@ -50,4 +50,7 @@ abstract class Piece(private var white: Boolean, private var type: PieceType) {
 
     // return the piece possible moves
     abstract fun moveOptions(board: Board, start: Spot): List<Spot>
+
+    // return the piece kill options
+    abstract fun killOptions(board: Board, start: Spot): List<Spot>
 }

@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
 
                 game.initialize(humanPlayer, computerPlayer)
                 game.renderGameBoard(chessboard, cellSize, this)
-                game.proceedWithTheGame(chessboard, cellSize, this)
+                game.proceedWithTheGame(chessboard, this)
 
                 backButton.setOnClickListener {
                     finish()

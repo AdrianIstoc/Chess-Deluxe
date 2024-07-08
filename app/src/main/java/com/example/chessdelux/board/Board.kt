@@ -90,5 +90,9 @@ class Board {
                 boxes[i][j] = Spot(i, j, null)
             }
         }
+
+        // remove this
+
+        //boxes[4][4] = Spot(4,4, King(true))
     }
 }
