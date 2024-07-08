@@ -446,6 +446,7 @@ class Game {
             end.getPiece()?.setKilled(false)
             return true
         }
+
         start.setPiece(startPiece)
         end.setPiece(endPiece)
         end.getPiece()?.setKilled(false)
