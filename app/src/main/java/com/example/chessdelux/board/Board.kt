@@ -93,6 +93,6 @@ class Board {
 
         // remove this
 
-        //boxes[4][4] = Spot(4,4, King(true))
+        boxes[2][5] = Spot(2,5, Pawn(true))
     }
 }

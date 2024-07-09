@@ -31,7 +31,7 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN) {
         val direction = if (isWhite()) -1 else 1
 
         // check if the pawn can move one space forward
-        if(board.getBox(start.getX() + direction, start.getY()).getPiece() == null)
+        if(start.getX()+direction in 0 .. 7 && board.getBox(start.getX() + direction, start.getY()).getPiece() == null)
             options.add(board.getBox(start.getX() + direction, start.getY()))
 
         // check if the pawn can move two spaces forward if it hasn't moved yet
@@ -50,11 +50,11 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN) {
         val direction = if (isWhite()) -1 else 1
 
         // check if the pawn can capture a piece in the right
-        if(start.getY()+1 < 8 && board.getBox(start.getX() +direction, start.getY()+1).getPiece() != null && board.getBox(start.getX() +direction, start.getY()+1).getPiece()?.isWhite() != isWhite())
+        if(start.getX()+direction in 0 .. 7 && start.getY()+1 < 8 && board.getBox(start.getX() +direction, start.getY()+1).getPiece() != null && board.getBox(start.getX() +direction, start.getY()+1).getPiece()?.isWhite() != isWhite())
             options.add(board.getBox(start.getX() +direction, start.getY()+1))
 
         // check if the pawn can capture a piece in the left
-        if(start.getY()-1 >= 0 && board.getBox(start.getX() +direction, start.getY()-1).getPiece() != null && board.getBox(start.getX() +direction, start.getY()-1).getPiece()?.isWhite() != isWhite())
+        if(start.getX()+direction in 0 .. 7 && start.getY()-1 >= 0 && board.getBox(start.getX() +direction, start.getY()-1).getPiece() != null && board.getBox(start.getX() +direction, start.getY()-1).getPiece()?.isWhite() != isWhite())
             options.add(board.getBox(start.getX() +direction, start.getY()-1))
 
 

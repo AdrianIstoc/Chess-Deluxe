@@ -111,13 +111,33 @@ class Game {
 
                 cell.setOnClickListener {
                     // set the selected spot
-                    this.setSelectedSpot(i, j)
+                    try{
+                        this.setSelectedSpot(i, j)
+                    }catch (e: Exception)
+                    {
+                        Log.e("ObscureMove", "setSelectedSpot problem e -> ${e.message}")
+                    }
                     // check if the selected spot indicated a player moving a piece
-                    this.checkIfPlayerMoves()
+                    try {
+                        this.checkIfPlayerMoves()
+                    }catch (e: Exception)
+                    {
+                        Log.e("ObscureMove", "checkIfPlayerMoves problem e -> ${e.message}")
+                    }
                     // update the game
-                    this.updateCurrentPieceSpot()
+                    try{
+                        this.updateCurrentPieceSpot()
+                    }catch (e: Exception)
+                    {
+                        Log.e("ObscureMove", "updateCurrentPieceSpot problem e -> ${e.message}")
+                    }
                     // selects the current piece spot as the selected spot
-                    this.setPossibleMoves()
+                    try{
+                        this.setPossibleMoves()
+                    }catch (e: Exception)
+                    {
+                        Log.e("ObscureMove", "setPossibleMoves problem e -> ${e.message}")
+                    }
                     // updates the colors of the chessboard to indicate the possible moves of the selected piece
                     this.changeBoardOnSelection(chessboard, context)
                     // renders the pieces
@@ -149,7 +169,7 @@ class Game {
                     checkImportantPieceMove()
 
                     // check if the pawn can make an en passant
-                    checkIfEnPassant(currentPieceSpot!!)
+                    checkIfEnPassant(currentPieceSpot!!, selectedSpot!!)
 
 
                     // check if the king is castling
@@ -178,37 +198,41 @@ class Game {
     }
 
     // check if the pawn is doing an en passant
-    private fun checkIfEnPassant(start: Spot){
+    private fun checkIfEnPassant(start: Spot, end: Spot){
         // check if a white pawn is going to the left
         if(start.getPiece()?.isWhite() == true && start.getX() == 3 ){
             if(board.getBox(start.getX(), start.getY()-1).getPiece() is Pawn)
-                if((board.getBox(start.getX(), start.getY()-1).getPiece() as Pawn).pawnSkipped) {
-                    board.getBox(start.getX(), start.getY()-1).getPiece()?.setKilled(true)
-                    return
-                }
+                if((board.getBox(start.getX(), start.getY()-1).getPiece() as Pawn).pawnSkipped)
+                    if(end.getX()==start.getX()-1 && end.getY() == start.getY()-1) {
+                        board.getBox(start.getX(), start.getY() - 1).getPiece()?.setKilled(true)
+                        return
+                    }
         }
         // check if a black pawn is going to the left
         else if(start.getPiece()?.isWhite() == false && start.getX() == 4)
             if(board.getBox(start.getX(), start.getY()-1).getPiece() is Pawn)
-                if((board.getBox(start.getX(), start.getY()-1).getPiece() as Pawn).pawnSkipped){
-                    board.getBox(start.getX(), start.getY()-1).getPiece()?.setKilled(true)
-                    return
-                }
+                if((board.getBox(start.getX(), start.getY()-1).getPiece() as Pawn).pawnSkipped)
+                    if(end.getX() == start.getX()+1 && end.getY() == start.getY()-1){
+                        board.getBox(start.getX(), start.getY()-1).getPiece()?.setKilled(true)
+                        return
+                    }
         // check if a white pawn is going to the right
         if(start.getPiece()?.isWhite() == true && start.getX() == 3){
             if(board.getBox(start.getX(), start.getY()+1).getPiece() is Pawn)
-                if((board.getBox(start.getX(), start.getY()+1).getPiece() as Pawn).pawnSkipped){
-                    board.getBox(start.getX(), start.getY()+1).getPiece()?.setKilled(true)
-                    return
-                }
+                if((board.getBox(start.getX(), start.getY()+1).getPiece() as Pawn).pawnSkipped)
+                    if(end.getX() == start.getX()-1 && end.getY() == start.getY()+1){
+                        board.getBox(start.getX(), start.getY()+1).getPiece()?.setKilled(true)
+                        return
+                    }
         }
         // check if a black pawn is going to the right
         else if(start.getPiece()?.isWhite() == false && start.getX() == 4)
             if(board.getBox(start.getX(), start.getY()+1).getPiece() is Pawn)
-                if((board.getBox(start.getX(), start.getY()+1).getPiece() as Pawn).pawnSkipped){
-                    board.getBox(start.getX(), start.getY()+1).getPiece()?.setKilled(true)
-                    return
-                }
+                if((board.getBox(start.getX(), start.getY()+1).getPiece() as Pawn).pawnSkipped)
+                    if(end.getX() == start.getX()+1 && end.getY() == start.getY()+1){
+                        board.getBox(start.getX(), start.getY()+1).getPiece()?.setKilled(true)
+                        return
+                    }
 
     }
 
@@ -282,6 +306,7 @@ class Game {
             possibleMoves = validMoves()
             // get the possible kills
             possibleKills = currentPieceSpot?.getPiece()?.killOptions(board, currentPieceSpot!!) as MutableList<Spot>
+            possibleKills = validKills()
         }
 
         // deselect all spots
@@ -300,11 +325,25 @@ class Game {
 
     }
 
-    private fun validMoves(): MutableList<Spot>{
+    private fun validMoves(): MutableList<Spot> {
+        val moves = mutableListOf<Spot>()
+        val currentPiece = currentPieceSpot?.getPiece()
+        if (currentPiece !is King) {
+            for (option in possibleMoves) {
+                if (!checkIfMovePutsPlayerInCheck(currentPieceSpot!!, option)) {
+                    moves.add(option)
+                }
+            }
+        }
+
+        return moves
+    }
+
+    private fun validKills(): MutableList<Spot>{
         val moves = mutableListOf<Spot>()
         val currentPiece = currentPieceSpot?.getPiece()
         if(currentPiece !is King){
-            for (option in possibleMoves + possibleKills){
+            for (option in possibleKills){
                 if(!checkIfMovePutsPlayerInCheck(currentPieceSpot!!, option)){
                     moves.add(option)
                 }
