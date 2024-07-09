@@ -1,5 +1,6 @@
 package com.example.chessdelux.pieces
 
+import android.util.Log
 import com.example.chessdelux.R
 import com.example.chessdelux.board.*
 import kotlin.math.abs
@@ -120,15 +121,18 @@ class King(white: Boolean) : Piece(white, PieceType.KING) {
             for (j in 0 until 8){
                 val pieceSpot = board.getBox(i, j)
                 val piece = pieceSpot.getPiece()
-                if(piece != null && piece.isWhite() != isWhite() && piece !is King){
-                    for (options in piece.killOptions(board, pieceSpot))
-                        if(options.getX() == kingSpot.getX() && options.getY() == kingSpot.getY())
-                            return true
+                try{
+                    if (piece != null && piece.isWhite() != isWhite() && piece !is King) {
+                        for (options in piece.killOptions(board, pieceSpot))
+                            if (options.getX() == kingSpot.getX() && options.getY() == kingSpot.getY())
+                                return true
 
-                }
-                else if(piece is King && piece.isWhite() != isWhite()){
-                    if(abs(kingSpot.getX() - pieceSpot.getX()) <= 1 && abs(kingSpot.getY() - pieceSpot.getY()) <= 1)
-                        return true
+                    } else if (piece is King && piece.isWhite() != isWhite()) {
+                        if (abs(kingSpot.getX() - pieceSpot.getX()) <= 1 && abs(kingSpot.getY() - pieceSpot.getY()) <= 1)
+                            return true
+                    }
+                }catch (e: Exception){
+                    Log.e("ObscureMove", "checkIfKingInCheck problem ${i},${j} e -> ${e.message}")
                 }
             }
         }

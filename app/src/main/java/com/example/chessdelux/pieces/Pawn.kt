@@ -50,35 +50,35 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN) {
         val direction = if (isWhite()) -1 else 1
 
         // check if the pawn can capture a piece in the right
-        if(start.getX()+direction in 0 .. 7 && start.getY()+1 < 8 && board.getBox(start.getX() +direction, start.getY()+1).getPiece() != null && board.getBox(start.getX() +direction, start.getY()+1).getPiece()?.isWhite() != isWhite())
+        if(start.getX()+direction in 0 .. 7 && start.getY()+1 in 0 .. 7 && board.getBox(start.getX() +direction, start.getY()+1).getPiece() != null && board.getBox(start.getX() +direction, start.getY()+1).getPiece()?.isWhite() != isWhite())
             options.add(board.getBox(start.getX() +direction, start.getY()+1))
 
         // check if the pawn can capture a piece in the left
-        if(start.getX()+direction in 0 .. 7 && start.getY()-1 >= 0 && board.getBox(start.getX() +direction, start.getY()-1).getPiece() != null && board.getBox(start.getX() +direction, start.getY()-1).getPiece()?.isWhite() != isWhite())
+        if(start.getX()+direction in 0 .. 7 && start.getY()-1 in 0 .. 7 && board.getBox(start.getX() +direction, start.getY()-1).getPiece() != null && board.getBox(start.getX() +direction, start.getY()-1).getPiece()?.isWhite() != isWhite())
             options.add(board.getBox(start.getX() +direction, start.getY()-1))
 
 
         // check if a white pawn can en passant to the left
         if(start.getPiece()?.isWhite() == true && start.getX() == 3 ){
-            if(board.getBox(start.getX(), start.getY()-1).getPiece() is Pawn)
+            if(start.getY()-1 in 0 .. 7 && board.getBox(start.getX(), start.getY()-1).getPiece() is Pawn)
                 if((board.getBox(start.getX(), start.getY()-1).getPiece() as Pawn).pawnSkipped)
                     options.add(board.getBox(start.getX()+direction, start.getY()-1))
         }
         // check if a black pawn can en passant to the left
         else if(start.getPiece()?.isWhite() == false && start.getX() == 4)
-            if(board.getBox(start.getX(), start.getY()-1).getPiece() is Pawn)
+            if(start.getY()-1 in 0 .. 7 && board.getBox(start.getX(), start.getY()-1).getPiece() is Pawn)
                 if((board.getBox(start.getX(), start.getY()-1).getPiece() as Pawn).pawnSkipped)
                     options.add(board.getBox(start.getX()+direction, start.getY()-1))
 
         // check if a white pawn can en passant to the right
         if(start.getPiece()?.isWhite() == true && start.getX() == 3){
-            if(board.getBox(start.getX(), start.getY()+1).getPiece() is Pawn)
+            if(start.getY()+1 in 0 .. 7 && board.getBox(start.getX(), start.getY()+1).getPiece() is Pawn)
                 if((board.getBox(start.getX(), start.getY()+1).getPiece() as Pawn).pawnSkipped)
                     options.add(board.getBox(start.getX()+direction, start.getY()+1))
         }
         // check if a black pawn can en passant to the right
         else if(start.getPiece()?.isWhite() == false && start.getX() == 4)
-            if(board.getBox(start.getX(), start.getY()+1).getPiece() is Pawn)
+            if(start.getY()+1 in 0 .. 7 && board.getBox(start.getX(), start.getY()+1).getPiece() is Pawn)
                 if((board.getBox(start.getX(), start.getY()+1).getPiece() as Pawn).pawnSkipped)
                     options.add(board.getBox(start.getX()+direction, start.getY()+1))
 

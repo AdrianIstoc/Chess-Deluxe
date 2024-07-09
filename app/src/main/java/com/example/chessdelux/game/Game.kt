@@ -53,9 +53,6 @@ class Game {
             currentPieceSpot = selectedSpot                 // set current piece spot as the selected spot
             currentPieceSpot?.getPiece()?.setSelected(true) // set the piece as selected
         }
-        else {
-            currentPieceSpot = null
-        }
     }
 
     // render the pieces on the board
@@ -162,30 +159,29 @@ class Game {
         if(currentPieceSpot != null){           // if there is a piece selected
             if(selectedSpot != null){           // and if there is a spot selected
                 if(checkValidMove()){           // check if the selected spot is one of the move options of the current piece
-                    // check if the pawn moved two spaces
-                    checkPawnSkipped(currentPieceSpot!!, selectedSpot!!)
+                    val piece = currentPieceSpot?.getPiece()
+
+                    if(piece is Pawn)
+                        // check if the pawn moved two spaces
+                        checkPawnSkipped(currentPieceSpot!!, selectedSpot!!)
 
                     // check for important moves
                     checkImportantPieceMove()
 
-                    // check if the pawn can make an en passant
-                    checkIfEnPassant(currentPieceSpot!!, selectedSpot!!)
+                    if(piece is Pawn)
+                        // check if the pawn can make an en passant and sets the opponent pawn as killed
+                        checkIfEnPassant(currentPieceSpot!!, selectedSpot!!)
 
 
                     // check if the king is castling
                     // if so, move the king and the rook properly
-                    if(checkIfCastling(currentPieceSpot!!, selectedSpot!!)){
-                        val rookSpot = if(currentPieceSpot?.getY()!! < selectedSpot?.getY()!!) board.getBox(selectedSpot?.getX()!!,selectedSpot?.getY()!!+1) else board.getBox(selectedSpot?.getX()!!, selectedSpot?.getY()!!-2)
-                        val direction = if(currentPieceSpot?.getY()!! < selectedSpot?.getY()!!) 1 else -1
-                        val kingNextSpot = board.getBox(currentPieceSpot?.getX()!!, currentPieceSpot?.getY()!!+2*direction)
-                        val rookNextSpot = board.getBox(currentPieceSpot?.getX()!!, currentPieceSpot?.getY()!!+direction)
-                        board.movePiece(currentPieceSpot!!, kingNextSpot)
-                        board.movePiece(rookSpot, rookNextSpot)
-                    }
-                    // else just move the piece
-                    else {
-                        board.movePiece(currentPieceSpot!!, selectedSpot!!)
-                    }
+                    if(piece is King)
+                        checkIfCastling(currentPieceSpot!!, selectedSpot!!)
+
+
+                    // move piece
+                    board.movePiece(currentPieceSpot!!, selectedSpot!!)
+
                     // change the turn of the players
                     currentTurn = if (currentTurn.isWhiteSide()) {
                         players[1]!!
@@ -201,7 +197,7 @@ class Game {
     private fun checkIfEnPassant(start: Spot, end: Spot){
         // check if a white pawn is going to the left
         if(start.getPiece()?.isWhite() == true && start.getX() == 3 ){
-            if(board.getBox(start.getX(), start.getY()-1).getPiece() is Pawn)
+            if(start.getY()-1 in 0 .. 7 && board.getBox(start.getX(), start.getY()-1).getPiece() is Pawn)
                 if((board.getBox(start.getX(), start.getY()-1).getPiece() as Pawn).pawnSkipped)
                     if(end.getX()==start.getX()-1 && end.getY() == start.getY()-1) {
                         board.getBox(start.getX(), start.getY() - 1).getPiece()?.setKilled(true)
@@ -210,7 +206,7 @@ class Game {
         }
         // check if a black pawn is going to the left
         else if(start.getPiece()?.isWhite() == false && start.getX() == 4)
-            if(board.getBox(start.getX(), start.getY()-1).getPiece() is Pawn)
+            if(start.getY()-1 in 0 .. 7 && board.getBox(start.getX(), start.getY()-1).getPiece() is Pawn)
                 if((board.getBox(start.getX(), start.getY()-1).getPiece() as Pawn).pawnSkipped)
                     if(end.getX() == start.getX()+1 && end.getY() == start.getY()-1){
                         board.getBox(start.getX(), start.getY()-1).getPiece()?.setKilled(true)
@@ -218,7 +214,7 @@ class Game {
                     }
         // check if a white pawn is going to the right
         if(start.getPiece()?.isWhite() == true && start.getX() == 3){
-            if(board.getBox(start.getX(), start.getY()+1).getPiece() is Pawn)
+            if(start.getY()+1 in 0 .. 7 && board.getBox(start.getX(), start.getY()+1).getPiece() is Pawn)
                 if((board.getBox(start.getX(), start.getY()+1).getPiece() as Pawn).pawnSkipped)
                     if(end.getX() == start.getX()-1 && end.getY() == start.getY()+1){
                         board.getBox(start.getX(), start.getY()+1).getPiece()?.setKilled(true)
@@ -227,7 +223,7 @@ class Game {
         }
         // check if a black pawn is going to the right
         else if(start.getPiece()?.isWhite() == false && start.getX() == 4)
-            if(board.getBox(start.getX(), start.getY()+1).getPiece() is Pawn)
+            if(start.getY()+1 in 0 .. 7 && board.getBox(start.getX(), start.getY()+1).getPiece() is Pawn)
                 if((board.getBox(start.getX(), start.getY()+1).getPiece() as Pawn).pawnSkipped)
                     if(end.getX() == start.getX()+1 && end.getY() == start.getY()+1){
                         board.getBox(start.getX(), start.getY()+1).getPiece()?.setKilled(true)
@@ -253,7 +249,7 @@ class Game {
     }
 
     // check if the king is castling
-    private fun checkIfCastling(start: Spot, end: Spot): Boolean {
+    private fun checkIfCastling(start: Spot, end: Spot) {
         try{
             // check if the selected spot is valid for a castling
             if ((end.getY() == 6 || end.getY() == 2) && (end.getX() == 0 || end.getX() == 7)) {
@@ -263,15 +259,17 @@ class Game {
                     selectedSpot?.getY()!! + 1
                 ) else board.getBox(selectedSpot?.getX()!!, selectedSpot?.getY()!! - 2)
                 val rook = rookSpot.getPiece()?.getType()                                   // get the piece type of the "rook"
-                return king == PieceType.KING && rook == PieceType.ROOK                     // return true if king is king and rook is rook
+                if(king == PieceType.KING && rook == PieceType.ROOK) {                      // return true if king is king and rook is rook
+                    val direction = if(currentPieceSpot?.getY()!! < selectedSpot?.getY()!!) 1 else -1
+                    val rookNextSpot = board.getBox(currentPieceSpot?.getX()!!, currentPieceSpot?.getY()!!+direction)
+                    board.movePiece(rookSpot, rookNextSpot)
+                }
             }
         }
         catch (e: Exception)
         {
             Log.e("ObscureMove", "CheckIfCastling problem e -> ${e.message}")
         }
-
-        return false
     }
 
     // check if any piece, that has a ruling
@@ -328,13 +326,13 @@ class Game {
     private fun validMoves(): MutableList<Spot> {
         val moves = mutableListOf<Spot>()
         val currentPiece = currentPieceSpot?.getPiece()
-        if (currentPiece !is King) {
+        //if (currentPiece !is King) {
             for (option in possibleMoves) {
                 if (!checkIfMovePutsPlayerInCheck(currentPieceSpot!!, option)) {
                     moves.add(option)
                 }
             }
-        }
+        //}
 
         return moves
     }
@@ -342,13 +340,13 @@ class Game {
     private fun validKills(): MutableList<Spot>{
         val moves = mutableListOf<Spot>()
         val currentPiece = currentPieceSpot?.getPiece()
-        if(currentPiece !is King){
+        //if(currentPiece !is King){
             for (option in possibleKills){
                 if(!checkIfMovePutsPlayerInCheck(currentPieceSpot!!, option)){
                     moves.add(option)
                 }
             }
-        }
+        //}
 
         return moves
     }
