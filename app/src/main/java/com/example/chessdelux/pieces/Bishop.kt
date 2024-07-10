@@ -10,7 +10,7 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP) {
 
 
     // return the bishop possible moves
-    override fun moveOptions(board: Board, start: Spot): List<Spot> {
+    override fun moveOptions(board: Board, start: Spot): MutableList<Spot> {
         val options = mutableListOf<Spot>()
         var x = start.getX()
         var y = start.getY()
@@ -63,7 +63,7 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP) {
     }
 
     // return the bishop kill options
-    override fun killOptions(board: Board, start: Spot): List<Spot> {
+    override fun killOptions(board: Board, start: Spot): MutableList<Spot> {
         val options = mutableListOf<Spot>()
         var x = start.getX()
         var y = start.getY()

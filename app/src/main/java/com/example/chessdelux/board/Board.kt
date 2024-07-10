@@ -90,9 +90,19 @@ class Board {
                 boxes[i][j] = Spot(i, j, null)
             }
         }
+    }
 
-        // remove this
+    fun testWin(){
+        for (i in 0 until 8)
+            for (j in 0 until 8)
+                boxes[i][j] = Spot(i, j, null)
 
-        //boxes[3][7] = Spot(3,7, Queen(true))
+        boxes[0][0] = Spot(0, 0, King(false))
+        boxes[2][2] = Spot(2, 2, Rook(true))
+        boxes[2][3] = Spot(2, 3, Rook(true))
+
+        boxes[7][7] = Spot(7, 7, King(true))
+        boxes[5][5] = Spot(5, 5, Rook(false))
+        boxes[5][4] = Spot(5, 4, Rook(false))
     }
 }

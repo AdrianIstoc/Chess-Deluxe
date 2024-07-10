@@ -8,7 +8,7 @@ class Knight(white: Boolean) : Piece(white, PieceType.KNIGHT) {
     override var imageResource: Int? = if (white) R.drawable.knight_white else R.drawable.knight_black
 
     // return the knight possible moves
-    override fun moveOptions(board: Board, start: Spot): List<Spot> {
+        override fun moveOptions(board: Board, start: Spot): MutableList<Spot> {
         val options = mutableListOf<Spot>()
         val x = start.getX()
         val y = start.getY()
@@ -30,7 +30,7 @@ class Knight(white: Boolean) : Piece(white, PieceType.KNIGHT) {
     }
 
     // return the knight kill options
-    override fun killOptions(board: Board, start: Spot): List<Spot> {
+    override fun killOptions(board: Board, start: Spot): MutableList<Spot> {
         val options = mutableListOf<Spot>()
         val x = start.getX()
         val y = start.getY()

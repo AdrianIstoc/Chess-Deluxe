@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Chess Delux</string>
-    <string name="chess_delux">Chess Delux</string>
     <string name="play">Play</string>
     <string name="credits">Credits</string>
     <string name="how_to_play">How to Play</string>
     <string name="back">back</string>
+    <string name="restart">restart</string>
 </resources>

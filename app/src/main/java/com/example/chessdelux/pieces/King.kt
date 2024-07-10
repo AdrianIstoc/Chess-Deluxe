@@ -21,7 +21,7 @@ class King(white: Boolean) : Piece(white, PieceType.KING) {
     }
 
     // return the king possible moves
-    override fun moveOptions(board: Board, start: Spot): List<Spot> {
+    override fun moveOptions(board: Board, start: Spot): MutableList<Spot> {
         val options = mutableListOf<Spot>()
         val x = start.getX()
         val y = start.getY()
@@ -42,28 +42,55 @@ class King(white: Boolean) : Piece(white, PieceType.KING) {
 
         // castling
         if (!kingMoved && !isInCheck) {
-            var rookSpot = board.getBox(start.getX(), start.getY()-4)   // get the spot of the left rook
-            var piece = rookSpot.getPiece()                                // get the piece
+            var rookSpotY = start.getY()-4
+            if(rookSpotY in 0 .. 7) {
+                val rookSpot = board.getBox(start.getX(), start.getY() - 4)   // get the spot of the left rook
+                val piece = rookSpot.getPiece()                                // get the piece
 
-            // check if piece is rook and if it hasn't moved yet
-            if (piece is Rook && !piece.isRookMoved()) {
-                // check if the space between the king and the rook is empty
-                if(board.getBox(x, y-3).getPiece() == null && board.getBox(x, y-2).getPiece() == null && board.getBox(x , y-1).getPiece() == null)
+                // check if piece is rook and if it hasn't moved yet
+                if (piece is Rook && !piece.isRookMoved()) {
+                    // check if the space between the king and the rook is empty
+                    if (board.getBox(x, y - 3).getPiece() == null && board.getBox(x, y - 2)
+                            .getPiece() == null && board.getBox(x, y - 1).getPiece() == null
+                    )
                     // check if the king will be in check after the move or during the move
-                    if(!checkIfKingMoveInCheck(board, board.getBox(x, y - 2)) && !checkIfKingMoveInCheck(board, board.getBox(x, y-1)) && !checkIfKingMoveInCheck(board, board.getBox(x, y)))
-                        options.add(board.getBox(x, y-2))
+                        if (!checkIfKingMoveInCheck(
+                                board,
+                                board.getBox(x, y - 2)
+                            ) && !checkIfKingMoveInCheck(
+                                board,
+                                board.getBox(x, y - 1)
+                            ) && !checkIfKingMoveInCheck(board, board.getBox(x, y))
+                        )
+                            options.add(board.getBox(x, y - 2))
+                }
             }
 
-            rookSpot = board.getBox(start.getX(), start.getY()+3)       // get the spot of the right rook
-            piece = rookSpot.getPiece()                                    // get the piece
+            rookSpotY = start.getY()+3
+            if(rookSpotY in 0 .. 7) {
+                val rookSpot = board.getBox(
+                    start.getX(),
+                    start.getY() + 3
+                )       // get the spot of the right rook
+                val piece = rookSpot.getPiece()                                    // get the piece
 
-            // check if piece is rook and if it hasn't moved yet
-            if(piece is Rook && !piece.isRookMoved()){
-                // check if the space between the king and the rook is empty
-                if(board.getBox(x , y+2).getPiece() == null && board.getBox(x , y+1).getPiece() == null)
+                // check if piece is rook and if it hasn't moved yet
+                if (piece is Rook && !piece.isRookMoved()) {
+                    // check if the space between the king and the rook is empty
+                    if (board.getBox(x, y + 2).getPiece() == null && board.getBox(x, y + 1)
+                            .getPiece() == null
+                    )
                     // check if the king will be in check after the move or during the move
-                    if(!checkIfKingMoveInCheck(board, board.getBox(x, y + 2)) && !checkIfKingMoveInCheck(board, board.getBox(x, y+1)) && !checkIfKingMoveInCheck(board, board.getBox(x, y-1)))
-                        options.add(board.getBox(x, y+2))
+                        if (!checkIfKingMoveInCheck(
+                                board,
+                                board.getBox(x, y + 2)
+                            ) && !checkIfKingMoveInCheck(
+                                board,
+                                board.getBox(x, y + 1)
+                            ) && !checkIfKingMoveInCheck(board, board.getBox(x, y - 1))
+                        )
+                            options.add(board.getBox(x, y + 2))
+                }
             }
         }
 
@@ -72,7 +99,7 @@ class King(white: Boolean) : Piece(white, PieceType.KING) {
 
 
     // return the king kill options
-    override fun killOptions(board: Board, start: Spot): List<Spot> {
+    override fun killOptions(board: Board, start: Spot): MutableList<Spot> {
         val options = mutableListOf<Spot>()
         val x = start.getX()
         val y = start.getY()

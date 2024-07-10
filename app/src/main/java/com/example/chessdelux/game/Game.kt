@@ -1,9 +1,13 @@
 package com.example.chessdelux.game
 
+import android.app.AlertDialog
 import android.util.Log
+import android.view.View
 import android.widget.GridLayout
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.size
 import com.example.chessdelux.MainActivity
 import com.example.chessdelux.R
 import com.example.chessdelux.board.*
@@ -14,12 +18,12 @@ class Game {
     private val players = arrayOfNulls<Player>(2)  // array of players
     private var board: Board = Board()                  // board; is filled with cells
     private lateinit var currentTurn: Player            // current player
-    private lateinit var status: GameStatus             // game status
     private var selectedSpot: Spot? = null              // the spot that has been currently selected
     private var currentPieceSpot: Spot? = null          // the spot of the piece that is currently selected
     private var possibleMoves = mutableListOf<Spot>()   // list of possible moves that the current piece can make
     private var possibleKills = mutableListOf<Spot>()   // list of possible kills that the current piece can make
     private val movesPlayed = mutableListOf<Move>()     // list of moves that the players have done
+    private var cellSize = 0                            // cell size for the chessboard
 
     fun initialize(p1: Player, p2: Player) {            // initialize the game
         players[0] = p1
@@ -33,9 +37,11 @@ class Game {
             p2
         }
 
-        status = GameStatus.ACTIVE                      // set the game status ACTIVE
-
         movesPlayed.clear()                             // clear the list of moves that the players have done
+    }
+
+    fun setCellSize(cellSize: Int) {
+        this.cellSize = cellSize
     }
 
     private fun setSelectedSpot(i: Int, j: Int) {       // sets the selected spot
@@ -74,7 +80,7 @@ class Game {
     }
 
     // renders the chessboard and updates it
-    fun renderGameBoard(chessboard: GridLayout, cellSize: Int, context: MainActivity) {
+    fun renderGameBoard(chessboard: GridLayout, context: MainActivity) {
         val white = ContextCompat.getColor(context, R.color.white)
         val black = ContextCompat.getColor(context, R.color.cheese)
 
@@ -116,7 +122,7 @@ class Game {
                     }
                     // check if the selected spot indicated a player moving a piece
                     try {
-                        this.checkIfPlayerMoves()
+                        this.checkIfPlayerMoves(context, chessboard)
                     }catch (e: Exception)
                     {
                         Log.e("ObscureMove", "checkIfPlayerMoves problem e -> ${e.message}")
@@ -139,8 +145,36 @@ class Game {
                     this.changeBoardOnSelection(chessboard, context)
                     // renders the pieces
                     this.renderPieces(chessboard)
+                    // check if any player won
+                    try{
+                        this.checkWin(context)
+                    }catch (e: Exception){
+                        Log.e("ObscureMove", "checkWin problem e -> ${e.message}")
+                    }
                 }
             }
+        }
+    }
+
+    private fun checkWin(context: MainActivity) {
+        val white = currentTurn.isWhiteSide()
+        var options = 0
+        for (i in 0 until 8)
+            for (j in 0 until 8){
+                val piece = board.getBox(i, j).getPiece()
+                if(piece != null && piece.isWhite() == white){
+                    var moves = piece.moveOptions(board, board.getBox(i, j))
+                    moves = validMoves(moves, board.getBox(i, j))
+                    var kills = piece.killOptions(board, board.getBox(i, j))
+                    kills = validKills(moves, board.getBox(i, j))
+                    options+=moves.size+kills.size
+                }
+            }
+
+        if(options == 0){
+            val textView = context.findViewById<TextView>(R.id.game_text)
+            textView.text = if (!white) "White won" else "Black won"
+            textView.visibility = View.VISIBLE
         }
     }
 
@@ -155,7 +189,7 @@ class Game {
 
 
     // check if player move and make the move
-    private fun checkIfPlayerMoves() {
+    private fun checkIfPlayerMoves(context: MainActivity, chessboard: GridLayout) {
         if(currentPieceSpot != null){           // if there is a piece selected
             if(selectedSpot != null){           // and if there is a spot selected
                 if(checkValidMove()){           // check if the selected spot is one of the move options of the current piece
@@ -188,8 +222,67 @@ class Game {
                     } else {
                         players[0]!!
                     }
+
+                    if(piece is Pawn)
+                        checkIfPawnPromoting(selectedSpot!!, context, chessboard)
+
                 }
             }
+        }
+    }
+
+    // promote the pawn
+    private fun checkIfPawnPromoting(end: Spot, context: MainActivity, chessboard: GridLayout) {
+        val pawn = end.getPiece() as Pawn
+        if((end.getX() == 0 && pawn.isWhite()) || (end.getX() == 7 && !pawn.isWhite())){
+            val builder = AlertDialog.Builder(context)
+            val popUpView = context.createPopUpView()
+            builder.setView(popUpView)
+            builder.setCancelable(false)
+
+            val grid = popUpView.findViewById<GridLayout>(R.id.popup_grid)
+            grid?.let { createPopUp(it, pawn.getPromoteOptions(), pawn.isWhite(), context, cellSize) }
+
+            val dialog = builder.create()
+            try{
+                dialog.show()
+            }catch (e: Exception){
+                Log.e("ObscureMove", "checkIfPawnPromoting problem e -> ${e.message}")
+            }
+
+            for(i in 0 until grid!!.rowCount)
+                for(j in 0 until grid.columnCount) {
+                    try{
+                        val child = grid.getChildAt(i * grid.columnCount + j)
+                        child.setOnClickListener {
+                            val pieceType = when (i * grid.columnCount + j) {
+                                0 -> PieceType.KNIGHT
+                                1 -> PieceType.BISHOP
+                                2 -> PieceType.ROOK
+                                3 -> PieceType.QUEEN
+                                else -> PieceType.PAWN
+                            }
+                            val piece = makePiece(pieceType, pawn.isWhite())
+                            board.getBox(end.getX(), end.getY()).setPiece(piece)
+                            // render pieces after any move for a better preview when a piece changes types
+                            this.renderPieces(chessboard)
+                            dialog.dismiss()
+                        }
+                    }catch (e: Exception){
+                        Log.e("ObscureMove", "setOnClickListener (checkIfPawnPromoting) problem e -> ${e.message}")
+                    }
+                }
+        }
+    }
+
+    // make a piece
+    private fun makePiece(pieceType: PieceType, white: Boolean): Piece {
+        return when (pieceType) {
+            PieceType.ROOK -> if (white) Rook(true) else Rook(false)
+            PieceType.KNIGHT -> if (white) Knight(true) else Knight(false)
+            PieceType.BISHOP -> if (white) Bishop(true) else Bishop(false)
+            PieceType.QUEEN -> if (white) Queen(true) else Queen(false)
+            else -> if (white) Pawn(true) else Pawn(false)
         }
     }
 
@@ -301,10 +394,10 @@ class Game {
         if(currentPieceSpot?.getPiece() != null) {
             // get the possible moves
             possibleMoves = currentPieceSpot?.getPiece()?.moveOptions(board, currentPieceSpot!!) as MutableList<Spot>
-            possibleMoves = validMoves()
+            possibleMoves = validMoves(possibleMoves, currentPieceSpot!!)
             // get the possible kills
             possibleKills = currentPieceSpot?.getPiece()?.killOptions(board, currentPieceSpot!!) as MutableList<Spot>
-            possibleKills = validKills()
+            possibleKills = validKills(possibleKills, currentPieceSpot!!)
         }
 
         // deselect all spots
@@ -323,30 +416,24 @@ class Game {
 
     }
 
-    private fun validMoves(): MutableList<Spot> {
+    private fun validMoves(options: MutableList<Spot>, spot: Spot): MutableList<Spot> {
         val moves = mutableListOf<Spot>()
-        val currentPiece = currentPieceSpot?.getPiece()
-        //if (currentPiece !is King) {
-            for (option in possibleMoves) {
-                if (!checkIfMovePutsPlayerInCheck(currentPieceSpot!!, option)) {
-                    moves.add(option)
-                }
+        for (option in options) {
+            if (!checkIfMovePutsPlayerInCheck(spot, option)) {
+                moves.add(option)
             }
-        //}
+        }
 
         return moves
     }
 
-    private fun validKills(): MutableList<Spot>{
+    private fun validKills(options: MutableList<Spot>, spot: Spot): MutableList<Spot>{
         val moves = mutableListOf<Spot>()
-        val currentPiece = currentPieceSpot?.getPiece()
-        //if(currentPiece !is King){
-            for (option in possibleKills){
-                if(!checkIfMovePutsPlayerInCheck(currentPieceSpot!!, option)){
-                    moves.add(option)
-                }
+        for (option in options){
+            if(!checkIfMovePutsPlayerInCheck(spot, option)){
+                moves.add(option)
             }
-        //}
+        }
 
         return moves
     }

@@ -17,7 +17,7 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK) {
         return rookMoved
     }
 
-    override fun moveOptions(board: Board, start: Spot): List<Spot> {
+    override fun moveOptions(board: Board, start: Spot): MutableList<Spot> {
         val options= mutableListOf<Spot>()
         var x = start.getX()
         var y = start.getY()
@@ -65,7 +65,7 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK) {
     }
 
     // return the rook kill options
-    override fun killOptions(board: Board, start: Spot): List<Spot> {
+    override fun killOptions(board: Board, start: Spot): MutableList<Spot> {
         val options= mutableListOf<Spot>()
         var x = start.getX()
         var y = start.getY()

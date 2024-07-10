@@ -7,12 +7,20 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN) {
     // the pawn image
     override var imageResource: Int? = if (white) R.drawable.pawn_white else R.drawable.pawn_black
 
+    // list of promote options
+    private val promoteOptions = listOf(PieceType.KNIGHT, PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN)
+
     // pawn moved at least once
     private var pawnMoved = false
 
     // pawn had moved two spaces last turn
     var pawnSkipped = false
         private set
+
+    // returns the list of promote options
+    fun getPromoteOptions(): List<PieceType> {
+        return promoteOptions
+    }
 
     // set if pawn moved two spaces last turn
     fun setPawnSkipped(skipped: Boolean){
@@ -25,7 +33,7 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN) {
     }
 
     // return the pawn possible moves
-    override fun moveOptions(board: Board, start: Spot): List<Spot> {
+    override fun moveOptions(board: Board, start: Spot): MutableList<Spot> {
         val options = mutableListOf<Spot>()
         // set the direction of the pawn based on the color
         val direction = if (isWhite()) -1 else 1
@@ -44,7 +52,7 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN) {
     }
 
     // return the pawn kill options
-    override fun killOptions(board: Board, start: Spot): List<Spot> {
+    override fun killOptions(board: Board, start: Spot): MutableList<Spot> {
         val options = mutableListOf<Spot>()
         // set the direction of the pawn based on the color
         val direction = if (isWhite()) -1 else 1
