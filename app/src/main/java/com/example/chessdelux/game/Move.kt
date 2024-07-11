@@ -8,7 +8,7 @@ class Move(val player: Player, val start: Spot, val end: Spot) {
     var pieceKilled: Piece? = null                  // the piece that was killed
     private var isCastlingMove: Boolean = false     // true if the move was a king castling
 
-    fun setCastlingMove(castlingMove: Boolean) {    // set the move as a king castling
+    fun setCastlingMove(castlingMove: Boolean) {    // set the move as a kincastling
         this.isCastlingMove = castlingMove
     }
 }

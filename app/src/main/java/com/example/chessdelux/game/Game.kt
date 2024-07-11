@@ -26,8 +26,8 @@ class Game {
         players[0] = p1
         players[1] = p2
 
-        //board.resetBoard()                              // reset the board for a fresh start
-        board.testWin()
+        board.resetBoard()                              // reset the board for a fresh start
+        //board.testWin()
         currentTurn = if (p1.isWhiteSide()) {           // set the current player
             p1
         } else {
@@ -199,6 +199,7 @@ class Game {
 
                     // move piece
                     board.movePiece(currentPieceSpot!!, selectedSpot!!)
+                    setMoveIndication(currentPieceSpot!!, selectedSpot!!)
 
                     // change the turn of the players
                     currentTurn = if (currentTurn.isWhiteSide()) {
@@ -212,6 +213,16 @@ class Game {
                 }
             }
         }
+    }
+
+    private fun setMoveIndication(start: Spot, end: Spot) {
+        for (i in 0 until 8)
+            for (j in 0 until 8)
+                board.getBox(i, j).setMovedSpot(false)
+
+
+        start.setMovedSpot(true)
+        end.setMovedSpot(true)
     }
 
     // set the spots that show to possible moves of a selected piece
@@ -272,14 +283,17 @@ class Game {
         val black = ContextCompat.getColor(context, R.color.cheese)
         val whiteGreen = ContextCompat.getColor(context, R.color.green)
         val blackGreen = ContextCompat.getColor(context, R.color.mold_cheese)
-
+        val whiteRed = ContextCompat.getColor(context, R.color.red)
+        val blackRed = ContextCompat.getColor(context, R.color.cursed_cheese)
 
         for (i in 0 until 8)
             for (j in 0 until 8) {
                 if((i+j) % 2 == 0) {
                     // white
+                    if(board.getBox(i,j).isMovedSpot())
+                        chessboard.getChildAt(i*8+j).setBackgroundColor(whiteRed)
                     // if the spot is not on the list it stays white
-                    if(possibleMoves.size == 0 && possibleKills.size == 0)
+                    else if(possibleMoves.size == 0 && possibleKills.size == 0)
                         chessboard.getChildAt(i*8+j).setBackgroundColor(white)
                     else
                         // else it changes into green
@@ -293,8 +307,10 @@ class Game {
                 }
                 else {
                     // black
+                    if(board.getBox(i,j).isMovedSpot())
+                        chessboard.getChildAt(i*8+j).setBackgroundColor(blackRed)
                     //if the spot is not on the list it stays black
-                    if(possibleMoves.size == 0 && possibleKills.size == 0)
+                    else if(possibleMoves.size == 0 && possibleKills.size == 0)
                         chessboard.getChildAt(i*8+j).setBackgroundColor(black)
                     else
                         // else it changes into a greenish black
