@@ -7,7 +7,7 @@ import com.example.chessdelux.R
 import com.example.chessdelux.pieces.PieceType
 
 fun createPopUp(grid: GridLayout, popupList: List<PieceType>, white: Boolean, context: MainActivity, cellSize: Int){
-    val matrix = listToMatrix(popupList, 3)
+    val matrix = listToMatrix(popupList, 7)
 
     grid.removeAllViews()
 

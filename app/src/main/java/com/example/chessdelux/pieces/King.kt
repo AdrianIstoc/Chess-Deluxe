@@ -20,6 +20,10 @@ class King(white: Boolean) : Piece(white, PieceType.KING) {
         kingMoved = true
     }
 
+    fun isInCheck(): Boolean{
+        return isInCheck
+    }
+
     // return the king possible moves
     override fun moveOptions(board: Board, start: Spot): MutableList<Spot> {
         val options = mutableListOf<Spot>()
@@ -93,7 +97,7 @@ class King(white: Boolean) : Piece(white, PieceType.KING) {
                 }
             }
         }
-
+        isInCheck = false
         return options
     }
 
@@ -118,6 +122,7 @@ class King(white: Boolean) : Piece(white, PieceType.KING) {
             }
         }
 
+        isInCheck = false
         return options
     }
 
@@ -151,18 +156,46 @@ class King(white: Boolean) : Piece(white, PieceType.KING) {
                 try{
                     if (piece != null && piece.isWhite() != isWhite() && piece !is King) {
                         for (options in piece.killOptions(board, pieceSpot))
-                            if (options.getX() == kingSpot.getX() && options.getY() == kingSpot.getY())
+                            if (options.getX() == kingSpot.getX() && options.getY() == kingSpot.getY()){
+                                isInCheck = true
                                 return true
-
+                            }
                     } else if (piece is King && piece.isWhite() != isWhite()) {
-                        if (abs(kingSpot.getX() - pieceSpot.getX()) <= 1 && abs(kingSpot.getY() - pieceSpot.getY()) <= 1)
+                        if (abs(kingSpot.getX() - pieceSpot.getX()) <= 1 && abs(kingSpot.getY() - pieceSpot.getY()) <= 1){
+                            isInCheck= true
                             return true
+                        }
                     }
                 }catch (e: Exception){
                     Log.e("ObscureMove", "checkIfKingInCheck problem ${i},${j} e -> ${e.message}")
                 }
             }
         }
+        isInCheck = false
         return false
+    }
+
+
+    // check if the king is castling
+    fun checkIfCastling(start: Spot, end: Spot, board: Board) {
+        try{
+            // check if the selected spot is valid for a castling
+            if ((end.getY() == 6 || end.getY() == 2) && (end.getX() == 0 || end.getX() == 7)) {
+                val king = start.getPiece()?.getType()                                      // get the piece type of the "king"
+                // get the spot of the rook based of the selected spot
+                val rookSpot = if (start.getY() < end.getY()) board.getBox(end.getX(), end.getY() + 1)
+                else board.getBox(end.getX(), end.getY() - 2)
+                val rook = rookSpot.getPiece()?.getType()                                   // get the piece type of the "rook"
+                if(king == PieceType.KING && rook == PieceType.ROOK) {                      // return true if king is king and rook is rook
+                    val direction = if(start.getY() < end.getY()) 1 else -1
+                    val rookNextSpot = board.getBox(start.getX(), start.getY()+direction)
+                    board.movePiece(rookSpot, rookNextSpot)
+                }
+            }
+        }
+        catch (e: Exception)
+        {
+            Log.e("ObscureMove", "CheckIfCastling problem e -> ${e.message}")
+        }
     }
 }
