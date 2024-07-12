@@ -3,10 +3,14 @@ package com.example.chessdelux.pieces
 import com.example.chessdelux.board.*
 import com.example.chessdelux.game.Game
 
-abstract class Piece(private var white: Boolean, private var type: PieceType) {
+abstract class Piece(private var white: Boolean, private var type: PieceType, private var value: Int) {
     private var killed: Boolean = false     // true if the piece was killed
     open var imageResource: Int? = null     // the piece image
     private var selected: Boolean = false   // true if the piece is selected
+
+    fun getValue(): Int{
+        return value
+    }
 
     // return if the piece is selected
     fun isSelected(): Boolean {

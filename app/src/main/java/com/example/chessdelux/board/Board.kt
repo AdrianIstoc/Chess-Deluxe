@@ -1,5 +1,7 @@
 package com.example.chessdelux.board
 
+import com.example.chessdelux.game.validKills
+import com.example.chessdelux.game.validMoves
 import com.example.chessdelux.pieces.*
 
 class Board {
@@ -103,4 +105,52 @@ class Board {
 
         boxes[7][7] = Spot(7, 7, King(true))
     }
+
+
+    fun evaluate(maximizingColor: Boolean): Int {
+        var sum = 0
+        if (!maximizingColor) {
+            for (i in 0 until 8)
+                for (j in 0 until 8) {
+                    val piece = getBox(i, j).getPiece()
+                    if(piece!= null && piece.isWhite())
+                        sum+=piece.getValue()
+                    else if(piece!= null && !piece.isWhite())
+                        sum-=piece.getValue()
+                }
+        }
+        else {
+            for (i in 0 until 8)
+                for (j in 0 until 8) {
+                    val piece = getBox(i, j).getPiece()
+                    if(piece!= null && piece.isWhite())
+                        sum-=piece.getValue()
+                    else if(piece!= null && !piece.isWhite())
+                        sum+=piece.getValue()
+                }
+        }
+
+        return sum
+    }
+
+    fun getMoves(white: Boolean, board: Board): MutableList<Pair<Spot, Spot>> {
+        val moves = mutableListOf<Pair<Spot, Spot>>() // Initialize the list
+
+        for (i in 0 until 8) {
+            for (j in 0 until 8) {
+                val pieceSpot = getBox(i, j)
+                val piece = pieceSpot.getPiece()
+                if (piece != null && piece.isWhite() == white) {
+                    val possibleMove = piece.moveOptions(board,  pieceSpot)
+                    val possibleKill = piece.killOptions(board,  pieceSpot)
+                    val options = validMoves(possibleMove,  pieceSpot, board, white) + validKills(possibleKill,  pieceSpot, board, white)
+                    for (option in options)
+                        moves.add(Pair(pieceSpot, option))
+                }
+            }
+        }
+
+        return moves // Return the list of moves
+    }
+
 }

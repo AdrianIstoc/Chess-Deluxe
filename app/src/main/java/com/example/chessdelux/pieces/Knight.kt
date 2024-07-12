@@ -3,7 +3,7 @@ package com.example.chessdelux.pieces
 import com.example.chessdelux.R
 import com.example.chessdelux.board.*
 
-class Knight(white: Boolean) : Piece(white, PieceType.KNIGHT) {
+class Knight(white: Boolean) : Piece(white, PieceType.KNIGHT, 3) {
     // the knight image
     override var imageResource: Int? = if (white) R.drawable.knight_white else R.drawable.knight_black
 

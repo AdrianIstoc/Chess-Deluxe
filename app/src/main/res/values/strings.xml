@@ -5,4 +5,7 @@
     <string name="how_to_play">How to Play</string>
     <string name="back">back</string>
     <string name="restart">restart</string>
+    <string name="local">Local</string>
+    <string name="computer">Computer</string>
+    <string name="exit">Exit</string>
 </resources>

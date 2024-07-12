@@ -4,7 +4,7 @@ import com.example.chessdelux.R
 import com.example.chessdelux.board.*
 import com.example.chessdelux.game.Game
 
-class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP) {
+class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3) {
     // the bishop image
     override var imageResource: Int? = if (white) R.drawable.bishop_white else R.drawable.bishop_black
 

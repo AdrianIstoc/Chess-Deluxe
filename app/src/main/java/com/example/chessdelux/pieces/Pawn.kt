@@ -9,7 +9,7 @@ import com.example.chessdelux.R
 import com.example.chessdelux.game.*
 import kotlin.math.abs
 
-class Pawn(white: Boolean) : Piece(white, PieceType.PAWN) {
+class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1) {
     // the pawn image
     override var imageResource: Int? = if (white) R.drawable.pawn_white else R.drawable.pawn_black
 

@@ -3,7 +3,7 @@ package com.example.chessdelux.pieces
 import com.example.chessdelux.R
 import com.example.chessdelux.board.*
 
-class Rook(white: Boolean) : Piece(white, PieceType.ROOK) {
+class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5) {
     override var imageResource: Int? = if (white) R.drawable.rook_white else R.drawable.rook_black
 
     var rookMoved = false

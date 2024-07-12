@@ -12,38 +12,31 @@
         android:id="@+id/menu_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textSize="40sp"
-        android:textColor="@color/cheese"
+        android:layout_marginBottom="100dp"
+        android:rotation="-10"
         android:shadowColor="@color/black"
         android:shadowDx="-2"
         android:shadowDy="8"
         android:shadowRadius="10"
-        android:layout_marginBottom="100dp"
-        android:rotation="-10"/>
+        android:text="@string/app_name"
+        android:textColor="@color/cheese"
+        android:textSize="40sp" />
 
     <Button
-        android:id="@+id/play_button"
+        android:id="@+id/local_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/play"
         android:layout_margin="10dp"
-        android:background="@color/cheese"/>
-    <Button
-        android:id="@+id/how_to_play_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/how_to_play"
-        android:layout_margin="10dp"
-        android:background="@color/cheese"/>
-    <Button
-        android:id="@+id/exit_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/exit"
-        android:layout_margin="10dp"
-        android:background="@color/cheese"/>
+        android:background="@color/cheese"
+        android:text="@string/local" />
 
+    <Button
+        android:id="@+id/computer_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/cheese"
+        android:text="@string/computer" />
 
 
 
