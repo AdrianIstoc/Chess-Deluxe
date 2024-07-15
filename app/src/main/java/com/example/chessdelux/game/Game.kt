@@ -30,8 +30,8 @@ class Game {
         players[0] = p1
         players[1] = p2
 
-        //board.resetBoard()                              // reset the board for a fresh start
-        board.testWin()
+        board.resetBoard()                              // reset the board for a fresh start
+        //board.testWin()
         currentTurn = if (p1.isWhiteSide()) {           // set the current player
             p1
         } else {
@@ -233,39 +233,55 @@ class Game {
     // check if player move and make the move
     private fun checkIfPlayerMoves(context: MainActivity, chessboard: GridLayout, start: Spot, end: Spot) {
         if((checkValidMove() && currentTurn.isHumanPlayer()) || currentTurn is ComputerPlayer){           // check if the selected spot is one of the move options of the current piece
-                val piece = start.getPiece()
+            val piece = start.getPiece()
+            if (piece != null) {
+                resetPawnSkipped(piece.isWhite())
+            }
+            // check for important moves
+            checkImportantPieceMove(start)
 
-                if(piece is Pawn)
+            if(piece is Pawn) {
                 // check if the pawn moved two spaces
-                    piece.checkPawnSkipped(start, end, board, currentTurn.isWhiteSide())
-
-                // check for important moves
-                checkImportantPieceMove(start)
-
-                if(piece is Pawn)
+                piece.checkPawnSkipped(start, end, board, currentTurn.isWhiteSide())
                 // check if the pawn can make an en passant and sets the opponent pawn as killed
-                    piece.checkIfEnPassant(start, end, board)
+                piece.checkIfEnPassant(start, end, board)
+            }
 
 
-                // check if the king is castling
-                // if so, move the king and the rook properly
-                if(piece is King)
-                    piece.checkIfCastling(start, end, board)
+            // check if the king is castling
+            // if so, move the king and the rook properly
+            if(piece is King)
+                piece.checkIfCastling(start, end, board)
+
+            if(piece is Rook)
+                piece.checkIfFortressing(start, end)
 
 
-                // move piece
-                board.movePiece(start, end)
-                setMoveIndication(start, end)
+            // move piece
+            board.movePiece(start, end)
+            setMoveIndication(start, end)
 
-                // change the turn of the players
-                currentTurn = if (currentTurn.isWhiteSide()) {
-                    players[1]!!
-                } else {
-                    players[0]!!
+            // change the turn of the players
+            currentTurn = if (currentTurn.isWhiteSide()) {
+                players[1]!!
+            } else {
+                players[0]!!
+            }
+
+            if(piece is Pawn)
+                piece.checkIfPawnPromoting(end, context, cellSize, board, chessboard)
+        }
+    }
+
+
+    private fun resetPawnSkipped(white: Boolean){
+        // set all pawns as they didn't move two spots
+        for (i in 0 until 8)
+            for (j in 0 until 8){
+                val piece = board.getBox(i, j).getPiece()
+                if(piece is Pawn && piece.isWhite() == white){
+                    piece.setPawnSkipped(false)
                 }
-
-                if(piece is Pawn)
-                    piece.checkIfPawnPromoting(end, context, cellSize, board, chessboard)
             }
     }
 

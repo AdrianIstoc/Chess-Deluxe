@@ -19,10 +19,11 @@ class Knight(white: Boolean) : Piece(white, PieceType.KNIGHT, 3) {
         // add the possible moves
         for ((dx, dy) in directions) {
             if (x + dx in 0 .. 7 && y + dy in 0 .. 7){
-                if (board.getBox(x + dx, y + dy).getPiece() == null || board.getBox(x + dx, y + dy)
-                        .getPiece()?.isWhite() != isWhite()
-                )
-                    options.add(board.getBox(x + dx, y + dy))
+                if(board.getBox(x + dx, y + dy).getPiece()?.getType() != PieceType.FORTRESS)
+                    if (board.getBox(x + dx, y + dy).getPiece() == null ||
+                        board.getBox(x + dx, y + dy).getPiece()?.isWhite() != isWhite()
+                    )
+                        options.add(board.getBox(x + dx, y + dy))
             }
         }
 
@@ -41,10 +42,11 @@ class Knight(white: Boolean) : Piece(white, PieceType.KNIGHT, 3) {
         // add the possible moves
         for ((dx, dy) in directions) {
             if (x + dx in 0 .. 7 && y + dy in 0 .. 7){
-                if (board.getBox(x + dx, y + dy).getPiece() == null || board.getBox(x + dx, y + dy)
-                        .getPiece()?.isWhite() != isWhite()
-                )
-                    options.add(board.getBox(x + dx, y + dy))
+                if(board.getBox(x + dx, y + dy).getPiece()?.getType() != PieceType.FORTRESS)
+                    if (board.getBox(x + dx, y + dy).getPiece() == null ||
+                        board.getBox(x + dx, y + dy).getPiece()?.isWhite() != isWhite()
+                    )
+                        options.add(board.getBox(x + dx, y + dy))
             }
         }
 

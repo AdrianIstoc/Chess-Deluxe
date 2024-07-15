@@ -17,9 +17,8 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3) {
 
         // checking all diagonals
         // also stopping at a black piece or before a white piece
-
         while (++x < 8 && ++y < 8)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite()) {
+            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS) {
                 options.add(board.getBox(x, y))
                 if(board.getBox(x, y).getPiece() != null)
                     break
@@ -30,7 +29,7 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3) {
         y = start.getY()
 
         while (++x < 8 && --y >= 0)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite()) {
+            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS) {
                 options.add(board.getBox(x, y))
                 if(board.getBox(x, y).getPiece() != null)
                     break
@@ -41,7 +40,7 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3) {
         y = start.getY()
 
         while (--x >= 0 && ++y < 8)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite()) {
+            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS) {
                 options.add(board.getBox(x, y))
                 if(board.getBox(x, y).getPiece() != null)
                     break
@@ -52,7 +51,7 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3) {
         y = start.getY()
 
         while (--x >= 0 && --y >= 0)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite()) {
+            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS) {
                 options.add(board.getBox(x, y))
                 if(board.getBox(x, y).getPiece() != null)
                     break
@@ -72,7 +71,7 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3) {
         // also stopping at a black piece or before a white piece
 
         while (++x < 8 && ++y < 8)
-            if (board.getBox(x, y).getPiece()?.isWhite() != isWhite()) {
+            if (board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS) {
                 options.add(board.getBox(x, y))
                 if (board.getBox(x, y).getPiece() != null)
                     break
@@ -82,7 +81,7 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3) {
         y = start.getY()
 
         while (++x < 8 && --y >= 0)
-            if (board.getBox(x, y).getPiece()?.isWhite() != isWhite()) {
+            if (board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS) {
                 options.add(board.getBox(x, y))
                 if (board.getBox(x, y).getPiece() != null)
                     break
@@ -92,7 +91,7 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3) {
         y = start.getY()
 
         while (--x >= 0 && ++y < 8)
-            if (board.getBox(x, y).getPiece()?.isWhite() != isWhite()) {
+            if (board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS) {
                 options.add(board.getBox(x, y))
                 if (board.getBox(x, y).getPiece() != null)
                     break
@@ -102,7 +101,7 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3) {
         y = start.getY()
 
         while (--x >= 0 && --y >= 0)
-            if (board.getBox(x, y).getPiece()?.isWhite() != isWhite()) {
+            if (board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS) {
                 options.add(board.getBox(x, y))
                 if (board.getBox(x, y).getPiece() != null)
                     break

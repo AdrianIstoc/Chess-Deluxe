@@ -27,6 +27,21 @@ class Board {
         return kingSpot
     }
 
+    fun getFortressSpots(white: Boolean): MutableList<Spot> {
+        val fortressSpot = mutableListOf<Spot>()        // set the spot of the king as null
+        for (i in 0 until 8){
+            for (j in 0 until 8){
+                val pieceSpot = this.getBox(i, j)
+                val piece = pieceSpot.getPiece()
+                if(piece is Fortress && piece.isWhite() == white){
+                    fortressSpot.add(pieceSpot)
+                    return fortressSpot
+                }
+            }
+        }
+        return fortressSpot
+    }
+
     // move a piece
     fun movePiece(start: Spot, end: Spot){
         val piece = start.getPiece()            // get the piece
@@ -104,6 +119,8 @@ class Board {
         boxes[3][3] = Spot(3, 3, Rook(true))
 
         boxes[7][7] = Spot(7, 7, King(true))
+        boxes[5][5] = Spot(5, 5, Rook(false))
+        boxes[4][4] = Spot(4, 4, Rook(false))
     }
 
 

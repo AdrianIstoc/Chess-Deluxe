@@ -23,7 +23,11 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5) {
         var y = start.getY()
 
         while (++x < 8)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite()) {
+            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() &&
+                board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS ||
+                (board.getBox(x, y).getPiece()?.isWhite() == isWhite() &&
+                        board.getBox(x, y).getPiece()?.getType() == PieceType.ROOK)
+            ) {
                 options.add(board.getBox(x, y))
                 if(board.getBox(x, y).getPiece() != null)
                     break
@@ -33,7 +37,11 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5) {
         x = start.getX()
 
         while (++y < 8)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite()) {
+            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() &&
+                board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS ||
+                (board.getBox(x, y).getPiece()?.isWhite() == isWhite() &&
+                        board.getBox(x, y).getPiece()?.getType() == PieceType.ROOK)
+            ) {
                 options.add(board.getBox(x, y))
                 if(board.getBox(x, y).getPiece() != null)
                     break
@@ -43,7 +51,11 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5) {
         y = start.getY()
 
         while (--x >= 0)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite()) {
+            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() &&
+                board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS ||
+                (board.getBox(x, y).getPiece()?.isWhite() == isWhite() &&
+                        board.getBox(x, y).getPiece()?.getType() == PieceType.ROOK)
+            ) {
                 options.add(board.getBox(x, y))
                 if(board.getBox(x, y).getPiece() != null)
                     break
@@ -53,7 +65,11 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5) {
         x = start.getX()
 
         while (--y >= 0)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite()) {
+            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() &&
+                board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS ||
+                (board.getBox(x, y).getPiece()?.isWhite() == isWhite() &&
+                        board.getBox(x, y).getPiece()?.getType() == PieceType.ROOK)
+            ) {
                 options.add(board.getBox(x, y))
                 if(board.getBox(x, y).getPiece() != null)
                     break
@@ -71,7 +87,9 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5) {
         var y = start.getY()
 
         while (++x < 8)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite()) {
+            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() &&
+                board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS
+            ) {
                 options.add(board.getBox(x, y))
                 if(board.getBox(x, y).getPiece() != null)
                     break
@@ -81,7 +99,9 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5) {
         x = start.getX()
 
         while (++y < 8)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite()) {
+            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() &&
+                board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS
+            ) {
                 options.add(board.getBox(x, y))
                 if(board.getBox(x, y).getPiece() != null)
                     break
@@ -91,7 +111,9 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5) {
         y = start.getY()
 
         while (--x >= 0)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite()) {
+            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() &&
+                board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS
+            ) {
                 options.add(board.getBox(x, y))
                 if(board.getBox(x, y).getPiece() != null)
                     break
@@ -101,7 +123,9 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5) {
         x = start.getX()
 
         while (--y >= 0)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite()) {
+            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() &&
+                board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS
+            ) {
                 options.add(board.getBox(x, y))
                 if(board.getBox(x, y).getPiece() != null)
                     break
@@ -109,5 +133,11 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5) {
             else break
 
         return options
+    }
+
+    fun checkIfFortressing(start: Spot, end: Spot){
+        val endPiece = end.getPiece()
+        if (endPiece is Rook)
+            start.setPiece(Fortress(endPiece.isWhite()))
     }
 }
