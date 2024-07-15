@@ -30,81 +30,37 @@ class MainActivity : ComponentActivity() {
             val computerButton = findViewById<Button>(R.id.computer_button)
 
             localButton.setOnClickListener {
-                setContentView(R.layout.activity_game)
-                try {
-                    val backButton = findViewById<Button>(R.id.back)
-                    val restartButton = findViewById<Button>(R.id.restart)
-
-                    val game = Game()
-                    val humanPlayer = HumanPlayer(true)
-                    val humanPlayer2 = HumanPlayer(false)
-                    val chessboard = findViewById<GridLayout>(R.id.chess_board)
-                    val cellSize = resources.displayMetrics.widthPixels / 8
-
-                    game.setCellSize(cellSize)
-                    game.initialize(humanPlayer, humanPlayer2)
-
-                    game.renderGameBoard(chessboard, this)
-                    game.proceedWithTheGame(chessboard, this)
-
-                    backButton.setOnClickListener {
-                        finish()
-                        startActivity(intent)
-                    }
-
-                    restartButton.setOnClickListener {
-                        game.initialize(humanPlayer, humanPlayer2)
-                        game.renderGameBoard(chessboard, this)
-                        game.proceedWithTheGame(chessboard, this)
-
-                        val text = findViewById<TextView>(R.id.game_text)
-                        text.text = null
-                        text.visibility = View.INVISIBLE
-                    }
-
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Log.e("GameBoardError", "Error initializing game board: ${e.message}")
-                }
+                startGame(false, 1)
             }
 
             computerButton.setOnClickListener {
-                setContentView(R.layout.activity_game)
-                try {
-                    val backButton = findViewById<Button>(R.id.back)
-                    val restartButton = findViewById<Button>(R.id.restart)
+                setContentView(R.layout.difficulty_menu)
+                val d1Button = findViewById<Button>(R.id.d1_button)
+                val d3Button = findViewById<Button>(R.id.d3_button)
+                val d5Button = findViewById<Button>(R.id.d5_button)
+                val d7Button = findViewById<Button>(R.id.d7_button)
+                val d9Button = findViewById<Button>(R.id.d9_button)
 
-                    val game = Game()
-                    val humanPlayer = HumanPlayer(true)
-                    val computerPlayer = ComputerPlayer(false)
-
-                    val chessboard = findViewById<GridLayout>(R.id.chess_board)
-                    val cellSize = resources.displayMetrics.widthPixels / 8
-
-                    game.setCellSize(cellSize)
-                    game.initialize(humanPlayer, computerPlayer)
-                    game.renderGameBoard(chessboard, this)
-                    game.proceedWithTheGame(chessboard, this)
-
-                    backButton.setOnClickListener {
-                        finish()
-                        startActivity(intent)
-                    }
-
-                    restartButton.setOnClickListener {
-                        game.initialize(humanPlayer, computerPlayer)
-                        game.renderGameBoard(chessboard, this)
-                        game.proceedWithTheGame(chessboard, this)
-
-                        val text = findViewById<TextView>(R.id.game_text)
-                        text.text = null
-                        text.visibility = View.INVISIBLE
-                    }
-
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Log.e("GameBoardError", "Error initializing game board: ${e.message}")
+                d1Button.setOnClickListener {
+                    startGame(true, 1)
                 }
+
+                d3Button.setOnClickListener {
+                    startGame(true, 3)
+                }
+
+                d5Button.setOnClickListener {
+                    startGame(true, 5)
+                }
+
+                d7Button.setOnClickListener {
+                    startGame(true, 7)
+                }
+
+                d9Button.setOnClickListener {
+                    startGame(true, 9)
+                }
+
             }
 
         }
@@ -121,6 +77,48 @@ class MainActivity : ComponentActivity() {
 
     fun createPopUpView(): View {
         return layoutInflater.inflate(R.layout.popup_layout, null)
+    }
+
+    private fun startGame(computerPlayer: Boolean, difficulty: Int){
+        setContentView(R.layout.activity_game)
+        try {
+            val backButton = findViewById<Button>(R.id.back)
+            val restartButton = findViewById<Button>(R.id.restart)
+
+            val game = Game()
+            val humanPlayer = HumanPlayer(true)
+            val player2 = if(computerPlayer)
+                ComputerPlayer(false).apply { setDifficulty(difficulty) }
+            else
+                HumanPlayer(false)
+
+            val chessboard = findViewById<GridLayout>(R.id.chess_board)
+            val cellSize = resources.displayMetrics.widthPixels / 8
+
+            game.setCellSize(cellSize)
+            game.initialize(humanPlayer, player2)
+            game.renderGameBoard(chessboard, this)
+            game.proceedWithTheGame(chessboard, this)
+
+            backButton.setOnClickListener {
+                finish()
+                startActivity(intent)
+            }
+
+            restartButton.setOnClickListener {
+                game.initialize(humanPlayer, player2)
+                game.renderGameBoard(chessboard, this)
+                game.proceedWithTheGame(chessboard, this)
+
+                val text = findViewById<TextView>(R.id.game_text)
+                text.text = null
+                text.visibility = View.INVISIBLE
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e("GameBoardError", "Error initializing game board: ${e.message}")
+        }
     }
 }
 

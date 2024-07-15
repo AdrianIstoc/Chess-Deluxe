@@ -6,6 +6,7 @@ import com.example.chessdelux.board.Spot
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
+import kotlin.time.measureTime
 
 abstract class Player(private val whiteSide: Boolean, private val humanPlayer: Boolean) {
     fun isWhiteSide(): Boolean {    // return the player color
@@ -22,19 +23,36 @@ class HumanPlayer(whiteSide: Boolean) : Player(whiteSide, true)
 
 // computer
 class ComputerPlayer(whiteSide: Boolean) : Player(whiteSide, false){
+    private var difficulty: Int = 1
+
+    fun setDifficulty(dif: Int){
+        difficulty = dif
+    }
+
+    fun getDifficulty(): Int{
+        return difficulty
+    }
+
     fun minimax(game: Game, board: Board, depth: Int, alpha: Int, beta: Int, maximizingPlayer: Boolean, maximizingColor: Boolean, value: Int = Int.MIN_VALUE): Pair<Pair<Spot, Spot>?, Int> {
         var valueN = value
-        if(valueN == Int.MIN_VALUE)
-            valueN = board.evaluate(maximizingColor)
+        var executionTime = measureTime{
+            if(valueN == Int.MIN_VALUE)
+                valueN = board.evaluate(maximizingColor)
+        }
+        Log.i("TimeMeasurements", "evaluate (minimax) time: $executionTime")
 
 
         if (depth == 0) {
             return Pair(null, valueN)
         }
-        val moves = board.getMoves(maximizingPlayer, board)
+        var moves: MutableList<Pair<Spot, Spot>>?
+        executionTime = measureTime {
+            moves = board.getMoves(maximizingPlayer, board)
+        }
+        Log.i("TimeMeasurements", "getMoves (minimax) time: $executionTime")
         var bestMove: Pair<Spot, Spot>? = null
-        if (moves.isNotEmpty()) {
-            bestMove = moves[Random.nextInt(moves.size)]
+        if (moves?.isNotEmpty() == true) {
+            bestMove = moves!![Random.nextInt(moves!!.size)]
         }
 
         var alphaVar = alpha
@@ -43,7 +61,7 @@ class ComputerPlayer(whiteSide: Boolean) : Player(whiteSide, false){
         if (maximizingPlayer) {
             var maxEval = Int.MIN_VALUE
             try {
-                for (move in moves) {
+                for (move in moves!!) {
                     val start = move.first
                     val startPiece = start.getPiece()
                     val end = move.second
@@ -73,7 +91,7 @@ class ComputerPlayer(whiteSide: Boolean) : Player(whiteSide, false){
         } else {
             var minEval = Int.MAX_VALUE
             try {
-                for (move in moves) {
+                for (move in moves!!) {
                     val start = move.first
                     val startPiece = start.getPiece()
                     val end = move.second
@@ -102,4 +120,5 @@ class ComputerPlayer(whiteSide: Boolean) : Player(whiteSide, false){
             return Pair(bestMove, minEval)
         }
     }
+
 }

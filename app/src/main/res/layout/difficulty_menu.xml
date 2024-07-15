@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingStart="50dp"
+    android:paddingEnd="50dp"
+    android:background="@color/background">
+
+    <TextView
+        android:id="@+id/menu_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="100dp"
+        android:rotation="-10"
+        android:shadowColor="@color/black"
+        android:shadowDx="-2"
+        android:shadowDy="8"
+        android:shadowRadius="10"
+        android:text="@string/app_name"
+        android:textColor="@color/cheese"
+        android:textSize="40sp" />
+
+    <Button
+        android:id="@+id/d1_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/cheese"
+        android:text="@string/baby" />
+
+    <Button
+        android:id="@+id/d3_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/cheese"
+        android:text="@string/normal" />
+
+    <Button
+        android:id="@+id/d5_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/cheese"
+        android:text="@string/hard" />
+
+    <Button
+        android:id="@+id/d7_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/cheese"
+        android:text="@string/hell" />
+
+    <Button
+        android:id="@+id/d9_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/cheese"
+        android:text="@string/eternity" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="50dp"
+        android:text="@string/caution_the_harder_the_difficulty_the_more_time_you_ll_spend_doing_nothing_also_the_game_might_just_crash"
+        android:textColor="@color/black"
+        android:textSize="30sp" />
+
+</LinearLayout>

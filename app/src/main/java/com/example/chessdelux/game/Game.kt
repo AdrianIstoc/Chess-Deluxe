@@ -1,5 +1,7 @@
 package com.example.chessdelux.game
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.GridLayout
@@ -10,6 +12,7 @@ import com.example.chessdelux.MainActivity
 import com.example.chessdelux.R
 import com.example.chessdelux.board.*
 import com.example.chessdelux.pieces.*
+import kotlin.time.measureTime
 
 class Game {
     private val players = arrayOfNulls<Player>(2)  // array of players
@@ -27,8 +30,8 @@ class Game {
         players[0] = p1
         players[1] = p2
 
-        board.resetBoard()                              // reset the board for a fresh start
-        //board.testWin()
+        //board.resetBoard()                              // reset the board for a fresh start
+        board.testWin()
         currentTurn = if (p1.isWhiteSide()) {           // set the current player
             p1
         } else {
@@ -99,56 +102,91 @@ class Game {
                     cell.setOnClickListener {
                         // set the selected spot
                         try {
-                            setSelectedSpot(i, j)
+                            val executionTime = measureTime {
+                                setSelectedSpot(i, j)
+                            }
+                            Log.i("TimeMeasurements", "setSelectedSpot time: $executionTime")
                         } catch (e: Exception) {
                             Log.e("ObscureMove", "setSelectedSpot problem e -> ${e.message}")
                         }
                         // check if the selected spot indicated a player moving a piece
                         try {
-                            if(currentPieceSpot != null)
-                                checkIfPlayerMoves(context, chessboard, currentPieceSpot!!, selectedSpot!!)
+                            val executionTime = measureTime {
+                                if(currentPieceSpot != null)
+                                    checkIfPlayerMoves(context, chessboard, currentPieceSpot!!, selectedSpot!!)
+                            }
+                            Log.i("TimeMeasurements", "checkIfPlayerMoves time: $executionTime")
                         } catch (e: Exception) {
                             Log.e("ObscureMove", "checkIfPlayerMoves problem e -> ${e.message}")
                         }
                         // update the game
                         try {
-                            updateCurrentPieceSpot()
+                            val executionTime = measureTime{
+                                updateCurrentPieceSpot()
+                            }
+                            Log.i("TimeMeasurements", "updateCurrentPieceSpot time: $executionTime")
                         } catch (e: Exception) {
                             Log.e("ObscureMove", "updateCurrentPieceSpot problem e -> ${e.message}")
                         }
                         // selects the current piece spot as the selected spot
                         try {
-                            setPossibleMoves()
+                            val executionTime = measureTime{
+                                setPossibleMoves()
+                            }
+                            Log.i("TimeMeasurements", "setPossibleMoves time: $executionTime")
                         } catch (e: Exception) {
                             Log.e("ObscureMove", "setPossibleMoves problem e -> ${e.message}")
                         }
                         // updates the colors of the chessboard to indicate the possible moves of the selected piece
-                        changeBoardOnSelection(chessboard, context)
+                        var executionTime = measureTime{
+                            changeBoardOnSelection(chessboard, context)
+                        }
+                        Log.i("TimeMeasurements", "changeBoardOnSelection time: $executionTime")
                         // renders the pieces
-                        renderPieces(chessboard, board)
+                        executionTime = measureTime{
+                            renderPieces(chessboard, board)
+                        }
+                        Log.i("TimeMeasurements", "renderPieces time: $executionTime")
                         // check if any player won
                         try{
-                            checkWin(context)
+                            executionTime = measureTime{
+                                checkWin(context)
+                            }
+                            Log.i("TimeMeasurements", "checkWin time: $executionTime")
                         }catch (e: Exception){
                             Log.e("ObscureMove", "checkWin problem e -> ${e.message}")
                         }
 
                         if(currentTurn is ComputerPlayer){
-                            try {
-                                val move = (currentTurn as ComputerPlayer).minimax(this,board,3, Int.MIN_VALUE, Int.MAX_VALUE, currentTurn.isWhiteSide(),currentTurn.isWhiteSide()).first
-                                if (move!=null){
-                                    val start = move.first
-                                    val end = move.second
-                                    checkIfPlayerMoves(context, chessboard, start, end)
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                try {
+                                    var move: Pair<Spot, Spot>?
+                                    val executionTime = measureTime {
+                                        move = (this.currentTurn as ComputerPlayer).minimax(
+                                            this,
+                                            board,
+                                            (currentTurn as ComputerPlayer).getDifficulty(),
+                                            Int.MIN_VALUE,
+                                            Int.MAX_VALUE,
+                                            currentTurn.isWhiteSide(),
+                                            currentTurn.isWhiteSide()
+                                        ).first
+                                    }
+                                    Log.i("TimeMeasurements", "minimax time: $executionTime")
+                                    if (move != null) {
+                                        val start = move!!.first
+                                        val end = move!!.second
+                                        checkIfPlayerMoves(context, chessboard, start, end)
 
+                                    }
+                                } catch (e: Exception) {
+                                    Log.e("ObscureMove", "minimax problem e -> ${e.message}")
                                 }
-                            }catch (e: Exception){
-                                Log.e("ObscureMove", "minimax problem e -> ${e.message}")
-                            }
-                            Log.i("ObscureMove", "Computer turn done")
-                            changeBoardOnSelection(chessboard, context)
-                            renderPieces(chessboard, board)
-                            checkWin(context)
+                                Log.i("ObscureMove", "Computer turn done")
+                                changeBoardOnSelection(chessboard, context)
+                                renderPieces(chessboard, board)
+                                checkWin(context)
+                            }, 500)
                         }
                     }
                 }

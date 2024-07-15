@@ -8,4 +8,10 @@
     <string name="local">Local</string>
     <string name="computer">Computer</string>
     <string name="exit">Exit</string>
+    <string name="caution_the_harder_the_difficulty_the_more_time_you_ll_spend_doing_nothing_also_the_game_might_just_crash">Caution! The harder the difficulty the more time you\'ll spend doing nothing. Also the game might just crash...</string>
+    <string name="eternity">Eternity</string>
+    <string name="hell">Hell</string>
+    <string name="hard">Hard</string>
+    <string name="normal">Normal</string>
+    <string name="baby">Baby</string>
 </resources>
