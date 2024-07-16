@@ -262,8 +262,11 @@ class Game {
                 players[0]!!
             }
 
-            if(piece is Pawn)
+            if(piece is Pawn){
                 piece.checkIfPawnPromoting(end, context, cellSize, board, chessboard)
+                val kingSpot = board.getKingSpot(currentTurn.isWhiteSide())
+                (kingSpot.getPiece() as King).checkIfKingInCheck(board, kingSpot)
+            }
         }
     }
 
@@ -421,7 +424,7 @@ fun checkImportantPieceMove(spot: Spot) {
         }
         PieceType.PAWN -> {
             val pawn = spot.getPiece() as Pawn
-            pawn.setPawnMoved()
+            pawn.setPawnMoved(true)
         }
         PieceType.ROOK -> {
             val rook = spot.getPiece() as Rook

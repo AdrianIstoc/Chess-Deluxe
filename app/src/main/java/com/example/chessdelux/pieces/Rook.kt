@@ -24,59 +24,47 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
         var x = start.getX()
         var y = start.getY()
 
-        while (++x < 8)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() &&
-                board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS ||
-                (board.getBox(x, y).getPiece()?.isWhite() == isWhite() &&
-                        board.getBox(x, y).getPiece()?.getType() == PieceType.ROOK)
-            ) {
-                options.add(board.getBox(x, y))
-                if(board.getBox(x, y).getPiece() != null)
-                    break
-            }
-            else break
+        while (++x < 8) {
+            val spot = board.getBox(x, y)
+            if (board.getBox(x, y).getPiece() != null)
+                break
+            else if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
+                options.add(spot)
+            else options.add(board.getBox(x, y))
+        }
 
         x = start.getX()
 
-        while (++y < 8)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() &&
-                board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS ||
-                (board.getBox(x, y).getPiece()?.isWhite() == isWhite() &&
-                        board.getBox(x, y).getPiece()?.getType() == PieceType.ROOK)
-            ) {
-                options.add(board.getBox(x, y))
-                if(board.getBox(x, y).getPiece() != null)
-                    break
-            }
-            else break
+        while (++y < 8) {
+            val spot = board.getBox(x, y)
+            if (board.getBox(x, y).getPiece() != null)
+                break
+            else if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
+                options.add(spot)
+            else options.add(board.getBox(x, y))
+        }
 
         y = start.getY()
 
-        while (--x >= 0)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() &&
-                board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS ||
-                (board.getBox(x, y).getPiece()?.isWhite() == isWhite() &&
-                        board.getBox(x, y).getPiece()?.getType() == PieceType.ROOK)
-            ) {
-                options.add(board.getBox(x, y))
-                if(board.getBox(x, y).getPiece() != null)
-                    break
-            }
-            else break
+        while (--x >= 0) {
+            val spot = board.getBox(x, y)
+            if (board.getBox(x, y).getPiece() != null)
+                break
+            else if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
+                options.add(spot)
+            else options.add(board.getBox(x, y))
+        }
 
         x = start.getX()
 
-        while (--y >= 0)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() &&
-                board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS ||
-                (board.getBox(x, y).getPiece()?.isWhite() == isWhite() &&
-                        board.getBox(x, y).getPiece()?.getType() == PieceType.ROOK)
-            ) {
-                options.add(board.getBox(x, y))
-                if(board.getBox(x, y).getPiece() != null)
-                    break
-            }
-            else break
+        while (--y >= 0) {
+            val spot = board.getBox(x, y)
+            if (board.getBox(x, y).getPiece() != null)
+                break
+            else if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
+                options.add(spot)
+            else options.add(board.getBox(x, y))
+        }
 
         return options
 
@@ -88,51 +76,59 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
         var x = start.getX()
         var y = start.getY()
 
-        while (++x < 8)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() &&
-                board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS
-            ) {
-                options.add(board.getBox(x, y))
-                if(board.getBox(x, y).getPiece() != null)
-                    break
+        while (++x < 8){
+            val spot = board.getBox(x, y)
+            if(spot.getPiece() is Fortress)
+                break
+            else if (spot.getPiece()?.isWhite() == !isWhite()) {
+                options.add(spot)
+                break
             }
-            else break
+            else if (spot.getPiece() != null)
+                break
+        }
 
         x = start.getX()
 
-        while (++y < 8)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() &&
-                board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS
-            ) {
-                options.add(board.getBox(x, y))
-                if(board.getBox(x, y).getPiece() != null)
-                    break
+        while (++y < 8){
+            val spot = board.getBox(x, y)
+            if(spot.getPiece() is Fortress)
+                break
+            else if (spot.getPiece()?.isWhite() == !isWhite()) {
+                options.add(spot)
+                break
             }
-            else break
+            else if (spot.getPiece() != null)
+                break
+        }
 
         y = start.getY()
 
-        while (--x >= 0)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() &&
-                board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS
-            ) {
-                options.add(board.getBox(x, y))
-                if(board.getBox(x, y).getPiece() != null)
-                    break
+        while (--x >= 0){
+            val spot = board.getBox(x, y)
+            if(spot.getPiece() is Fortress)
+                break
+            else if (spot.getPiece()?.isWhite() == !isWhite()) {
+                options.add(spot)
+                break
             }
-            else break
+            else if (spot.getPiece() != null)
+                break
+        }
 
         x = start.getX()
 
-        while (--y >= 0)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() &&
-                board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS
-            ) {
-                options.add(board.getBox(x, y))
-                if(board.getBox(x, y).getPiece() != null)
-                    break
+        while (--y >= 0){
+            val spot = board.getBox(x, y)
+            if(spot.getPiece() is Fortress)
+                break
+            else if (spot.getPiece()?.isWhite() == !isWhite()) {
+                options.add(spot)
+                break
             }
-            else break
+            else if (spot.getPiece() != null)
+                break
+        }
 
         return options
     }

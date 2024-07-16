@@ -16,45 +16,33 @@ class Thief(white: Boolean) : Piece(white, PieceType.THIEF, 2, Int.MAX_VALUE) {
 
         while (++x <= start.getX() + 2)
             if(x < 8)
-                if(board.getBox(x, y).getPiece()?.isWhite() == null){
-                    options.add(board.getBox(x, y))
-                    if(board.getBox(x, y).getPiece() != null)
-                        break
-                }
-                else break
+                if(board.getBox(x, y).getPiece() != null)
+                    break
+                else options.add(board.getBox(x, y))
 
         x = start.getX()
 
         while (++y <= start.getY() + 2)
             if(y < 8)
-                if(board.getBox(x, y).getPiece()?.isWhite() == null){
-                    options.add(board.getBox(x, y))
-                    if(board.getBox(x, y).getPiece() != null)
-                        break
-                }
-                else break
+                if(board.getBox(x, y).getPiece() != null)
+                    break
+                else options.add(board.getBox(x, y))
 
         y = start.getY()
 
         while (--x >= start.getX() - 2)
             if(x >= 0)
-                if(board.getBox(x, y).getPiece()?.isWhite() == null){
-                    options.add(board.getBox(x, y))
-                    if(board.getBox(x, y).getPiece() != null)
-                        break
-                }
-                else break
+                if(board.getBox(x, y).getPiece() != null)
+                    break
+                else options.add(board.getBox(x, y))
 
         x = start.getX()
 
         while (--y >= start.getY() - 2)
             if(y >= 0)
-                if(board.getBox(x, y).getPiece()?.isWhite() == null){
-                    options.add(board.getBox(x, y))
-                    if(board.getBox(x, y).getPiece() != null)
-                        break
-                }
-                else break
+                if(board.getBox(x, y).getPiece() != null)
+                    break
+                else options.add(board.getBox(x, y))
 
         y = start.getY()
 
@@ -97,28 +85,28 @@ class Thief(white: Boolean) : Piece(white, PieceType.THIEF, 2, Int.MAX_VALUE) {
 
         //checking diagonals
         if (++x < 8 && ++y < 8)
-            if(board.getBox(x, y).getPiece() != null && board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS)
+            if(board.getBox(x, y).getPiece() !is Fortress && board.getBox(x, y).getPiece()?.isWhite() == !isWhite())
                 options.add(board.getBox(x, y))
 
         x = start.getX()
         y = start.getY()
 
         if(++x < 8 && --y >= 0)
-            if(board.getBox(x, y).getPiece() != null && board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS)
+            if(board.getBox(x, y).getPiece() !is Fortress && board.getBox(x, y).getPiece()?.isWhite() == !isWhite())
                 options.add(board.getBox(x, y))
 
         x = start.getX()
         y = start.getY()
 
         if(--x >= 0 && ++y < 8)
-            if(board.getBox(x, y).getPiece() != null && board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS)
+            if(board.getBox(x, y).getPiece() !is Fortress && board.getBox(x, y).getPiece()?.isWhite() == !isWhite())
                 options.add(board.getBox(x, y))
 
         x = start.getX()
         y = start.getY()
 
         if(--x >= 0 && --y >= 0)
-            if(board.getBox(x, y).getPiece() != null && board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS)
+            if(board.getBox(x, y).getPiece() !is Fortress && board.getBox(x, y).getPiece()?.isWhite() == !isWhite())
                 options.add(board.getBox(x, y))
 
         return options
@@ -135,26 +123,34 @@ class Thief(white: Boolean) : Piece(white, PieceType.THIEF, 2, Int.MAX_VALUE) {
         if(startX+2 == endX) {
             pawnSpot = board.getBox(startX + 1, startY)
             pawn = pawnSpot.getPiece()
-            if(pawn is Pawn)
-               pawnSpot.setPiece(Pawn(this.isWhite()))
+            if(pawn is Pawn) {
+                pawnSpot.setPiece(Pawn(this.isWhite()))
+                (pawnSpot.getPiece() as Pawn).setPawnMoved(true)
+            }
         }
         else if(startX-2 == endX) {
             pawnSpot = board.getBox(startX - 1, startY)
             pawn = pawnSpot.getPiece()
-            if(pawn is Pawn)
+            if(pawn is Pawn) {
                 pawnSpot.setPiece(Pawn(this.isWhite()))
+                (pawnSpot.getPiece() as Pawn).setPawnMoved(true)
+            }
         }
         else if(startY +2 == endY){
             pawnSpot = board.getBox(startX, startY+1)
             pawn = pawnSpot.getPiece()
-            if(pawn is Pawn)
+            if(pawn is Pawn) {
                 pawnSpot.setPiece(Pawn(this.isWhite()))
+                (pawnSpot.getPiece() as Pawn).setPawnMoved(true)
+            }
         }
         else if(startY -2 == endY){
             pawnSpot = board.getBox(startX, startY-1)
             pawn = pawnSpot.getPiece()
-            if(pawn is Pawn)
+            if(pawn is Pawn) {
                 pawnSpot.setPiece(Pawn(this.isWhite()))
+                (pawnSpot.getPiece() as Pawn).setPawnMoved(true)
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ package com.example.chessdelux.game
 import android.util.Log
 import com.example.chessdelux.board.Board
 import com.example.chessdelux.board.Spot
+import com.example.chessdelux.pieces.Pawn
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
@@ -35,24 +36,19 @@ class ComputerPlayer(whiteSide: Boolean) : Player(whiteSide, false){
 
     fun minimax(game: Game, board: Board, depth: Int, alpha: Int, beta: Int, maximizingPlayer: Boolean, maximizingColor: Boolean, value: Int = Int.MIN_VALUE): Pair<Pair<Spot, Spot>?, Int> {
         var valueN = value
-        var executionTime = measureTime{
-            if(valueN == Int.MIN_VALUE)
-                valueN = board.evaluate(maximizingColor)
-        }
-        Log.i("TimeMeasurements", "evaluate (minimax) time: $executionTime")
+        if(valueN == Int.MIN_VALUE)
+            valueN = board.evaluate(maximizingColor)
 
 
         if (depth == 0) {
             return Pair(null, valueN)
         }
-        var moves: MutableList<Pair<Spot, Spot>>?
-        executionTime = measureTime {
-            moves = board.getMoves(maximizingPlayer, board)
-        }
-        Log.i("TimeMeasurements", "getMoves (minimax) time: $executionTime")
+        var moves: MutableList<Pair<Spot, Spot>> = emptyList<Pair<Spot, Spot>>().toMutableList()
+        moves = board.getMoves(maximizingPlayer, board)
+
         var bestMove: Pair<Spot, Spot>? = null
-        if (moves?.isNotEmpty() == true) {
-            bestMove = moves!![Random.nextInt(moves!!.size)]
+        if (moves.isNotEmpty() == true) {
+            bestMove = moves[Random.nextInt(moves.size)]
         }
 
         var alphaVar = alpha
@@ -61,17 +57,26 @@ class ComputerPlayer(whiteSide: Boolean) : Player(whiteSide, false){
         if (maximizingPlayer) {
             var maxEval = Int.MIN_VALUE
             try {
-                for (move in moves!!) {
+                for (move in moves) {
+                    Log.i("ObscureMove", "depth: $depth")
+                    Log.i("ObscureMove", "minimax white problem move -> first: ${move.first.getPiece()?.getType()} ${move.first.getX()},${move.first.getY()}, second: ${move.second.getX()},${move.second.getY()}")
                     val start = move.first
                     val startPiece = start.getPiece()
+                    var moved : Boolean = false
+                    if (start.getPiece() is Pawn) {
+                        moved = (start.getPiece() as Pawn).isPawnMoved()
+                        (start.getPiece() as Pawn).setPawnMoved(true)
+                    }
                     val end = move.second
                     val endPiece = end.getPiece()
                     board.movePiece(move.first, move.second)
                     if(endPiece != null)
                         valueN += endPiece.getValue()
                     val currentEval =
-                        minimax(game, board, depth - 1, alpha, beta, false, maximizingColor, valueN).second
+                        minimax(game, board, depth - 1, alphaVar, betaVar, false, maximizingColor, valueN).second
                     start.setPiece(startPiece)
+                    if (start.getPiece() is Pawn)
+                        (start.getPiece() as Pawn).setPawnMoved(moved)
                     end.setPiece(endPiece)
                     end.getPiece()?.setKilled(false)
                     if(endPiece != null)
@@ -91,17 +96,26 @@ class ComputerPlayer(whiteSide: Boolean) : Player(whiteSide, false){
         } else {
             var minEval = Int.MAX_VALUE
             try {
-                for (move in moves!!) {
+                for (move in moves) {
+                    Log.i("ObscureMove", "depth: $depth")
+                    Log.i("ObscureMove", "minimax black problem move -> first: ${move.first.getPiece()?.getType()} ${move.first.getX()},${move.first.getY()}, second: ${move.second.getX()},${move.second.getY()}")
                     val start = move.first
                     val startPiece = start.getPiece()
+                    var moved : Boolean = false
+                    if (start.getPiece() is Pawn) {
+                        moved = (start.getPiece() as Pawn).isPawnMoved()
+                        (start.getPiece() as Pawn).setPawnMoved(true)
+                    }
                     val end = move.second
                     val endPiece = end.getPiece()
                     board.movePiece(move.first, move.second)
                     if(endPiece != null)
                         valueN -= endPiece.getValue()
                     val currentEval =
-                        minimax(game, board, depth - 1, alpha, beta, true, maximizingColor, valueN).second
+                        minimax(game, board, depth - 1, alphaVar, betaVar, true, maximizingColor, valueN).second
                     start.setPiece(startPiece)
+                    if (start.getPiece() is Pawn)
+                        (start.getPiece() as Pawn).setPawnMoved(moved)
                     end.setPiece(endPiece)
                     end.getPiece()?.setKilled(false)
                     if(endPiece != null)

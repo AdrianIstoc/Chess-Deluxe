@@ -40,11 +40,9 @@ class King(white: Boolean) : Piece(white, PieceType.KING, 90, Int.MAX_VALUE) {
         if(checkIfKingInCheck(board, start)){
             val fortressSpots = board.getFortressSpots(this.isWhite())
             for (fortressSpot in fortressSpots){
-                val fortressX = fortressSpot.getX()
-                val fortressY = fortressSpot.getY()
                 // check if the king will be in check after the move
-                if(!checkIfKingMoveInCheck(board, board.getBox(fortressX, fortressY)))
-                    options.add(board.getBox(fortressX, fortressY))
+                if(!checkIfKingMoveInCheck(board, fortressSpot))
+                    options.add(fortressSpot)
             }
         }
 
@@ -52,13 +50,12 @@ class King(white: Boolean) : Piece(white, PieceType.KING, 90, Int.MAX_VALUE) {
         // normal moves
         for ((dx, dy) in directions) {
             if (x+dx in 0 .. 7 && y+dy in 0 .. 7){
+                val spot = board.getBox(x+dx, y+dy)
                 // check arrival spot to not be a fortress
-                if(board.getBox(x + dx, y + dy).getPiece()?.getType() != PieceType.FORTRESS)
-                    // check arrival spot to not be a white piece
-                    if (board.getBox(x + dx, y + dy).getPiece()?.isWhite() != isWhite())
-                        // check if the king will be in check after the move
-                        if(!checkIfKingMoveInCheck(board, board.getBox(x + dx, y + dy)))
-                            options.add(board.getBox(x + dx, y + dy))
+                if(spot.getPiece() == null)
+                    // check if the king will be in check after the move
+                    if(!checkIfKingMoveInCheck(board, spot))
+                        options.add(spot)
             }
         }
 
@@ -132,13 +129,14 @@ class King(white: Boolean) : Piece(white, PieceType.KING, 90, Int.MAX_VALUE) {
         // normal moves
         for ((dx, dy) in directions) {
             if (x+dx in 0 .. 7 && y+dy in 0 .. 7){
+                val spot = board.getBox(x+dx, y+dy)
                 // check arrival spot to not be a fortress
-                if(board.getBox(x + dx, y + dy).getPiece()?.getType() != PieceType.FORTRESS)
+                if(spot.getPiece() !is Fortress)
                     // check arrival spot to not be a white piece
-                    if (board.getBox(x + dx, y + dy).getPiece()?.isWhite() != isWhite())
+                    if (spot.getPiece()?.isWhite() == !isWhite())
                         // check if the king will be in check after the move
-                        if(!checkIfKingMoveInCheck(board, board.getBox(x + dx, y + dy)))
-                            options.add(board.getBox(x + dx, y + dy))
+                        if(!checkIfKingMoveInCheck(board, spot))
+                            options.add(spot)
             }
         }
 

@@ -36,8 +36,12 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 10) {
     }
 
     // set if pawn moved at least once
-    fun setPawnMoved() {
-        pawnMoved = true
+    fun setPawnMoved(moved: Boolean) {
+        pawnMoved = moved
+    }
+
+    fun isPawnMoved():Boolean{
+        return pawnMoved
     }
 
     // return the pawn possible moves
@@ -47,15 +51,15 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 10) {
         val direction = if (isWhite()) -1 else 1
 
         // check if the pawn can move one space forward
-        if(start.getX()+direction in 0 .. 7 &&
-            board.getBox(start.getX() + direction, start.getY()).getPiece() == null)
-            options.add(board.getBox(start.getX() + direction, start.getY()))
+        if(start.getX()+direction in 0 .. 7) {
+            val spot = board.getBox(start.getX() + direction, start.getY())
+            if (spot.getPiece() == null)
+                options.add(spot)
+        }
 
         // check if the pawn can move two spaces forward if it hasn't moved yet
         if(!pawnMoved && board.getBox(start.getX() + 2 * direction, start.getY()).getPiece() == null && board.getBox(start.getX()+direction, start.getY()).getPiece() == null)
             options.add(board.getBox(start.getX() + 2 * direction, start.getY()))
-
-
 
         return options
     }
@@ -65,24 +69,29 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 10) {
         val options = mutableListOf<Spot>()
         // set the direction of the pawn based on the color
         val direction = if (isWhite()) -1 else 1
+        val x = start.getX()
+        val y = start.getY()
+        var spot: Spot?
 
         // check if the pawn can capture a piece in the right
-        if(start.getX()+direction in 0 .. 7 &&
-            start.getY()+1 in 0 .. 7 &&
-            board.getBox(start.getX() +direction, start.getY()+1).getPiece() != null &&
-            board.getBox(start.getX() +direction, start.getY()+1).getPiece()?.isWhite() != isWhite() &&
-            board.getBox(start.getX() +direction, start.getY()+1).getPiece()?.getType() != PieceType.FORTRESS
+        if(start.getX()+direction in 0 .. 7 && start.getY()+1 in 0 .. 7) {
+            spot = board.getBox(start.getX() + direction, start.getY() + 1)
+            if (spot.getPiece() != null &&
+                spot.getPiece()?.isWhite() == !isWhite() &&
+                spot.getPiece() !is Fortress
             )
-            options.add(board.getBox(start.getX() +direction, start.getY()+1))
+                options.add(spot)
+        }
 
         // check if the pawn can capture a piece in the left
-        if(start.getX()+direction in 0 .. 7 &&
-            start.getY()-1 in 0 .. 7 &&
-            board.getBox(start.getX() +direction, start.getY()-1).getPiece() != null &&
-            board.getBox(start.getX() +direction, start.getY()-1).getPiece()?.isWhite() != isWhite() &&
-            board.getBox(start.getX() +direction, start.getY()-1).getPiece()?.getType() != PieceType.FORTRESS
+        if(start.getX()+direction in 0 .. 7 && start.getY()-1 in 0 .. 7) {
+            spot = board.getBox(start.getX() + direction, start.getY() - 1)
+            if (spot.getPiece() != null &&
+                spot.getPiece()?.isWhite() == !isWhite() &&
+                spot.getPiece() !is Fortress
             )
-            options.add(board.getBox(start.getX() +direction, start.getY()-1))
+                options.add(spot)
+        }
 
 
         // check if a white pawn can en passant to the left
@@ -113,7 +122,7 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 10) {
     }
 
     // promote the pawn
-    fun checkIfPawnPromoting(end: Spot, context: MainActivity, cellSize: Int, board: Board, chessboard: GridLayout) {
+    fun checkIfPawnPromoting(end: Spot, context: MainActivity, cellSize: Int, board: Board, chessboard: GridLayout){
         val pawn = end.getPiece() as Pawn
         if((end.getX() == 0 && pawn.isWhite()) || (end.getX() == 7 && !pawn.isWhite())){
             val builder = AlertDialog.Builder(context)

@@ -114,20 +114,15 @@ class Board {
             for (j in 0 until 8)
                 boxes[i][j] = Spot(i, j, null)
 
-        boxes [3][3] = Spot(3,3,Pawn(false))
-        boxes [3][4] = Spot(3,4,Pawn(false))
-        boxes [3][5] = Spot(3,5,Pawn(false))
-        boxes [3][6] = Spot(3,6,Pawn(false))
-        boxes [4][3] = Spot(4,3,Pawn(false))
-        boxes [4][4] = Spot(4,4,Pawn(false))
-        boxes [4][5] = Spot(4,5,Pawn(false))
-        boxes [4][6] = Spot(4,6,Pawn(false))
+        boxes[0][0] = Spot(0, 0, King(false))
+        boxes[0][7] = Spot(0, 7, King(true))
 
-        boxes [6][4] = Spot(6, 4, Thief(true))
-        boxes [6][5] = Spot(6, 5, Thief(true))
+        boxes[4][3] = Spot(4, 3, Knight(true))
 
-        boxes [0][0] = Spot(0, 0, King(false))
-        boxes [0][7] = Spot(0,7, King(true))
+        boxes[3][2] = Spot(3, 2, Pawn(true))
+        boxes[5][2] = Spot(5, 2, Pawn(false))
+        boxes[2][5] = Spot(2, 5, Fortress(true))
+        boxes[6][5] = Spot(6, 5, Fortress(false))
     }
 
 

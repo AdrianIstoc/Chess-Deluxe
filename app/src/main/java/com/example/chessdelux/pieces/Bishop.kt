@@ -20,45 +20,33 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3, Int.MAX_VALUE) 
         // checking all diagonals
         // also stopping at a black piece or before a white piece
         while (++x < 8 && ++y < 8)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS) {
-                options.add(board.getBox(x, y))
-                if(board.getBox(x, y).getPiece() != null)
-                    break
-            }
-            else break
+            if(board.getBox(x, y).getPiece() != null)
+                break
+            else options.add(board.getBox(x, y))
 
         x = start.getX()
         y = start.getY()
 
         while (++x < 8 && --y >= 0)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS) {
-                options.add(board.getBox(x, y))
-                if(board.getBox(x, y).getPiece() != null)
-                    break
-            }
-            else break
+            if(board.getBox(x, y).getPiece() != null)
+                break
+            else options.add(board.getBox(x, y))
 
         x = start.getX()
         y = start.getY()
 
         while (--x >= 0 && ++y < 8)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS) {
-                options.add(board.getBox(x, y))
-                if(board.getBox(x, y).getPiece() != null)
-                    break
-            }
-            else break
+            if(board.getBox(x, y).getPiece() != null)
+                break
+            else options.add(board.getBox(x, y))
 
         x = start.getX()
         y = start.getY()
 
         while (--x >= 0 && --y >= 0)
-            if(board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS) {
-                options.add(board.getBox(x, y))
-                if(board.getBox(x, y).getPiece() != null)
-                    break
-            }
-            else break
+            if(board.getBox(x, y).getPiece() != null)
+                break
+            else options.add(board.getBox(x, y))
 
         return options
     }
@@ -72,42 +60,62 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3, Int.MAX_VALUE) 
         // checking all diagonals
         // also stopping at a black piece or before a white piece
 
-        while (++x < 8 && ++y < 8)
-            if (board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS) {
-                options.add(board.getBox(x, y))
-                if (board.getBox(x, y).getPiece() != null)
-                    break
-            } else break
+        while (++x < 8 && ++y < 8){
+            val spot = board.getBox(x, y)
+            if(spot.getPiece() is Fortress)
+                break
+            else if (spot.getPiece()?.isWhite() == !isWhite()) {
+                options.add(spot)
+                break
+            }
+            else if (spot.getPiece() != null)
+                break
+        }
 
         x = start.getX()
         y = start.getY()
 
-        while (++x < 8 && --y >= 0)
-            if (board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS) {
-                options.add(board.getBox(x, y))
-                if (board.getBox(x, y).getPiece() != null)
-                    break
-            } else break
+        while (++x < 8 && --y >= 0){
+            val spot = board.getBox(x, y)
+            if(spot.getPiece() is Fortress)
+                break
+            else if (spot.getPiece()?.isWhite() == !isWhite()) {
+                options.add(spot)
+                break
+            }
+            else if (spot.getPiece() != null)
+                break
+        }
 
         x = start.getX()
         y = start.getY()
 
-        while (--x >= 0 && ++y < 8)
-            if (board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS) {
-                options.add(board.getBox(x, y))
-                if (board.getBox(x, y).getPiece() != null)
-                    break
-            } else break
+        while (--x >= 0 && ++y < 8){
+            val spot = board.getBox(x, y)
+            if(spot.getPiece() is Fortress)
+                break
+            else if (spot.getPiece()?.isWhite() == !isWhite()) {
+                options.add(spot)
+                break
+            }
+            else if (spot.getPiece() != null)
+                break
+        }
 
         x = start.getX()
         y = start.getY()
 
-        while (--x >= 0 && --y >= 0)
-            if (board.getBox(x, y).getPiece()?.isWhite() != isWhite() && board.getBox(x, y).getPiece()?.getType() != PieceType.FORTRESS) {
-                options.add(board.getBox(x, y))
-                if (board.getBox(x, y).getPiece() != null)
-                    break
-            } else break
+        while (--x >= 0 && --y >= 0){
+            val spot = board.getBox(x, y)
+            if(spot.getPiece() is Fortress)
+                break
+            else if (spot.getPiece()?.isWhite() == !isWhite()) {
+                options.add(spot)
+                break
+            }
+            else if (spot.getPiece() != null)
+                break
+        }
 
         return options
     }
