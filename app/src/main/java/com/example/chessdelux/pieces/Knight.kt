@@ -3,9 +3,12 @@ package com.example.chessdelux.pieces
 import com.example.chessdelux.R
 import com.example.chessdelux.board.*
 
-class Knight(white: Boolean) : Piece(white, PieceType.KNIGHT, 3) {
+class Knight(white: Boolean) : Piece(white, PieceType.KNIGHT, 3, Int.MAX_VALUE) {
     // the knight image
     override var imageResource: Int? = if (white) R.drawable.knight_white else R.drawable.knight_black
+
+    override val evolutionOptions: List<PieceType> = listOf()
+
 
     // return the knight possible moves
         override fun moveOptions(board: Board, start: Spot): MutableList<Spot> {

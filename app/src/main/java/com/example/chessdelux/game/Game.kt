@@ -32,6 +32,7 @@ class Game {
 
         board.resetBoard()                              // reset the board for a fresh start
         //board.testWin()
+
         currentTurn = if (p1.isWhiteSide()) {           // set the current player
             p1
         } else {
@@ -52,7 +53,7 @@ class Game {
     }
 
     // update the current piece spot
-    private fun updateCurrentPieceSpot() {
+    private fun updateCurrentPieceSpot(context: MainActivity, chessboard: GridLayout) {
         currentPieceSpot?.getPiece()?.setSelected(false)    // deselect the piece
         currentPieceSpot = null                             // reset the current piece spot
 
@@ -60,7 +61,13 @@ class Game {
         // check if selected spot has a piece of the current player
         if (selectedSpot != null && selectedSpot?.getPiece()?.isWhite() == currentTurn.isWhiteSide()) {
             currentPieceSpot = selectedSpot                 // set current piece spot as the selected spot
-            currentPieceSpot?.getPiece()?.setSelected(true) // set the piece as selected
+            val currentPiece = currentPieceSpot?.getPiece()
+            if(currentPiece != null) {
+                currentPiece.setSelected(true) // set the piece as selected
+                if(currentPiece.readyToEvolve()){
+                    currentPieceSpot?.let { currentPiece.checkIfPieceEvolves(it, context, cellSize, board, chessboard) }
+                }
+            }
         }
     }
 
@@ -102,57 +109,38 @@ class Game {
                     cell.setOnClickListener {
                         // set the selected spot
                         try {
-                            val executionTime = measureTime {
-                                setSelectedSpot(i, j)
-                            }
-                            Log.i("TimeMeasurements", "setSelectedSpot time: $executionTime")
+                            setSelectedSpot(i, j)
                         } catch (e: Exception) {
                             Log.e("ObscureMove", "setSelectedSpot problem e -> ${e.message}")
                         }
                         // check if the selected spot indicated a player moving a piece
                         try {
-                            val executionTime = measureTime {
-                                if(currentPieceSpot != null)
-                                    checkIfPlayerMoves(context, chessboard, currentPieceSpot!!, selectedSpot!!)
-                            }
-                            Log.i("TimeMeasurements", "checkIfPlayerMoves time: $executionTime")
+                            if(currentPieceSpot != null)
+                                checkIfPlayerMoves(context, chessboard, currentPieceSpot!!, selectedSpot!!)
                         } catch (e: Exception) {
                             Log.e("ObscureMove", "checkIfPlayerMoves problem e -> ${e.message}")
                         }
                         // update the game
                         try {
-                            val executionTime = measureTime{
-                                updateCurrentPieceSpot()
-                            }
-                            Log.i("TimeMeasurements", "updateCurrentPieceSpot time: $executionTime")
+                            updateCurrentPieceSpot(context, chessboard)
                         } catch (e: Exception) {
                             Log.e("ObscureMove", "updateCurrentPieceSpot problem e -> ${e.message}")
                         }
                         // selects the current piece spot as the selected spot
                         try {
-                            val executionTime = measureTime{
-                                setPossibleMoves()
-                            }
-                            Log.i("TimeMeasurements", "setPossibleMoves time: $executionTime")
+                            setPossibleMoves()
                         } catch (e: Exception) {
                             Log.e("ObscureMove", "setPossibleMoves problem e -> ${e.message}")
                         }
                         // updates the colors of the chessboard to indicate the possible moves of the selected piece
-                        var executionTime = measureTime{
-                            changeBoardOnSelection(chessboard, context)
-                        }
-                        Log.i("TimeMeasurements", "changeBoardOnSelection time: $executionTime")
+                        changeBoardOnSelection(chessboard, context)
+
                         // renders the pieces
-                        executionTime = measureTime{
-                            renderPieces(chessboard, board)
-                        }
-                        Log.i("TimeMeasurements", "renderPieces time: $executionTime")
+                        renderPieces(chessboard, board)
+
                         // check if any player won
                         try{
-                            executionTime = measureTime{
-                                checkWin(context)
-                            }
-                            Log.i("TimeMeasurements", "checkWin time: $executionTime")
+                            checkWin(context)
                         }catch (e: Exception){
                             Log.e("ObscureMove", "checkWin problem e -> ${e.message}")
                         }
@@ -160,9 +148,7 @@ class Game {
                         if(currentTurn is ComputerPlayer){
                             Handler(Looper.getMainLooper()).postDelayed({
                                 try {
-                                    var move: Pair<Spot, Spot>?
-                                    val executionTime = measureTime {
-                                        move = (this.currentTurn as ComputerPlayer).minimax(
+                                    val move = (this.currentTurn as ComputerPlayer).minimax(
                                             this,
                                             board,
                                             (currentTurn as ComputerPlayer).getDifficulty(),
@@ -171,11 +157,9 @@ class Game {
                                             currentTurn.isWhiteSide(),
                                             currentTurn.isWhiteSide()
                                         ).first
-                                    }
-                                    Log.i("TimeMeasurements", "minimax time: $executionTime")
                                     if (move != null) {
-                                        val start = move!!.first
-                                        val end = move!!.second
+                                        val start = move.first
+                                        val end = move.second
                                         checkIfPlayerMoves(context, chessboard, start, end)
 
                                     }
@@ -195,6 +179,8 @@ class Game {
 
     private fun checkWin(context: MainActivity) {
         val white = currentTurn.isWhiteSide()
+        val king = board.getKingSpot(white).getPiece() as King
+
         var options = 0
         for (i in 0 until 8)
             for (j in 0 until 8){
@@ -209,8 +195,8 @@ class Game {
             }
 
         if(options == 0){
+            king.checkIfKingInCheck(board, board.getKingSpot(white))
             val textView = context.findViewById<TextView>(R.id.game_text)
-            val king = board.getKingSpot(currentTurn.isWhiteSide()).getPiece() as King
             if(king.isInCheck())
                 textView.text = if (!white) "White won" else "Black won"
             else
@@ -234,6 +220,10 @@ class Game {
     private fun checkIfPlayerMoves(context: MainActivity, chessboard: GridLayout, start: Spot, end: Spot) {
         if((checkValidMove() && currentTurn.isHumanPlayer()) || currentTurn is ComputerPlayer){           // check if the selected spot is one of the move options of the current piece
             val piece = start.getPiece()
+            val endPiece = end.getPiece()
+            val endPieceValue = endPiece?.getValue() ?: 0
+
+
             if (piece != null) {
                 resetPawnSkipped(piece.isWhite())
             }
@@ -256,10 +246,14 @@ class Game {
             if(piece is Rook)
                 piece.checkIfFortressing(start, end)
 
+            if(piece is Thief)
+                piece.checkIfStealing(start, end, board)
 
             // move piece
             board.movePiece(start, end)
+            piece?.addExp(endPieceValue)
             setMoveIndication(start, end)
+            addExpPerTurn()
 
             // change the turn of the players
             currentTurn = if (currentTurn.isWhiteSide()) {
@@ -271,6 +265,14 @@ class Game {
             if(piece is Pawn)
                 piece.checkIfPawnPromoting(end, context, cellSize, board, chessboard)
         }
+    }
+
+    private fun addExpPerTurn() {
+        for (i in 0 until 8)
+            for (j in 0 until 8){
+                val piece = board.getBox(i, j).getPiece()
+                piece?.addExp(1)
+            }
     }
 
 
@@ -385,6 +387,7 @@ fun makePiece(pieceType: PieceType, white: Boolean): Piece {
         PieceType.KNIGHT -> if (white) Knight(true) else Knight(false)
         PieceType.BISHOP -> if (white) Bishop(true) else Bishop(false)
         PieceType.QUEEN -> if (white) Queen(true) else Queen(false)
+        PieceType.THIEF -> if (white) Thief(true) else Thief(false)
         else -> if (white) Pawn(true) else Pawn(false)
     }
 }

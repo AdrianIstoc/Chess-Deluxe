@@ -9,12 +9,14 @@ import com.example.chessdelux.R
 import com.example.chessdelux.game.*
 import kotlin.math.abs
 
-class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1) {
+class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 10) {
     // the pawn image
     override var imageResource: Int? = if (white) R.drawable.pawn_white else R.drawable.pawn_black
 
     // list of promote options
     private val promoteOptions = listOf(PieceType.KNIGHT, PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN)
+
+    override val evolutionOptions = listOf(PieceType.ASSASSIN, PieceType.THIEF)
 
     // pawn moved at least once
     private var pawnMoved = false
@@ -26,6 +28,7 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1) {
     private fun getPromoteOptions(): List<PieceType> {
         return promoteOptions
     }
+
 
     // set if pawn moved two spaces last turn
     fun setPawnSkipped(skipped: Boolean){
@@ -118,8 +121,9 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1) {
             builder.setView(popUpView)
             builder.setCancelable(false)
 
+            val promotions = pawn.getPromoteOptions()
             val grid = popUpView.findViewById<GridLayout>(R.id.popup_grid)
-            grid?.let { createPopUp(it, pawn.getPromoteOptions(), pawn.isWhite(), context, cellSize) }
+            grid?.let { createPopUp(it, promotions, pawn.isWhite(), context, cellSize) }
 
             val dialog = builder.create()
             try{
@@ -133,13 +137,7 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1) {
                     try{
                         val child = grid.getChildAt(i * grid.columnCount + j)
                         child.setOnClickListener {
-                            val pieceType = when (i * grid.columnCount + j) {
-                                0 -> PieceType.KNIGHT
-                                1 -> PieceType.BISHOP
-                                2 -> PieceType.ROOK
-                                3 -> PieceType.QUEEN
-                                else -> PieceType.PAWN
-                            }
+                            val pieceType = promotions[i * grid.columnCount + j]
                             val piece = makePiece(pieceType, pawn.isWhite())
                             board.getBox(end.getX(), end.getY()).setPiece(piece)
                             // render pieces after any move for a better preview when a piece changes types

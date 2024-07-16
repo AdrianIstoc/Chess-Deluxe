@@ -3,11 +3,13 @@ package com.example.chessdelux.pieces
 import com.example.chessdelux.R
 import com.example.chessdelux.board.*
 
-class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5) {
+class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
     override var imageResource: Int? = if (white) R.drawable.rook_white else R.drawable.rook_black
 
-    var rookMoved = false
-        private set
+    override val evolutionOptions: List<PieceType> = listOf()
+
+
+    private var rookMoved = false
 
     fun setRookMoved() {
         this.rookMoved = true

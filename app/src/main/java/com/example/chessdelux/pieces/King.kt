@@ -5,9 +5,11 @@ import com.example.chessdelux.R
 import com.example.chessdelux.board.*
 import kotlin.math.abs
 
-class King(white: Boolean) : Piece(white, PieceType.KING, 90) {
+class King(white: Boolean) : Piece(white, PieceType.KING, 90, Int.MAX_VALUE) {
     // the king image
     override var imageResource: Int? = if (white) R.drawable.king_white else R.drawable.king_black
+
+    override val evolutionOptions: List<PieceType> = listOf()
 
     // king in check
     private var isInCheck = false

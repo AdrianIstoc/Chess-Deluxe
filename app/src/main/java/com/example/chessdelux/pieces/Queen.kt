@@ -3,8 +3,10 @@ package com.example.chessdelux.pieces
 import com.example.chessdelux.R
 import com.example.chessdelux.board.*
 
-class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9) {
+class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, Int.MAX_VALUE) {
     override var imageResource: Int? = if (white) R.drawable.queen_white else R.drawable.queen_black
+
+    override val evolutionOptions: List<PieceType> = listOf()
 
     override fun moveOptions(board: Board, start: Spot): MutableList<Spot> {
         val options = mutableListOf<Spot>()

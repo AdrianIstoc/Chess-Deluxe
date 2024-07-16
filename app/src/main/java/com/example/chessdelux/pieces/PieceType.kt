@@ -7,5 +7,7 @@ enum class PieceType {
     BISHOP,
     QUEEN,
     KING,
-    FORTRESS
+    FORTRESS,
+    ASSASSIN,
+    THIEF
 }
