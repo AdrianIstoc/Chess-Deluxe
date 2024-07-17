@@ -65,7 +65,7 @@ class Game {
             val currentPiece = currentPieceSpot?.getPiece()
             if(currentPiece != null) {
                 currentPiece.setSelected(true) // set the piece as selected
-                if(canEvolve && currentPiece.readyToEvolve()){
+                if(canEvolve && currentPiece.readyToEvolve() && !(currentPiece is Pawn && currentPiece.isPromoting())){
                     currentPieceSpot?.let { currentPiece.checkIfPieceEvolves(it, context, cellSize, board, chessboard) { canEvolve = false } }
                 }
             }
@@ -92,7 +92,6 @@ class Game {
                 }
                 cell.setBackgroundColor(if ((i + j) % 2 == 0) white else black)
                 chessboard.addView(cell)
-
             }
         }
         // renders the pieces again for some reason
@@ -256,18 +255,30 @@ class Game {
 
             // move piece
             board.movePiece(start, end)
-
+            piece?.addExp(endPieceValue)
+            setMoveIndication(start, end)
+            addExpPerTurn()
 
             if(piece is Pawn){
-                piece.checkIfPawnPromoting(end, context, cellSize, board, chessboard) {
-                    // change the turn of the players
-                    currentTurn = if (currentTurn.isWhiteSide()) {
+                if(currentTurn is ComputerPlayer)
+                    piece.checkIfPawnPromoting(end, context, cellSize, board, chessboard) {
+                        // change the turn of the players
+                        currentTurn = if (currentTurn.isWhiteSide()) {
+                            players[1]!!
+                        } else {
+                            players[0]!!
+                        }
+                        canEvolve=true
+                        triggerComputerTurn(context, chessboard)
+                    }
+                else{
+                    piece.checkIfPawnPromoting(end, context, cellSize, board, chessboard) {}
+                    currentTurn = if(currentTurn.isWhiteSide()) {
                         players[1]!!
-                    } else {
+                    }else{
                         players[0]!!
                     }
-                    canEvolve=true
-                    triggerComputerTurn(context, chessboard)
+                    canEvolve = true
                 }
                 val kingSpot = board.getKingSpot(!currentTurn.isWhiteSide())
                 (kingSpot.getPiece() as King).checkIfKingInCheck(board, kingSpot)
@@ -282,9 +293,6 @@ class Game {
                 canEvolve=true
             }
 
-            piece?.addExp(endPieceValue)
-            setMoveIndication(start, end)
-            addExpPerTurn()
         }
     }
 
@@ -409,14 +417,18 @@ fun makePiece(pieceType: PieceType, white: Boolean): Piece {
         PieceType.BISHOP -> if (white) Bishop(true) else Bishop(false)
         PieceType.QUEEN -> if (white) Queen(true) else Queen(false)
         PieceType.THIEF -> if (white) Thief(true) else Thief(false)
+        PieceType.ASSASSIN -> if (white) Assassin(true) else Assassin(false)
         else -> if (white) Pawn(true) else Pawn(false)
     }
 }
 
 // render the pieces on the board
 fun renderPieces(chessboard: GridLayout, board: Board) {
+    var string: String = ""
     for (i in 0 until 8) {
+        string = ""
         for (j in 0 until 8) {
+            string += "${board.getBox(i,j).getPiece()?.getExp()}, "
             val cell = chessboard.getChildAt(i * 8 + j) as ImageView
             val piece = board.getBox(i, j).getPiece()
             // check if the piece exists
@@ -427,6 +439,7 @@ fun renderPieces(chessboard: GridLayout, board: Board) {
                 cell.setImageResource(0)
             }
         }
+        Log.i("ExpCheck", "line $i: ${string}\n")
     }
 
 }

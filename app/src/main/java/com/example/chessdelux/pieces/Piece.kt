@@ -19,7 +19,7 @@ abstract class Piece(private var white: Boolean, private var type: PieceType, pr
     abstract val evolutionOptions: List<PieceType>
 
     fun readyToEvolve():Boolean{
-        return exp>=expCap
+        return exp >= expCap
     }
 
     fun addExp(xp: Int){
@@ -28,6 +28,10 @@ abstract class Piece(private var white: Boolean, private var type: PieceType, pr
 
     fun getValue(): Int{
         return value
+    }
+
+    fun getExp(): Int{
+        return exp
     }
 
     // return if the piece is selected

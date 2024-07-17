@@ -9,10 +9,10 @@ import com.example.chessdelux.R
 import com.example.chessdelux.game.*
 import kotlin.math.abs
 
-class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 10) {
+class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 15) {
     // the pawn image
     override var imageResource: Int? = if (white) R.drawable.pawn_white else R.drawable.pawn_black
-
+    private var promoting = false
     // list of promote options
     private val promoteOptions = listOf(PieceType.KNIGHT, PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN)
 
@@ -23,6 +23,14 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 10) {
 
     // pawn had moved two spaces last turn
     private var pawnSkipped = false
+
+    fun isPromoting(): Boolean {
+        return promoting
+    }
+
+    fun setPromoting(promoting: Boolean) {
+        this.promoting = promoting
+    }
 
     // returns the list of promote options
     private fun getPromoteOptions(): List<PieceType> {

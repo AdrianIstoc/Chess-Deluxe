@@ -4,7 +4,7 @@ import com.example.chessdelux.R
 import com.example.chessdelux.board.Board
 import com.example.chessdelux.board.Spot
 
-class Thief(white: Boolean) : Piece(white, PieceType.THIEF, 2, Int.MAX_VALUE) {
+class Thief(white: Boolean) : Piece(white, PieceType.THIEF, 4, Int.MAX_VALUE) {
     override var imageResource: Int? = if (white) R.drawable.thief_white else R.drawable.thief_black
 
     override val evolutionOptions: List<PieceType> = listOf()
