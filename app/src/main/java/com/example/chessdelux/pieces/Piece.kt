@@ -70,7 +70,7 @@ abstract class Piece(private var white: Boolean, private var type: PieceType, pr
         return type
     }
 
-    fun checkIfPieceEvolves(spot: Spot, context: MainActivity, cellSize: Int, board: Board, chessboard: GridLayout){
+    fun checkIfPieceEvolves(spot: Spot, context: MainActivity, cellSize: Int, board: Board, chessboard: GridLayout, onEvolutionSelected: () -> Unit){
         val builder = AlertDialog.Builder(context)
         val popUpView = context.createPopUpView()
         builder.setView(popUpView)
@@ -96,6 +96,7 @@ abstract class Piece(private var white: Boolean, private var type: PieceType, pr
                         board.getBox(spot.getX(), spot.getY()).setPiece(piece)
                         renderPieces(chessboard, board)
                         dialog.dismiss()
+                        onEvolutionSelected()
                     }
                 }catch (e: Exception){
                     Log.e("ObscureMovement", "setOnClickListener (checkIfPieceEvolves) problem e -> ${e.message}")

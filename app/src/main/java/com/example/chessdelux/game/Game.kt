@@ -15,6 +15,7 @@ import com.example.chessdelux.pieces.*
 import kotlin.time.measureTime
 
 class Game {
+    private var canEvolve: Boolean = true               // a player can evolve a piece once per turn
     private val players = arrayOfNulls<Player>(2)  // array of players
     private var board: Board = Board()                  // board; is filled with cells
     private lateinit var currentTurn: Player            // current player
@@ -64,8 +65,8 @@ class Game {
             val currentPiece = currentPieceSpot?.getPiece()
             if(currentPiece != null) {
                 currentPiece.setSelected(true) // set the piece as selected
-                if(currentPiece.readyToEvolve()){
-                    currentPieceSpot?.let { currentPiece.checkIfPieceEvolves(it, context, cellSize, board, chessboard) }
+                if(canEvolve && currentPiece.readyToEvolve()){
+                    currentPieceSpot?.let { currentPiece.checkIfPieceEvolves(it, context, cellSize, board, chessboard) { canEvolve = false } }
                 }
             }
         }
@@ -146,35 +147,39 @@ class Game {
                         }
 
                         if(currentTurn is ComputerPlayer){
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                try {
-                                    val move = (this.currentTurn as ComputerPlayer).minimax(
-                                            this,
-                                            board,
-                                            (currentTurn as ComputerPlayer).getDifficulty(),
-                                            Int.MIN_VALUE,
-                                            Int.MAX_VALUE,
-                                            currentTurn.isWhiteSide(),
-                                            currentTurn.isWhiteSide()
-                                        ).first
-                                    if (move != null) {
-                                        val start = move.first
-                                        val end = move.second
-                                        checkIfPlayerMoves(context, chessboard, start, end)
-
-                                    }
-                                } catch (e: Exception) {
-                                    Log.e("ObscureMove", "minimax problem e -> ${e.message}")
-                                }
-                                Log.i("ObscureMove", "Computer turn done")
-                                changeBoardOnSelection(chessboard, context)
-                                renderPieces(chessboard, board)
-                                checkWin(context)
-                            }, 500)
+                            triggerComputerTurn(context, chessboard)
                         }
                     }
                 }
             }
+    }
+
+    private fun triggerComputerTurn(context: MainActivity, chessboard: GridLayout) {
+        Handler(Looper.getMainLooper()).postDelayed({
+            try {
+                val move = (this.currentTurn as ComputerPlayer).minimax(
+                    this,
+                    board,
+                    (currentTurn as ComputerPlayer).getDifficulty(),
+                    Int.MIN_VALUE,
+                    Int.MAX_VALUE,
+                    currentTurn.isWhiteSide(),
+                    currentTurn.isWhiteSide()
+                ).first
+                if (move != null) {
+                    val start = move.first
+                    val end = move.second
+                    checkIfPlayerMoves(context, chessboard, start, end)
+
+                }
+            } catch (e: Exception) {
+                Log.e("ObscureMove", "minimax problem e -> ${e.message}")
+            }
+            Log.i("ObscureMove", "Computer turn done")
+            changeBoardOnSelection(chessboard, context)
+            renderPieces(chessboard, board)
+            checkWin(context)
+        }, 500)
     }
 
     private fun checkWin(context: MainActivity) {
@@ -251,22 +256,35 @@ class Game {
 
             // move piece
             board.movePiece(start, end)
+
+
+            if(piece is Pawn){
+                piece.checkIfPawnPromoting(end, context, cellSize, board, chessboard) {
+                    // change the turn of the players
+                    currentTurn = if (currentTurn.isWhiteSide()) {
+                        players[1]!!
+                    } else {
+                        players[0]!!
+                    }
+                    canEvolve=true
+                    triggerComputerTurn(context, chessboard)
+                }
+                val kingSpot = board.getKingSpot(!currentTurn.isWhiteSide())
+                (kingSpot.getPiece() as King).checkIfKingInCheck(board, kingSpot)
+            }
+            else {
+                // change the turn of the players
+                currentTurn = if (currentTurn.isWhiteSide()) {
+                    players[1]!!
+                } else {
+                    players[0]!!
+                }
+                canEvolve=true
+            }
+
             piece?.addExp(endPieceValue)
             setMoveIndication(start, end)
             addExpPerTurn()
-
-            // change the turn of the players
-            currentTurn = if (currentTurn.isWhiteSide()) {
-                players[1]!!
-            } else {
-                players[0]!!
-            }
-
-            if(piece is Pawn){
-                piece.checkIfPawnPromoting(end, context, cellSize, board, chessboard)
-                val kingSpot = board.getKingSpot(currentTurn.isWhiteSide())
-                (kingSpot.getPiece() as King).checkIfKingInCheck(board, kingSpot)
-            }
         }
     }
 
@@ -461,6 +479,22 @@ fun checkIfMovePutsPlayerInCheck(start: Spot, end: Spot, board: Board, currentTu
     val startPiece = start.getPiece()               // save the piece that wants to move
     val endPiece = end.getPiece()                   // save the piece (if any) on the targeted spot
     board.movePiece(start, end)                     // moves the piece
+    if(startPiece is Thief){
+        if(endPiece == null){
+            val sx = start.getX()
+            val sy = start.getY()
+            val ex = end.getX()
+            val ey = end.getY()
+            if(sx + 2 == ex && board.getBox(sx+1, sy).getPiece() is Pawn)
+                board.getBox(sx+1, sy).getPiece()?.setWhite(currentTurn)
+            else if(sx - 2 == ex && board.getBox(sx-1, sy).getPiece() is Pawn)
+                board.getBox(sx-1, sy).getPiece()?.setWhite(currentTurn)
+            else if(sy+2 == ey && board.getBox(sx, sy+1).getPiece() is Pawn)
+                board.getBox(sx, sy+1).getPiece()?.setWhite(currentTurn)
+            else if(sy-2 == ey && board.getBox(sx, sy-1).getPiece() is Pawn)
+                board.getBox(sx, sy-1).getPiece()?.setWhite(currentTurn)
+        }
+    }
     val kingSpot = board.getKingSpot(currentTurn)  // get the king
     val king = kingSpot.getPiece() as King
     // check if the player is in check
@@ -468,12 +502,44 @@ fun checkIfMovePutsPlayerInCheck(start: Spot, end: Spot, board: Board, currentTu
         // if not, reset the move and declare that the move is a valid move
         start.setPiece(startPiece)
         end.setPiece(endPiece)
+        if(startPiece is Thief){
+            if(endPiece == null){
+                val sx = start.getX()
+                val sy = start.getY()
+                val ex = end.getX()
+                val ey = end.getY()
+                if(sx + 2 == ex && board.getBox(sx+1, sy).getPiece() is Pawn)
+                    board.getBox(sx+1, sy).getPiece()?.setWhite(!currentTurn)
+                else if(sx - 2 == ex && board.getBox(sx-1, sy).getPiece() is Pawn)
+                    board.getBox(sx-1, sy).getPiece()?.setWhite(!currentTurn)
+                else if(sy+2 == ey && board.getBox(sx, sy+1).getPiece() is Pawn)
+                    board.getBox(sx, sy+1).getPiece()?.setWhite(!currentTurn)
+                else if(sy-2 == ey && board.getBox(sx, sy-1).getPiece() is Pawn)
+                    board.getBox(sx, sy-1).getPiece()?.setWhite(!currentTurn)
+            }
+        }
         end.getPiece()?.setKilled(false)
         return true
     }
     else {
         start.setPiece(startPiece)
         end.setPiece(endPiece)
+        if(startPiece is Thief){
+            if(endPiece == null){
+                val sx = start.getX()
+                val sy = start.getY()
+                val ex = end.getX()
+                val ey = end.getY()
+                if(sx + 2 == ex && board.getBox(sx+1, sy).getPiece() is Pawn)
+                    board.getBox(sx+1, sy).getPiece()?.setWhite(!currentTurn)
+                else if(sx - 2 == ex && board.getBox(sx-1, sy).getPiece() is Pawn)
+                    board.getBox(sx-1, sy).getPiece()?.setWhite(!currentTurn)
+                else if(sy+2 == ey && board.getBox(sx, sy+1).getPiece() is Pawn)
+                    board.getBox(sx, sy+1).getPiece()?.setWhite(!currentTurn)
+                else if(sy-2 == ey && board.getBox(sx, sy-1).getPiece() is Pawn)
+                    board.getBox(sx, sy-1).getPiece()?.setWhite(!currentTurn)
+            }
+        }
         end.getPiece()?.setKilled(false)
         return false
     }

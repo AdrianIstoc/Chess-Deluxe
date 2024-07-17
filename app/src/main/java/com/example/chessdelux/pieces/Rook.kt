@@ -26,10 +26,10 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
 
         while (++x < 8) {
             val spot = board.getBox(x, y)
-            if (board.getBox(x, y).getPiece() != null)
-                break
-            else if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
+            if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
                 options.add(spot)
+            else if (board.getBox(x, y).getPiece() != null)
+                break
             else options.add(board.getBox(x, y))
         }
 
@@ -37,10 +37,10 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
 
         while (++y < 8) {
             val spot = board.getBox(x, y)
-            if (board.getBox(x, y).getPiece() != null)
-                break
-            else if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
+            if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
                 options.add(spot)
+            else if (board.getBox(x, y).getPiece() != null)
+                break
             else options.add(board.getBox(x, y))
         }
 
@@ -48,10 +48,10 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
 
         while (--x >= 0) {
             val spot = board.getBox(x, y)
-            if (board.getBox(x, y).getPiece() != null)
-                break
-            else if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
+            if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
                 options.add(spot)
+            else if (board.getBox(x, y).getPiece() != null)
+                break
             else options.add(board.getBox(x, y))
         }
 
@@ -59,10 +59,10 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
 
         while (--y >= 0) {
             val spot = board.getBox(x, y)
-            if (board.getBox(x, y).getPiece() != null)
-                break
-            else if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
+            if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
                 options.add(spot)
+            else if (board.getBox(x, y).getPiece() != null)
+                break
             else options.add(board.getBox(x, y))
         }
 
@@ -135,7 +135,7 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
 
     fun checkIfFortressing(start: Spot, end: Spot){
         val endPiece = end.getPiece()
-        if (endPiece is Rook)
+        if (endPiece is Rook && endPiece.isWhite() == isWhite())
             start.setPiece(Fortress(endPiece.isWhite()))
     }
 }

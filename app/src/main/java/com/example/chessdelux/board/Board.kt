@@ -115,14 +115,12 @@ class Board {
                 boxes[i][j] = Spot(i, j, null)
 
         boxes[0][0] = Spot(0, 0, King(false))
-        boxes[0][7] = Spot(0, 7, King(true))
+        boxes[1][1] = Spot(1,1, Rook(true))
+        boxes[2][2] = Spot(2,2, Bishop(true))
 
-        boxes[4][3] = Spot(4, 3, Knight(true))
-
-        boxes[3][2] = Spot(3, 2, Pawn(true))
-        boxes[5][2] = Spot(5, 2, Pawn(false))
-        boxes[2][5] = Spot(2, 5, Fortress(true))
-        boxes[6][5] = Spot(6, 5, Fortress(false))
+        boxes[2][6] = Spot(2,6, Pawn(false))
+        boxes[3][5] = Spot(3,5,King(true))
+        boxes[3][6] = Spot(3,6, Thief(true))
     }
 
 

@@ -122,7 +122,7 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 10) {
     }
 
     // promote the pawn
-    fun checkIfPawnPromoting(end: Spot, context: MainActivity, cellSize: Int, board: Board, chessboard: GridLayout){
+    fun checkIfPawnPromoting(end: Spot, context: MainActivity, cellSize: Int, board: Board, chessboard: GridLayout, promotingDone: () -> Unit){
         val pawn = end.getPiece() as Pawn
         if((end.getX() == 0 && pawn.isWhite()) || (end.getX() == 7 && !pawn.isWhite())){
             val builder = AlertDialog.Builder(context)
@@ -151,6 +151,8 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 10) {
                             board.getBox(end.getX(), end.getY()).setPiece(piece)
                             // render pieces after any move for a better preview when a piece changes types
                             renderPieces(chessboard, board)
+                            // change the turn of the players
+                            promotingDone()
                             dialog.dismiss()
                         }
                     }catch (e: Exception){
@@ -158,6 +160,7 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 10) {
                     }
                 }
         }
+        else promotingDone()
     }
 
 

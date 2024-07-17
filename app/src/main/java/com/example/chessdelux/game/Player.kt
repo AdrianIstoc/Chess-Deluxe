@@ -3,6 +3,7 @@ package com.example.chessdelux.game
 import android.util.Log
 import com.example.chessdelux.board.Board
 import com.example.chessdelux.board.Spot
+import com.example.chessdelux.pieces.King
 import com.example.chessdelux.pieces.Pawn
 import kotlin.math.max
 import kotlin.math.min
@@ -70,10 +71,15 @@ class ComputerPlayer(whiteSide: Boolean) : Player(whiteSide, false){
                     val end = move.second
                     val endPiece = end.getPiece()
                     board.movePiece(move.first, move.second)
+                    val king = board.getKingSpot(false)
+                    if((king.getPiece() as King).checkIfKingInCheck(board, king))
+                        valueN+=45
                     if(endPiece != null)
                         valueN += endPiece.getValue()
                     val currentEval =
                         minimax(game, board, depth - 1, alphaVar, betaVar, false, maximizingColor, valueN).second
+                    if((king.getPiece() as King).checkIfKingInCheck(board, king))
+                        valueN-=45
                     start.setPiece(startPiece)
                     if (start.getPiece() is Pawn)
                         (start.getPiece() as Pawn).setPawnMoved(moved)
@@ -109,10 +115,15 @@ class ComputerPlayer(whiteSide: Boolean) : Player(whiteSide, false){
                     val end = move.second
                     val endPiece = end.getPiece()
                     board.movePiece(move.first, move.second)
+                    val king = board.getKingSpot(false)
+                    if((king.getPiece() as King).checkIfKingInCheck(board, king))
+                        valueN-=45
                     if(endPiece != null)
                         valueN -= endPiece.getValue()
                     val currentEval =
                         minimax(game, board, depth - 1, alphaVar, betaVar, true, maximizingColor, valueN).second
+                    if((king.getPiece() as King).checkIfKingInCheck(board, king))
+                        valueN+=45
                     start.setPiece(startPiece)
                     if (start.getPiece() is Pawn)
                         (start.getPiece() as Pawn).setPawnMoved(moved)
