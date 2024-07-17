@@ -14,4 +14,14 @@
     <string name="hard">Hard</string>
     <string name="normal">Normal</string>
     <string name="baby">Baby</string>
+    <string name="pawn_tutorial">Pawn Tutorial</string>
+    <string name="knight_tutorial">Knight Tutorial</string>
+    <string name="bishop_tutorial">Bishop Tutorial</string>
+    <string name="rook_tutorial">Rook Tutorial</string>
+    <string name="queen_tutorial">Queen Tutorial</string>
+    <string name="king_tutorial">King Tutorial</string>
+    <string name="fortress_tutorial">Fortress Tutorial</string>
+    <string name="thief_tutorial">Thief Tutorial</string>
+    <string name="assassin_tutorial">Assassin Tutorial</string>
+    <string name="cardinal_tutorial">Cardinal Tutorial</string>
 </resources>

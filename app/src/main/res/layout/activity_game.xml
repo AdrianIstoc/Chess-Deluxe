@@ -65,7 +65,20 @@
             android:background="@color/cheese"
             android:text="@string/restart" />
 
-
     </LinearLayout>
+
+    <Button
+        android:id="@+id/tutorial_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:layout_weight="1"
+        android:background="@color/green"
+        android:clickable="false"
+        android:visibility="invisible"/>
+
 
 </LinearLayout>

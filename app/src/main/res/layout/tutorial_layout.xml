@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingStart="50dp"
+    android:paddingEnd="50dp"
+    android:background="@color/background">
+
+    <TextView
+        android:id="@+id/menu_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:rotation="-10"
+        android:shadowColor="@color/black"
+        android:shadowDx="-2"
+        android:shadowDy="8"
+        android:shadowRadius="10"
+        android:text="@string/app_name"
+        android:textColor="@color/cheese"
+        android:textSize="40sp" />
+
+    <Button
+        android:id="@+id/back_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:background="@color/cheese"
+        android:text="@string/back" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="50dp">
+
+            <Button
+                android:id="@+id/pawn_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/cheese"
+                android:text="@string/pawn_tutorial" />
+
+            <Button
+                android:id="@+id/knight_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/cheese"
+                android:text="@string/knight_tutorial" />
+
+            <Button
+                android:id="@+id/bishop_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/cheese"
+                android:text="@string/bishop_tutorial" />
+
+            <Button
+                android:id="@+id/rook_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/cheese"
+                android:text="@string/rook_tutorial" />
+
+            <Button
+                android:id="@+id/queen_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/cheese"
+                android:text="@string/queen_tutorial" />
+
+            <Button
+                android:id="@+id/king_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/cheese"
+                android:text="@string/king_tutorial" />
+
+            <Button
+                android:id="@+id/fortress_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/cheese"
+                android:text="@string/fortress_tutorial" />
+
+            <Button
+                android:id="@+id/thief_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/cheese"
+                android:text="@string/thief_tutorial" />
+
+            <Button
+                android:id="@+id/assassin_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/cheese"
+                android:text="@string/assassin_tutorial" />
+
+            <Button
+                android:id="@+id/cardinal_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/cheese"
+                android:text="@string/cardinal_tutorial" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/cheese"
+                android:text="King Tutorial" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/cheese"
+                android:text="King Tutorial" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/cheese"
+                android:text="King Tutorial" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/cheese"
+                android:text="King Tutorial" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/cheese"
+                android:text="King Tutorial" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/cheese"
+                android:text="King Tutorial" />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>

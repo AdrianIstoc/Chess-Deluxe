@@ -6,6 +6,7 @@ import android.widget.GridLayout
 import com.example.chessdelux.MainActivity
 import com.example.chessdelux.R
 import com.example.chessdelux.board.*
+import com.example.chessdelux.game.Game
 import com.example.chessdelux.game.createPopUp
 import com.example.chessdelux.game.makePiece
 import com.example.chessdelux.game.renderPieces
@@ -74,7 +75,7 @@ abstract class Piece(private var white: Boolean, private var type: PieceType, pr
         return type
     }
 
-    fun checkIfPieceEvolves(spot: Spot, context: MainActivity, cellSize: Int, board: Board, chessboard: GridLayout, onEvolutionSelected: () -> Unit){
+    fun checkIfPieceEvolves(game: Game, spot: Spot, context: MainActivity, cellSize: Int, board: Board, chessboard: GridLayout, onEvolutionSelected: () -> Unit){
         val builder = AlertDialog.Builder(context)
         val popUpView = context.createPopUpView()
         builder.setView(popUpView)
@@ -99,6 +100,8 @@ abstract class Piece(private var white: Boolean, private var type: PieceType, pr
                         val piece = makePiece(pieceType, this.isWhite())
                         board.getBox(spot.getX(), spot.getY()).setPiece(piece)
                         renderPieces(chessboard, board)
+                        //game.emptyPossibleMoves()
+                        //game.changeBoardOnSelection(chessboard, context)
                         dialog.dismiss()
                         onEvolutionSelected()
                     }

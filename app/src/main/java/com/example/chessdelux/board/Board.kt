@@ -120,9 +120,125 @@ class Board {
 
         boxes[2][6] = Spot(2,6, Pawn(false))
         boxes[3][5] = Spot(3,5,King(true))
-        boxes[3][6] = Spot(3,6, Thief(true))
+        //boxes[3][6] = Spot(3,6, Thief(true))
     }
 
+    fun pawnTutorial(){
+        for (i in 0 until 8)
+            for (j in 0 until 8)
+                boxes[i][j] = Spot(i, j, null)
+
+        boxes[7][0] = Spot(7, 0, King(false))
+        boxes[7][7] = Spot(7,7, King(true))
+
+        boxes[2][2] = Spot(2,2, Pawn(true))
+        boxes[6][2] = Spot(6,2, Pawn(true))
+        boxes[6][5] = Spot(6,5, Pawn(true))
+
+        boxes[3][1] = Spot(3,1, Knight(false))
+        boxes[3][3] = Spot(3,3, Knight(false))
+
+        boxes[5][4] = Spot(5,4, Rook(false))
+        boxes[5][5] = Spot(5,5, Rook(false))
+        boxes[5][6] = Spot(5,6, Rook(false))
+        boxes[6][4] = Spot(6,4, Rook(false))
+        boxes[6][6] = Spot(6,6, Rook(false))
+        boxes[7][4] = Spot(7,4, Bishop(false))
+        boxes[7][5] = Spot(7,5, Rook(false))
+        boxes[7][6] = Spot(7,6, Bishop(false))
+    }
+
+    fun knightTutorial(){
+        for (i in 0 until 8)
+            for (j in 0 until 8)
+                boxes[i][j] = Spot(i, j, null)
+
+        boxes[7][0] = Spot(7, 0, King(false))
+        boxes[7][7] = Spot(7,7, King(true))
+
+        boxes[3][4] = Spot(3,4, Knight(true))
+
+        boxes[1][3] = Spot(1,3, Rook(false))
+        boxes[1][5] = Spot(1,5, Rook(false))
+        boxes[2][2] = Spot(2,2, Rook(false))
+        boxes[2][6] = Spot(2,6, Rook(false))
+        boxes[4][2] = Spot(4,2, Rook(false))
+        boxes[4][6] = Spot(4,6, Rook(false))
+        boxes[5][3] = Spot(5,3, Rook(false))
+        boxes[5][5] = Spot(5,5, Rook(false))
+
+        boxes[2][3] = Spot(2,3, Pawn(false))
+        boxes[2][4] = Spot(2,4, Pawn(false))
+        boxes[2][5] = Spot(2,5, Pawn(false))
+        boxes[3][3] = Spot(3,3, Pawn(false))
+        boxes[3][5] = Spot(3,5, Pawn(false))
+        boxes[4][3] = Spot(4,3, Pawn(false))
+        boxes[4][4] = Spot(4,4, Pawn(false))
+        boxes[4][5] = Spot(4,5, Pawn(false))
+    }
+
+    fun bishopTutorial(){
+        for (i in 0 until 8)
+            for (j in 0 until 8)
+                boxes[i][j] = Spot(i, j, null)
+
+        boxes[7][0] = Spot(7, 0, King(false))
+        boxes[7][7] = Spot(7,7, King(true))
+
+        boxes[3][4] = Spot(3,4, Bishop(true))
+
+        boxes[0][1] = Spot(0,1, Rook(false))
+        boxes[1][6] = Spot(1,6, Rook(false))
+        boxes[4][5] = Spot(4,5, Rook(false))
+    }
+
+    fun rookTutorial(){
+        for (i in 0 until 8)
+            for (j in 0 until 8)
+                boxes[i][j] = Spot(i, j, null)
+
+        boxes[7][0] = Spot(7, 0, King(false))
+        boxes[7][7] = Spot(7,7, King(true))
+
+        boxes[3][4] = Spot(3,4, Rook(true))
+
+        boxes[2][4] = Spot(2,4, Knight(false))
+        boxes[3][1] = Spot(3,1, Knight(false))
+        boxes[3][6] = Spot(3,6, Knight(false))
+        boxes[7][4] = Spot(7,4, Knight(false))
+    }
+
+
+    fun queenTutorial(){
+        for (i in 0 until 8)
+            for (j in 0 until 8)
+                boxes[i][j] = Spot(i, j, null)
+
+        boxes[7][0] = Spot(7, 0, King(false))
+        boxes[7][7] = Spot(7,7, King(true))
+
+        boxes[4][5] = Spot(4,5, Queen(true))
+
+        boxes[0][1] = Spot(0,1, Pawn(false))
+        boxes[1][5] = Spot(1,5, Pawn(false))
+        boxes[2][7] = Spot(2,7, Pawn(false))
+        boxes[4][0] = Spot(4,0, Pawn(false))
+        boxes[4][6] = Spot(4,6, Pawn(false))
+    }
+
+    fun kingTutorial(){
+        for (i in 0 until 8)
+            for (j in 0 until 8)
+                boxes[i][j] = Spot(i, j, null)
+
+        boxes[0][6] = Spot(0, 6, King(false))
+        boxes[7][4] = Spot(7,4, King(true))
+
+        boxes[7][0] = Spot(7,0, Rook(true))
+        boxes[7][7] = Spot(7,7, Rook(true))
+
+        boxes[0][1] = Spot(0,1, Rook(false))
+    }
 
     fun evaluate(maximizingColor: Boolean): Int {
         var sum = 0

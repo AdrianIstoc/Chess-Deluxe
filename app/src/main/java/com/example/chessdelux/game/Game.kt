@@ -45,6 +45,10 @@ class Game {
         movesPlayed.clear()                             // clear the list of moves that the players have done
     }
 
+    fun getBoard(): Board {
+        return board
+    }
+
     fun setCellSize(cellSize: Int) {
         this.cellSize = cellSize
     }
@@ -66,7 +70,14 @@ class Game {
             if(currentPiece != null) {
                 currentPiece.setSelected(true) // set the piece as selected
                 if(canEvolve && currentPiece.readyToEvolve() && !(currentPiece is Pawn && currentPiece.isPromoting())){
-                    currentPieceSpot?.let { currentPiece.checkIfPieceEvolves(it, context, cellSize, board, chessboard) { canEvolve = false } }
+                    currentPieceSpot?.let {
+                        currentPiece.checkIfPieceEvolves(this, it, context, cellSize, board, chessboard) {
+                            possibleMoves = mutableListOf()
+                            possibleKills = mutableListOf()
+                            changeBoardOnSelection(chessboard, context)
+                            canEvolve = false
+                        }
+                    }
                 }
             }
         }
@@ -225,6 +236,8 @@ class Game {
         if((checkValidMove() && currentTurn.isHumanPlayer()) || currentTurn is ComputerPlayer){           // check if the selected spot is one of the move options of the current piece
             val piece = start.getPiece()
             val endPiece = end.getPiece()
+            if(endPiece is King)
+                return
             val endPieceValue = endPiece?.getValue() ?: 0
 
 
@@ -359,7 +372,7 @@ class Game {
 
 
     // change the colors of the chessboard to show the current piece movement
-    private fun changeBoardOnSelection(chessboard: GridLayout, context: MainActivity) {
+    fun changeBoardOnSelection(chessboard: GridLayout, context: MainActivity) {
         val white = ContextCompat.getColor(context, R.color.white)
         val black = ContextCompat.getColor(context, R.color.cheese)
         val whiteGreen = ContextCompat.getColor(context, R.color.green)
@@ -376,7 +389,7 @@ class Game {
                         chessboard.getChildAt(i*8+j).setBackgroundColor(white)
                     if(board.getBox(i,j).isMovedSpot())
                         chessboard.getChildAt(i*8+j).setBackgroundColor(whiteRed)
-                    if (board.getBox(i,j).isSelectableSpot() || board.getBox(i,j).isKillableSpot()) {
+                    if (board.getBox(i,j).isSelectableSpot() || board.getBox(i,j).isKillableSpot() && board.getBox(i,j).getPiece() !is King) {
                         // else it changes into green
                         for (pair in possibleMoves + possibleKills)
                             if (pair.getX() == i && pair.getY() == j) {
@@ -393,7 +406,7 @@ class Game {
                         chessboard.getChildAt(i*8+j).setBackgroundColor(black)
                     if(board.getBox(i,j).isMovedSpot())
                         chessboard.getChildAt(i*8+j).setBackgroundColor(blackRed)
-                    if(board.getBox(i,j).isSelectableSpot() || board.getBox(i,j).isKillableSpot()){
+                    if(board.getBox(i,j).isSelectableSpot() || board.getBox(i,j).isKillableSpot() && board.getBox(i,j).getPiece() !is King){
                         // else it changes into a greenish black
                         for(pair in possibleMoves + possibleKills)
                             if(pair.getX() == i && pair.getY() == j) {
@@ -418,6 +431,7 @@ fun makePiece(pieceType: PieceType, white: Boolean): Piece {
         PieceType.QUEEN -> if (white) Queen(true) else Queen(false)
         PieceType.THIEF -> if (white) Thief(true) else Thief(false)
         PieceType.ASSASSIN -> if (white) Assassin(true) else Assassin(false)
+        PieceType.CARDINAL -> if (white) Cardinal(true) else Cardinal(false)
         else -> if (white) Pawn(true) else Pawn(false)
     }
 }

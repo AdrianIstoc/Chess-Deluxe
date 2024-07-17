@@ -4,11 +4,11 @@ import com.example.chessdelux.R
 import com.example.chessdelux.board.*
 import com.example.chessdelux.game.Game
 
-class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3, Int.MAX_VALUE) {
+class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3, 30) {
     // the bishop image
     override var imageResource: Int? = if (white) R.drawable.bishop_white else R.drawable.bishop_black
 
-    override val evolutionOptions: List<PieceType> = listOf()
+    override val evolutionOptions: List<PieceType> = listOf(PieceType.CARDINAL)
 
 
     // return the bishop possible moves

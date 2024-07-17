@@ -148,18 +148,21 @@ class King(white: Boolean) : Piece(white, PieceType.KING, 90, Int.MAX_VALUE) {
     private fun checkIfKingMoveInCheck(board: Board, end: Spot): Boolean {
         val kingSpot = board.getKingSpot(isWhite())
         val startPiece = kingSpot.getPiece() as King
+        val check = startPiece.isInCheck()
         val endPiece = end.getPiece()
         board.movePiece(kingSpot, end)
         if(startPiece.checkIfKingInCheck(board, end)){ // here end is the king spot because we move the king on the end spot
             kingSpot.setPiece(startPiece)
+            startPiece.isInCheck = false
             end.setPiece(endPiece)
-            end.getPiece()?.setKilled(false)
+            end.getPiece()?.setKilled(check)
             return true
         }
         else {
             kingSpot.setPiece(startPiece)
+            startPiece.isInCheck = false
             end.setPiece(endPiece)
-            end.getPiece()?.setKilled(false)
+            end.getPiece()?.setKilled(check)
             return false
         }
 

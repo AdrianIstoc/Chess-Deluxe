@@ -73,13 +73,13 @@ class ComputerPlayer(whiteSide: Boolean) : Player(whiteSide, false){
                     board.movePiece(move.first, move.second)
                     val king = board.getKingSpot(false)
                     if((king.getPiece() as King).checkIfKingInCheck(board, king))
-                        valueN+=45
+                        valueN+=15
                     if(endPiece != null)
                         valueN += endPiece.getValue()
                     val currentEval =
                         minimax(game, board, depth - 1, alphaVar, betaVar, false, maximizingColor, valueN).second
                     if((king.getPiece() as King).checkIfKingInCheck(board, king))
-                        valueN-=45
+                        valueN-=15
                     start.setPiece(startPiece)
                     if (start.getPiece() is Pawn)
                         (start.getPiece() as Pawn).setPawnMoved(moved)
@@ -117,13 +117,13 @@ class ComputerPlayer(whiteSide: Boolean) : Player(whiteSide, false){
                     board.movePiece(move.first, move.second)
                     val king = board.getKingSpot(false)
                     if((king.getPiece() as King).checkIfKingInCheck(board, king))
-                        valueN-=45
+                        valueN-=15
                     if(endPiece != null)
                         valueN -= endPiece.getValue()
                     val currentEval =
                         minimax(game, board, depth - 1, alphaVar, betaVar, true, maximizingColor, valueN).second
                     if((king.getPiece() as King).checkIfKingInCheck(board, king))
-                        valueN+=45
+                        valueN+=15
                     start.setPiece(startPiece)
                     if (start.getPiece() is Pawn)
                         (start.getPiece() as Pawn).setPawnMoved(moved)

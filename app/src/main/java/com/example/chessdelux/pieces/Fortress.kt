@@ -4,7 +4,7 @@ import com.example.chessdelux.R
 import com.example.chessdelux.board.Board
 import com.example.chessdelux.board.Spot
 
-class Fortress(white: Boolean) : Piece(white, PieceType.FORTRESS, 8, Int.MAX_VALUE) {
+class Fortress(white: Boolean) : Piece(white, PieceType.FORTRESS, 20, Int.MAX_VALUE) {
     override var imageResource: Int? = if (white) R.drawable.fortress_white else R.drawable.fortress_black
 
     override val evolutionOptions: List<PieceType> = listOf()
