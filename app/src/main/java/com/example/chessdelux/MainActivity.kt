@@ -40,23 +40,23 @@ class MainActivity : ComponentActivity() {
                 val d9Button = findViewById<Button>(R.id.d9_button)
 
                 d1Button.setOnClickListener {
-                    startGame(true, 1)
+                    startGame(true, 2)
                 }
 
                 d3Button.setOnClickListener {
-                    startGame(true, 3)
+                    startGame(true, 4)
                 }
 
                 d5Button.setOnClickListener {
-                    startGame(true, 5)
+                    startGame(true, 6)
                 }
 
                 d7Button.setOnClickListener {
-                    startGame(true, 7)
+                    startGame(true, 8)
                 }
 
                 d9Button.setOnClickListener {
-                    startGame(true, 9)
+                    startGame(true, 10)
                 }
 
             }

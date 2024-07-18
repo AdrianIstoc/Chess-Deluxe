@@ -275,7 +275,7 @@ class Game {
             addExpPerTurn()
 
             if(piece is Pawn){
-                if(currentTurn is ComputerPlayer)
+                if(currentTurn !is ComputerPlayer)
                     piece.checkIfPawnPromoting(end, context, cellSize, board, chessboard) {
                         // change the turn of the players
                         currentTurn = if (currentTurn.isWhiteSide()) {
