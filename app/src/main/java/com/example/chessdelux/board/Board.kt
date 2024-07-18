@@ -35,7 +35,6 @@ class Board {
                 val piece = pieceSpot.getPiece()
                 if(piece is Fortress && piece.isWhite() == white){
                     fortressSpot.add(pieceSpot)
-                    return fortressSpot
                 }
             }
         }
@@ -131,7 +130,7 @@ class Board {
         boxes[7][0] = Spot(7, 0, King(false))
         boxes[7][7] = Spot(7,7, King(true))
 
-        boxes[2][2] = Spot(2,2, Pawn(true))
+        boxes[1][1] = Spot(1,1, Pawn(true))
         boxes[6][2] = Spot(6,2, Pawn(true))
         boxes[6][5] = Spot(6,5, Pawn(true))
 
@@ -238,6 +237,58 @@ class Board {
         boxes[7][7] = Spot(7,7, Rook(true))
 
         boxes[0][1] = Spot(0,1, Rook(false))
+        boxes[0][5] = Spot(0,5, Rook(false))
+    }
+
+    fun fortressTutorial() {
+        for (i in 0 until 8)
+            for (j in 0 until 8)
+                boxes[i][j] = Spot(i, j, null)
+
+        boxes[0][0] = Spot(0, 0, King(false))
+        boxes[7][7] = Spot(7,7, King(true))
+
+        boxes[2][1] = Spot(2,1, Rook(true))
+        boxes[2][3] = Spot(2,3, Rook(true))
+        boxes[2][5] = Spot(2,5, Rook(true))
+        boxes[5][2] = Spot(5,2, Fortress(true))
+        boxes[5][4] = Spot(5,4, Fortress(true))
+        boxes[6][3] = Spot(6,3, Fortress(true))
+
+        boxes[6][6] = Spot(6,6, Queen(false))
+        boxes[6][7] = Spot(6,7, Rook(false))
+        boxes[7][6] = Spot(7,6, Rook(false))
+
+    }
+
+    fun thiefTutorial() {
+        for (i in 0 until 8)
+            for (j in 0 until 8)
+                boxes[i][j] = Spot(i, j, null)
+
+        boxes[0][0] = Spot(0, 0, King(false))
+        boxes[7][7] = Spot(7,7, King(true))
+
+        boxes[1][5] = Spot(1,5, Thief(true))
+        boxes[5][4] = Spot(5,4, Thief(true))
+        boxes[7][1] = Spot(7,1, Pawn(true))
+
+        boxes[0][0] = Spot(0,0, Queen(false))
+        boxes[1][1] = Spot(1,1, Queen(false))
+        boxes[2][0] = Spot(2,0, Queen(false))
+        boxes[3][1] = Spot(3,1, Queen(false))
+        boxes[4][0] = Spot(4,0, Queen(false))
+        boxes[5][1] = Spot(5,1, Queen(false))
+        boxes[6][0] = Spot(6,0, Queen(false))
+
+        boxes[0][4] = Spot(0,4, Knight(false))
+        boxes[2][4] = Spot(2,4, Knight(false))
+        boxes[2][6] = Spot(2,6, Knight(false))
+
+        boxes[4][4] = Spot(4,4, Pawn(false))
+        boxes[5][5] = Spot(5,5, Pawn(false))
+        boxes[6][4] = Spot(6,4, Pawn(false))
+
     }
 
     fun evaluate(maximizingColor: Boolean): Int {

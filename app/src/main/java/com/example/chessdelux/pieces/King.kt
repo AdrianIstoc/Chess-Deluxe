@@ -153,16 +153,16 @@ class King(white: Boolean) : Piece(white, PieceType.KING, 90, Int.MAX_VALUE) {
         board.movePiece(kingSpot, end)
         if(startPiece.checkIfKingInCheck(board, end)){ // here end is the king spot because we move the king on the end spot
             kingSpot.setPiece(startPiece)
-            startPiece.isInCheck = false
+            startPiece.isInCheck = check
             end.setPiece(endPiece)
-            end.getPiece()?.setKilled(check)
+            end.getPiece()?.setKilled(false)
             return true
         }
         else {
             kingSpot.setPiece(startPiece)
-            startPiece.isInCheck = false
+            startPiece.isInCheck = check
             end.setPiece(endPiece)
-            end.getPiece()?.setKilled(check)
+            end.getPiece()?.setKilled(false)
             return false
         }
 

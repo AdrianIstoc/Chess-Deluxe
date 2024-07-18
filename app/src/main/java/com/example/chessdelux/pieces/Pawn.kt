@@ -66,7 +66,7 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 15) {
         }
 
         // check if the pawn can move two spaces forward if it hasn't moved yet
-        if(!pawnMoved && board.getBox(start.getX() + 2 * direction, start.getY()).getPiece() == null && board.getBox(start.getX()+direction, start.getY()).getPiece() == null)
+        if(!pawnMoved && board.getBox(start.getX()+direction, start.getY()).getPiece() == null && start.getX() + 2 * direction in 0 .. 7 && board.getBox(start.getX() + 2 * direction, start.getY()).getPiece() == null)
             options.add(board.getBox(start.getX() + 2 * direction, start.getY()))
 
         return options

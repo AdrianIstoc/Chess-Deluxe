@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Chess Delux</string>
+    <string name="app_name">Chess Deluxe</string>
     <string name="play">Play</string>
     <string name="credits">Credits</string>
     <string name="how_to_play">How to Play</string>
@@ -24,4 +24,15 @@
     <string name="thief_tutorial">Thief Tutorial</string>
     <string name="assassin_tutorial">Assassin Tutorial</string>
     <string name="cardinal_tutorial">Cardinal Tutorial</string>
+    <string name="pawn_tutorial_text">Pawn Tutorial:\n\n Pawns can move only forwards one space at a time. They can move two spaces on their first move. The pawns can capture other pieces diagonally. Once a pawn reaches the end of the board, it is changed into a knight, bishop, rook or queen, it is the player\'s choice. Try it out!</string>
+    <string name="knight_tutorial_text">Knight Tutorial:\n\n Knights can move and capture other pieces in an L shape. The knights can jump over other pieces. Try it out!</string>
+    <string name="bishop_tutorial_text">Bishop Tutorial:\n\n Bishops can move and capture other pieces diagonally. Try it out!</string>
+    <string name="rook_tutorial_text">Rook Tutorial:\n\n Rooks can move and capture other pieces horizontally and vertically. Try it out!</string>
+    <string name="queen_tutorial_text">Queen Tutorial:\n\n Queens can move and capture other pieces horizontally, vertically and diagonally. Try it out!</string>
+    <string name="king_tutorial_text">King Tutorial:\n\n Kings are the center of this game. Kings can\'t be captured by other pieces, but they can be put in check. If a king is in check and there are no moves available, the king is in checkmate and the game is over. Kings move and capture pieces in any direction one space at a time. Kings can\'t move on a space if that space is in check. Protect your king at all costs! Also kings can castle. Castling can be achieved by moving the king two spaces towards the rook and the rook will be placed next to the king in the opposite direction of the king\'s move. Castling is not allowed if the king or the rook moved from their initial spots or if the king is in check or if the spaces that the king moves through are in check. Try it out!</string>
+    <string name="fortress_tutorial_text">Fortress Tutorial:\n\n Chess Deluxe build upon a normal game of chess and introduces new mechanics and interactions. One of them allows for the creation of fortresses. A fortress is a special chess piece that doesn\'t move nor capture other pieces. Instead it acts as another escape opportunity. Only if your king is in check or checkmate you can \'teleport\' it to any of you fortresses, if you control any. Once \'teleported\', the fortress is removed from the board and the king takes its space. If you wish to make a fortress appear you have to move one of your rook on another rook that you control. This means you loose two rooks for a second chance for your king. Try it out!</string>
+    <string name="thief_tutorial_text">a</string>
+    <string name="assassin_tutorial_text">a</string>
+    <string name="cardinal_tutorial_text">a</string>
+
 </resources>
