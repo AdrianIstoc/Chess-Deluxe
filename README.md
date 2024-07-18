@@ -1,2 +1,2 @@
-# Chess-Delux
+# Chess-Deluxe
 Chess but fun
