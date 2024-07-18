@@ -243,6 +243,15 @@ class Game {
             if (piece != null) {
                 resetPawnSkipped(piece.isWhite())
             }
+
+            // check if the king is castling
+            // if so, move the king and the rook properly
+            if(piece is King)
+                piece.checkIfCastling(start, end, board)
+
+            if(piece is Rook)
+                piece.checkIfFortressing(start, end)
+
             // check for important moves
             checkImportantPieceMove(start)
 
@@ -252,15 +261,6 @@ class Game {
                 // check if the pawn can make an en passant and sets the opponent pawn as killed
                 piece.checkIfEnPassant(start, end, board)
             }
-
-
-            // check if the king is castling
-            // if so, move the king and the rook properly
-            if(piece is King)
-                piece.checkIfCastling(start, end, board)
-
-            if(piece is Rook)
-                piece.checkIfFortressing(start, end)
 
             if(piece is Thief)
                 piece.checkIfStealing(start, end, board)
@@ -469,7 +469,7 @@ fun checkImportantPieceMove(spot: Spot) {
     when (spot.getPiece()?.getType()) {
         PieceType.KING -> {
             val king = spot.getPiece() as King
-            king.setKingMoved()
+            king.setKingMoved(true)
         }
         PieceType.PAWN -> {
             val pawn = spot.getPiece() as Pawn
@@ -477,7 +477,7 @@ fun checkImportantPieceMove(spot: Spot) {
         }
         PieceType.ROOK -> {
             val rook = spot.getPiece() as Rook
-            rook.setRookMoved()
+            rook.setRookMoved(true)
         }
         else -> {}
     }
@@ -509,7 +509,14 @@ fun validKills(options: MutableList<Spot>, spot: Spot, board: Board, currentTurn
 fun checkIfMovePutsPlayerInCheck(start: Spot, end: Spot, board: Board, currentTurn: Boolean): Boolean {
     val startPiece = start.getPiece()               // save the piece that wants to move
     val endPiece = end.getPiece()                   // save the piece (if any) on the targeted spot
-    if(startPiece is Paladin){                      // if true push piece
+    var moved = false
+    if(startPiece is Pawn)
+        moved = startPiece.isPawnMoved()
+    else if(startPiece is Rook)
+        moved = startPiece.isRookMoved()
+    else if(startPiece is King)
+        moved = startPiece.isKingMoved()
+    else if(startPiece is Paladin){                      // if true push piece
         if(endPiece != null){
             val sx = start.getX()
             val sy = start.getY()
@@ -549,7 +556,13 @@ fun checkIfMovePutsPlayerInCheck(start: Spot, end: Spot, board: Board, currentTu
         // if not, reset the move and declare that the move is a valid move
         start.setPiece(startPiece)
         end.setPiece(endPiece)
-        if(startPiece is Thief){                    // reset the board before the thief stole
+        if(startPiece is Pawn)
+            startPiece.setPawnMoved(moved)
+        else if(startPiece is Rook)
+            startPiece.setRookMoved(moved)
+        else if(startPiece is King)
+            startPiece.setKingMoved(moved)
+        else if(startPiece is Thief){                    // reset the board before the thief stole
             if(endPiece == null){
                 val sx = start.getX()
                 val sy = start.getY()

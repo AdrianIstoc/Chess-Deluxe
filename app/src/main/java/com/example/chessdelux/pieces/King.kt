@@ -18,8 +18,12 @@ class King(white: Boolean) : Piece(white, PieceType.KING, 90, Int.MAX_VALUE) {
     private var kingMoved = false
 
     // set if king moved
-    fun setKingMoved() {
-        kingMoved = true
+    fun setKingMoved(value: Boolean) {
+        kingMoved = value
+    }
+
+    fun isKingMoved(): Boolean {
+        return kingMoved
     }
 
     fun isInCheck(): Boolean{
@@ -202,12 +206,12 @@ class King(white: Boolean) : Piece(white, PieceType.KING, 90, Int.MAX_VALUE) {
         try{
             // check if the selected spot is valid for a castling
             if ((end.getY() == 6 || end.getY() == 2) && (end.getX() == 0 || end.getX() == 7)) {
-                val king = start.getPiece()?.getType()                                      // get the piece type of the "king"
+                val king = start.getPiece()                                      // get the piece type of the "king"
                 // get the spot of the rook based of the selected spot
                 val rookSpot = if (start.getY() < end.getY()) board.getBox(end.getX(), end.getY() + 1)
                 else board.getBox(end.getX(), end.getY() - 2)
-                val rook = rookSpot.getPiece()?.getType()                                   // get the piece type of the "rook"
-                if(king == PieceType.KING && rook == PieceType.ROOK) {                      // return true if king is king and rook is rook
+                val rook = rookSpot.getPiece()                                // get the piece type of the "rook"
+                if(king is King && rook is Rook && !king.kingMoved && !rook.isRookMoved()) {                      // return true if king is king and rook is rook
                     val direction = if(start.getY() < end.getY()) 1 else -1
                     val rookNextSpot = board.getBox(start.getX(), start.getY()+direction)
                     board.movePiece(rookSpot, rookNextSpot)
@@ -219,4 +223,5 @@ class King(white: Boolean) : Piece(white, PieceType.KING, 90, Int.MAX_VALUE) {
             Log.e("ObscureMove", "CheckIfCastling problem e -> ${e.message}")
         }
     }
+
 }

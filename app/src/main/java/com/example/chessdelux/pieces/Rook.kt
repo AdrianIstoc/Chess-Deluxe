@@ -11,8 +11,8 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
 
     private var rookMoved = false
 
-    fun setRookMoved() {
-        this.rookMoved = true
+    fun setRookMoved(value: Boolean) {
+        this.rookMoved = value
     }
 
     fun isRookMoved(): Boolean {
