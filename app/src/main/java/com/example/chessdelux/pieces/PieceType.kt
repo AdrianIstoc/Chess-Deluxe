@@ -10,5 +10,6 @@ enum class PieceType {
     FORTRESS,
     ASSASSIN,
     THIEF,
-    CARDINAL
+    CARDINAL,
+    PALADIN
 }

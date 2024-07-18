@@ -12,7 +12,6 @@ import com.example.chessdelux.MainActivity
 import com.example.chessdelux.R
 import com.example.chessdelux.board.*
 import com.example.chessdelux.pieces.*
-import kotlin.time.measureTime
 
 class Game {
     private var canEvolve: Boolean = true               // a player can evolve a piece once per turn
@@ -266,6 +265,9 @@ class Game {
             if(piece is Thief)
                 piece.checkIfStealing(start, end, board)
 
+            if(piece is Paladin)
+                piece.checkIfPushing(start, end, board)
+
             // move piece
             board.movePiece(start, end)
             piece?.addExp(endPieceValue)
@@ -372,7 +374,7 @@ class Game {
 
 
     // change the colors of the chessboard to show the current piece movement
-    fun changeBoardOnSelection(chessboard: GridLayout, context: MainActivity) {
+    private fun changeBoardOnSelection(chessboard: GridLayout, context: MainActivity) {
         val white = ContextCompat.getColor(context, R.color.white)
         val black = ContextCompat.getColor(context, R.color.cheese)
         val whiteGreen = ContextCompat.getColor(context, R.color.green)
@@ -425,20 +427,22 @@ class Game {
 // make a piece
 fun makePiece(pieceType: PieceType, white: Boolean): Piece {
     return when (pieceType) {
-        PieceType.ROOK -> if (white) Rook(true) else Rook(false)
-        PieceType.KNIGHT -> if (white) Knight(true) else Knight(false)
-        PieceType.BISHOP -> if (white) Bishop(true) else Bishop(false)
-        PieceType.QUEEN -> if (white) Queen(true) else Queen(false)
-        PieceType.THIEF -> if (white) Thief(true) else Thief(false)
-        PieceType.ASSASSIN -> if (white) Assassin(true) else Assassin(false)
-        PieceType.CARDINAL -> if (white) Cardinal(true) else Cardinal(false)
-        else -> if (white) Pawn(true) else Pawn(false)
+        PieceType.PAWN -> Pawn(white)
+        PieceType.ROOK -> Rook(white)
+        PieceType.KNIGHT -> Knight(white)
+        PieceType.BISHOP -> Bishop(white)
+        PieceType.QUEEN -> Queen(white)
+        PieceType.THIEF -> Thief(white)
+        PieceType.ASSASSIN -> Assassin(white)
+        PieceType.CARDINAL -> Cardinal(white)
+        PieceType.PALADIN -> Paladin(white)
+        else -> Pawn(!white)
     }
 }
 
 // render the pieces on the board
 fun renderPieces(chessboard: GridLayout, board: Board) {
-    var string: String = ""
+    var string: String
     for (i in 0 until 8) {
         string = ""
         for (j in 0 until 8) {
@@ -505,8 +509,24 @@ fun validKills(options: MutableList<Spot>, spot: Spot, board: Board, currentTurn
 fun checkIfMovePutsPlayerInCheck(start: Spot, end: Spot, board: Board, currentTurn: Boolean): Boolean {
     val startPiece = start.getPiece()               // save the piece that wants to move
     val endPiece = end.getPiece()                   // save the piece (if any) on the targeted spot
+    if(startPiece is Paladin){                      // if true push piece
+        if(endPiece != null){
+            val sx = start.getX()
+            val sy = start.getY()
+            val ex = end.getX()
+            val ey = end.getY()
+            if(sx + 2 == ex)
+                board.movePiece(end, board.getBox(ex+1, ey))
+            if(sx - 2 == ex)
+                board.movePiece(end, board.getBox(ex-1, ey))
+            if(sy + 2 == ey)
+                board.movePiece(end, board.getBox(ex, ey+1))
+            if(sy - 2 == ey)
+                board.movePiece(end, board.getBox(ex, ey-1))
+        }
+    }
     board.movePiece(start, end)                     // moves the piece
-    if(startPiece is Thief){
+    if(startPiece is Thief){                        // if true set the board to the new state after the thief stole any piece
         if(endPiece == null){
             val sx = start.getX()
             val sy = start.getY()
@@ -522,14 +542,14 @@ fun checkIfMovePutsPlayerInCheck(start: Spot, end: Spot, board: Board, currentTu
                 board.getBox(sx, sy-1).getPiece()?.setWhite(currentTurn)
         }
     }
-    val kingSpot = board.getKingSpot(currentTurn)  // get the king
+    val kingSpot = board.getKingSpot(currentTurn)   // get the king
     val king = kingSpot.getPiece() as King
     // check if the player is in check
     if(king.checkIfKingInCheck(board, kingSpot)){
         // if not, reset the move and declare that the move is a valid move
         start.setPiece(startPiece)
         end.setPiece(endPiece)
-        if(startPiece is Thief){
+        if(startPiece is Thief){                    // reset the board before the thief stole
             if(endPiece == null){
                 val sx = start.getX()
                 val sy = start.getY()
@@ -545,13 +565,28 @@ fun checkIfMovePutsPlayerInCheck(start: Spot, end: Spot, board: Board, currentTu
                     board.getBox(sx, sy-1).getPiece()?.setWhite(!currentTurn)
             }
         }
+        else if(startPiece is Paladin)
+            if(endPiece != null){
+                val sx = start.getX()
+                val sy = start.getY()
+                val ex = end.getX()
+                val ey = end.getY()
+                if(sx + 2 == ex)
+                    board.getBox(ex+1,ey).setPiece(null)
+                if(sx - 2 == ex)
+                    board.getBox(ex-1,ey).setPiece(null)
+                if(sy + 2 == ey)
+                    board.getBox(ex,ey+1).setPiece(null)
+                if(sy - 2 == ey)
+                    board.getBox(ex,ey-1).setPiece(null)
+            }
         end.getPiece()?.setKilled(false)
         return true
     }
     else {
         start.setPiece(startPiece)
         end.setPiece(endPiece)
-        if(startPiece is Thief){
+        if(startPiece is Thief){                    // reset the board before the thief stole
             if(endPiece == null){
                 val sx = start.getX()
                 val sy = start.getY()
@@ -567,6 +602,21 @@ fun checkIfMovePutsPlayerInCheck(start: Spot, end: Spot, board: Board, currentTu
                     board.getBox(sx, sy-1).getPiece()?.setWhite(!currentTurn)
             }
         }
+        else if(startPiece is Paladin)
+            if(endPiece != null){
+                val sx = start.getX()
+                val sy = start.getY()
+                val ex = end.getX()
+                val ey = end.getY()
+                if(sx + 2 == ex)
+                    board.getBox(ex+1,ey).setPiece(null)
+                if(sx - 2 == ex)
+                    board.getBox(ex-1,ey).setPiece(null)
+                if(sy + 2 == ey)
+                    board.getBox(ex,ey+1).setPiece(null)
+                if(sy - 2 == ey)
+                    board.getBox(ex,ey-1).setPiece(null)
+            }
         end.getPiece()?.setKilled(false)
         return false
     }

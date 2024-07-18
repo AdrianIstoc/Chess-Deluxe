@@ -16,7 +16,7 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 15) {
     // list of promote options
     private val promoteOptions = listOf(PieceType.KNIGHT, PieceType.BISHOP, PieceType.ROOK, PieceType.QUEEN)
 
-    override val evolutionOptions = listOf(PieceType.ASSASSIN, PieceType.THIEF)
+    override val evolutionOptions = listOf(PieceType.THIEF, PieceType.ASSASSIN)
 
     // pawn moved at least once
     private var pawnMoved = false

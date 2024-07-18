@@ -79,6 +79,7 @@ class MainActivity : ComponentActivity() {
             val thiefButton = findViewById<Button>(R.id.thief_button)
             val assassinButton = findViewById<Button>(R.id.assassin_button)
             val cardinalButton = findViewById<Button>(R.id.cardinal_button)
+            val paladinButton = findViewById<Button>(R.id.paladin_button)
 
             backButton.setOnClickListener {
                 finish()
@@ -372,7 +373,7 @@ class MainActivity : ComponentActivity() {
                 val restartButton = findViewById<Button>(R.id.restart)
 
                 var text = findViewById<TextView>(R.id.tutorial_text)
-                text.text = "Fortress Tutorial:\n\n Chess Delux build upon a normal game of chess and introduces new mechanics and interactions. One of them allows for the creation of fortresses. A fortress is a special chess piece that doesn't move nor capture other pieces. Instead it acts as another escape opportunity. Only if your king is in check or checkmate you can 'teleport' it to any of you fortresses, if you control any. Once 'teleported', the fortress is removed from the board and the king takes its space. If you wish to make a fortress appear you have to move one of your rook on another rook that you control. This means you loose two rooks for a second chance for your king. Try it out!"
+                text.text = getString(R.string.thief_tutorial_text)
                 text.visibility = View.VISIBLE
 
                 val game = Game()
@@ -405,8 +406,125 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
+            assassinButton.setOnClickListener {
+                setContentView(R.layout.activity_game)
 
+                backButton = findViewById<Button>(R.id.back)
+                val restartButton = findViewById<Button>(R.id.restart)
 
+                var text = findViewById<TextView>(R.id.tutorial_text)
+                text.text = getString(R.string.assassin_tutorial_text)
+                text.visibility = View.VISIBLE
+
+                val game = Game()
+                val humanPlayer = HumanPlayer(true)
+                val player2 = HumanPlayer(false)
+
+                val chessboard = findViewById<GridLayout>(R.id.chess_board)
+                val cellSize = resources.displayMetrics.widthPixels / 8
+
+                game.setCellSize(cellSize)
+                game.initialize(humanPlayer, player2)
+                game.getBoard().assassinTutorial()
+                game.renderGameBoard(chessboard, this)
+                game.proceedWithTheGame(chessboard, this)
+
+                backButton.setOnClickListener {
+                    finish()
+                    startActivity(intent)
+                }
+
+                restartButton.setOnClickListener {
+                    game.initialize(humanPlayer, player2)
+                    game.getBoard().assassinTutorial()
+                    game.renderGameBoard(chessboard, this)
+                    game.proceedWithTheGame(chessboard, this)
+
+                    text = findViewById<TextView>(R.id.game_text)
+                    text.text = null
+                    text.visibility = View.INVISIBLE
+                }
+            }
+
+            cardinalButton.setOnClickListener {
+                setContentView(R.layout.activity_game)
+
+                backButton = findViewById<Button>(R.id.back)
+                val restartButton = findViewById<Button>(R.id.restart)
+
+                var text = findViewById<TextView>(R.id.tutorial_text)
+                text.text = getString(R.string.cardinal_tutorial_text)
+                text.visibility = View.VISIBLE
+
+                val game = Game()
+                val humanPlayer = HumanPlayer(true)
+                val player2 = HumanPlayer(false)
+
+                val chessboard = findViewById<GridLayout>(R.id.chess_board)
+                val cellSize = resources.displayMetrics.widthPixels / 8
+
+                game.setCellSize(cellSize)
+                game.initialize(humanPlayer, player2)
+                game.getBoard().cardinalTutorial()
+                game.renderGameBoard(chessboard, this)
+                game.proceedWithTheGame(chessboard, this)
+
+                backButton.setOnClickListener {
+                    finish()
+                    startActivity(intent)
+                }
+
+                restartButton.setOnClickListener {
+                    game.initialize(humanPlayer, player2)
+                    game.getBoard().cardinalTutorial()
+                    game.renderGameBoard(chessboard, this)
+                    game.proceedWithTheGame(chessboard, this)
+
+                    text = findViewById<TextView>(R.id.game_text)
+                    text.text = null
+                    text.visibility = View.INVISIBLE
+                }
+            }
+
+            paladinButton.setOnClickListener {
+                setContentView(R.layout.activity_game)
+
+                backButton = findViewById<Button>(R.id.back)
+                val restartButton = findViewById<Button>(R.id.restart)
+
+                var text = findViewById<TextView>(R.id.tutorial_text)
+                text.text = getString(R.string.paladin_tutorial_text)
+                text.visibility = View.VISIBLE
+
+                val game = Game()
+                val humanPlayer = HumanPlayer(true)
+                val player2 = HumanPlayer(false)
+
+                val chessboard = findViewById<GridLayout>(R.id.chess_board)
+                val cellSize = resources.displayMetrics.widthPixels / 8
+
+                game.setCellSize(cellSize)
+                game.initialize(humanPlayer, player2)
+                game.getBoard().paladinTutorial()
+                game.renderGameBoard(chessboard, this)
+                game.proceedWithTheGame(chessboard, this)
+
+                backButton.setOnClickListener {
+                    finish()
+                    startActivity(intent)
+                }
+
+                restartButton.setOnClickListener {
+                    game.initialize(humanPlayer, player2)
+                    game.getBoard().paladinTutorial()
+                    game.renderGameBoard(chessboard, this)
+                    game.proceedWithTheGame(chessboard, this)
+
+                    text = findViewById<TextView>(R.id.game_text)
+                    text.text = null
+                    text.visibility = View.INVISIBLE
+                }
+            }
 
         }
 

@@ -37,6 +37,7 @@ fun listToMatrix(list: List<Any>, columns: Int): List<List<Any?>> {
 
 fun getImgResource(type: PieceType, white: Boolean): Int {
     return when(type){
+        PieceType.PAWN -> if (white) R.drawable.pawn_white else R.drawable.pawn_black
         PieceType.ROOK -> if (white) R.drawable.rook_white else R.drawable.rook_black
         PieceType.QUEEN -> if (white) R.drawable.queen_white else R.drawable.queen_black
         PieceType.KNIGHT -> if (white) R.drawable.knight_white else R.drawable.knight_black
@@ -44,6 +45,7 @@ fun getImgResource(type: PieceType, white: Boolean): Int {
         PieceType.THIEF -> if (white) R.drawable.thief_white else R.drawable.thief_black
         PieceType.ASSASSIN -> if (white) R.drawable.assassin_white else R.drawable.assassin_black
         PieceType.CARDINAL -> if (white) R.drawable.cardinal_white else R.drawable.cardinal_black
+        PieceType.PALADIN -> if (white) R.drawable.paladin_white else R.drawable.paladin_black
         else -> R.drawable.chess_delux_icon
     }
 }
