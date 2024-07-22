@@ -17,7 +17,9 @@ class Paladin(white: Boolean) : Piece(white, PieceType.PALADIN, 7, Int.MAX_VALUE
 
         while (++x <= start.getX() + 3)
             if(x < 8)
-                if(board.getBox(x, y).getPiece() != null)
+                if(board.getBox(x, y).getPiece() is RiverBridge)
+                    continue
+                else if(board.getBox(x, y).getPiece() != null)
                     break
                 else options.add(board.getBox(x, y))
 
@@ -25,7 +27,9 @@ class Paladin(white: Boolean) : Piece(white, PieceType.PALADIN, 7, Int.MAX_VALUE
 
         while (++y <= start.getY() + 3)
             if(y < 8)
-                if(board.getBox(x, y).getPiece() != null)
+                if(board.getBox(x, y).getPiece() is RiverBridge)
+                    continue
+                else if(board.getBox(x, y).getPiece() != null)
                     break
                 else options.add(board.getBox(x, y))
 
@@ -33,7 +37,9 @@ class Paladin(white: Boolean) : Piece(white, PieceType.PALADIN, 7, Int.MAX_VALUE
 
         while (--x >= start.getX() - 3)
             if(x >= 0)
-                if(board.getBox(x, y).getPiece() != null)
+                if(board.getBox(x, y).getPiece() is RiverBridge)
+                    continue
+                else if(board.getBox(x, y).getPiece() != null)
                     break
                 else options.add(board.getBox(x, y))
 
@@ -41,7 +47,9 @@ class Paladin(white: Boolean) : Piece(white, PieceType.PALADIN, 7, Int.MAX_VALUE
 
         while (--y >= start.getY() - 3)
             if(y >= 0)
-                if(board.getBox(x, y).getPiece() != null)
+                if(board.getBox(x, y).getPiece() is RiverBridge)
+                    continue
+                else if(board.getBox(x, y).getPiece() != null)
                     break
                 else options.add(board.getBox(x, y))
 
@@ -49,22 +57,22 @@ class Paladin(white: Boolean) : Piece(white, PieceType.PALADIN, 7, Int.MAX_VALUE
 
         if (x + 2 < 8 && x + 3 < 8)
             if(board.getBox(x+2, y).getPiece()?.isWhite() == !isWhite() && board.getBox(x+2, y).getPiece() !is Fortress)
-                if(board.getBox(x+3, y).getPiece() == null && board.getBox(x+1, y).getPiece() == null)
+                if(board.getBox(x+3, y).getPiece() == null && (board.getBox(x+1, y).getPiece() == null || board.getBox(x+1, y).getPiece() is RiverBridge))
                     options.add(board.getBox(x+2, y))
 
         if (x - 2 >= 0 && x - 3 >= 0)
             if(board.getBox(x-2, y).getPiece()?.isWhite() == !isWhite() && board.getBox(x-2, y).getPiece() !is Fortress)
-                if(board.getBox(x-3, y).getPiece() == null && board.getBox(x-1, y).getPiece() == null)
+                if(board.getBox(x-3, y).getPiece() == null && (board.getBox(x-1, y).getPiece() == null || board.getBox(x-1, y).getPiece() is RiverBridge))
                     options.add(board.getBox(x-2, y))
 
         if (y + 2 < 8 && y + 3 < 8)
             if(board.getBox(x, y+2).getPiece()?.isWhite() == !isWhite() && board.getBox(x, y+2).getPiece() !is Fortress)
-                if(board.getBox(x, y+3).getPiece() == null && board.getBox(x, y+1).getPiece() == null)
+                if(board.getBox(x, y+3).getPiece() == null && (board.getBox(x, y+1).getPiece() == null || board.getBox(x, y+1).getPiece() is RiverBridge))
                     options.add(board.getBox(x, y+2))
 
         if (y - 2 >= 0 && y - 3 >= 0)
             if(board.getBox(x, y-2).getPiece()?.isWhite() == !isWhite() && board.getBox(x, y-2).getPiece() !is Fortress)
-                if(board.getBox(x, y-3).getPiece() == null && board.getBox(x, y-1).getPiece() == null)
+                if(board.getBox(x, y-3).getPiece() == null && (board.getBox(x, y-1).getPiece() == null || board.getBox(x, y-1).getPiece() is RiverBridge))
                     options.add(board.getBox(x, y-2))
 
         return options
@@ -81,7 +89,7 @@ class Paladin(white: Boolean) : Piece(white, PieceType.PALADIN, 7, Int.MAX_VALUE
         for((dx, dy) in directions)
             if (x + dx in 0..7 && y + dy in 0..7){
                 val spot = board.getBox(x + dx, y + dy)
-                if (spot.getPiece() !is Fortress)
+                if (spot.getPiece() !is Fortress && spot.getPiece()?.isRiver() == false)
                     if (spot.getPiece()?.isWhite() == !isWhite())
                         options.add(board.getBox(x + dx, y + dy))
             }

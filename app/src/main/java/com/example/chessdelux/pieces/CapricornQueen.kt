@@ -1,25 +1,20 @@
 package com.example.chessdelux.pieces
 
 import com.example.chessdelux.R
-import com.example.chessdelux.board.*
-import com.example.chessdelux.game.Game
+import com.example.chessdelux.board.Board
+import com.example.chessdelux.board.Spot
 
-class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3, 25) {
-    // the bishop image
-    override var imageResource: Int? = if (white) R.drawable.bishop_white else R.drawable.bishop_black
+class CapricornQueen(white: Boolean) : Piece(white, PieceType.CAPRICORN_QUEEN, 18, Int.MAX_VALUE) {
+    override var imageResource: Int? = if (white) R.drawable.capricorn_queen_white else R.drawable.capricorn_queen_black
 
-    override val evolutionOptions: List<PieceType> = listOf(PieceType.CARDINAL)
+    override val evolutionOptions: List<PieceType> = listOf()
 
-
-    // return the bishop possible moves
     override fun moveOptions(board: Board, start: Spot): MutableList<Spot> {
         val options = mutableListOf<Spot>()
         var x = start.getX()
         var y = start.getY()
 
-        // checking all diagonals
-        // also stopping at a black piece or before a white piece
-        while (++x < 8 && ++y < 8)
+        while (++x < 8)
             if(board.getBox(x, y).getPiece() is RiverBridge)
                 continue
             else if(board.getBox(x, y).getPiece() != null)
@@ -27,9 +22,8 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3, 25) {
             else options.add(board.getBox(x, y))
 
         x = start.getX()
-        y = start.getY()
 
-        while (++x < 8 && --y >= 0)
+        while (--x >= 0)
             if(board.getBox(x, y).getPiece() is RiverBridge)
                 continue
             else if(board.getBox(x, y).getPiece() != null)
@@ -37,44 +31,52 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3, 25) {
             else options.add(board.getBox(x, y))
 
         x = start.getX()
-        y = start.getY()
 
-        while (--x >= 0 && ++y < 8)
+        while (++y < 8)
             if(board.getBox(x, y).getPiece() is RiverBridge)
                 continue
             else if(board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
 
-        x = start.getX()
         y = start.getY()
 
-        while (--x >= 0 && --y >= 0)
+        while (--y >= 0)
             if(board.getBox(x, y).getPiece() is RiverBridge)
                 continue
             else if(board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
+
+        y = start.getY()
+
+        if(board.isRiverOnBoard()){
+            if(checkNextRiver(board, start)){
+                val river = board.getRiverSpots()
+                for(spot in river){
+                    val riverOptions = spot.getPiece()?.moveOptions(board, spot)
+                    for(option in riverOptions!!){
+                        options.add(option)
+                    }
+                }
+            }
+        }
 
         return options
     }
 
-    // return the bishop kill options
     override fun killOptions(board: Board, start: Spot): MutableList<Spot> {
         val options = mutableListOf<Spot>()
         var x = start.getX()
         var y = start.getY()
 
-        // checking all diagonals
-        // also stopping at a black piece or before a white piece
-
-        while (++x < 8 && ++y < 8){
+        while (++x < 8){
             val spot = board.getBox(x, y)
             if(board.getBox(x, y).getPiece() is RiverBridge)
                 continue
-            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
+            else if(spot.getPiece() is Fortress)
                 break
-            else if (spot.getPiece()?.isWhite() == !isWhite()) {
+            else if (spot.getPiece()?.isWhite() == !isWhite() && spot.getPiece()?.isRiver() == false) {
                 options.add(spot)
                 break
             }
@@ -83,15 +85,14 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3, 25) {
         }
 
         x = start.getX()
-        y = start.getY()
 
-        while (++x < 8 && --y >= 0){
+        while (--x >= 0){
             val spot = board.getBox(x, y)
             if(board.getBox(x, y).getPiece() is RiverBridge)
                 continue
-            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
+            else if(spot.getPiece() is Fortress)
                 break
-            else if (spot.getPiece()?.isWhite() == !isWhite()) {
+            else if (spot.getPiece()?.isWhite() == !isWhite() && spot.getPiece()?.isRiver() == false) {
                 options.add(spot)
                 break
             }
@@ -100,15 +101,14 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3, 25) {
         }
 
         x = start.getX()
-        y = start.getY()
 
-        while (--x >= 0 && ++y < 8){
+        while (++y < 8){
             val spot = board.getBox(x, y)
             if(board.getBox(x, y).getPiece() is RiverBridge)
                 continue
-            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
+            else if(spot.getPiece() is Fortress)
                 break
-            else if (spot.getPiece()?.isWhite() == !isWhite()) {
+            else if (spot.getPiece()?.isWhite() == !isWhite() && spot.getPiece()?.isRiver() == false) {
                 options.add(spot)
                 break
             }
@@ -116,23 +116,52 @@ class Bishop(white: Boolean) : Piece(white, PieceType.BISHOP, 3, 25) {
                 break
         }
 
-        x = start.getX()
         y = start.getY()
 
-        while (--x >= 0 && --y >= 0){
+        while (--y >= 0){
             val spot = board.getBox(x, y)
             if(board.getBox(x, y).getPiece() is RiverBridge)
                 continue
-            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
+            else if(spot.getPiece() is Fortress)
                 break
-            else if (spot.getPiece()?.isWhite() == !isWhite()) {
+            else if (spot.getPiece()?.isWhite() == !isWhite() && spot.getPiece()?.isRiver() == false) {
                 options.add(spot)
                 break
             }
             else if (spot.getPiece() != null)
                 break
         }
+
+        board.getPieceSpotThatChecks(this.isWhite(), board)?.let { options.add(it) }
 
         return options
+    }
+
+    private fun checkNextRiver(board: Board, start: Spot): Boolean{
+        val direction = listOf(
+            Pair(1, 0),
+            Pair(0, 1),
+            Pair(-1, 0),
+            Pair(0, -1)
+        )
+        val x = start.getX()
+        val y = start.getY()
+        for((dx, dy) in direction){
+            if(x+dx in 0..7 && y+dy in 0..7) {
+                val box = board.getBox(x + dx, y + dy)
+                if (box.getPiece() is RiverStart ||
+                    box.getPiece() is RiverEnd ||
+                    box.getPiece() is RiverHorizontal ||
+                    box.getPiece() is RiverVertical ||
+                    box.getPiece() is RiverLeftUp ||
+                    box.getPiece() is RiverLeftDown ||
+                    box.getPiece() is RiverRightUp ||
+                    box.getPiece() is RiverRightDown ||
+                    box.getPiece() is RiverBridge
+                )
+                    return true
+            }
+        }
+        return false
     }
 }

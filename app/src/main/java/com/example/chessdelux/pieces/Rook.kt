@@ -26,7 +26,9 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
 
         while (++x < 8) {
             val spot = board.getBox(x, y)
-            if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
                 options.add(spot)
             else if (board.getBox(x, y).getPiece() != null)
                 break
@@ -37,7 +39,9 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
 
         while (++y < 8) {
             val spot = board.getBox(x, y)
-            if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
                 options.add(spot)
             else if (board.getBox(x, y).getPiece() != null)
                 break
@@ -48,7 +52,9 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
 
         while (--x >= 0) {
             val spot = board.getBox(x, y)
-            if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
                 options.add(spot)
             else if (board.getBox(x, y).getPiece() != null)
                 break
@@ -59,7 +65,9 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
 
         while (--y >= 0) {
             val spot = board.getBox(x, y)
-            if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if (spot.getPiece() is Rook && spot.getPiece()?.isWhite() == isWhite())
                 options.add(spot)
             else if (board.getBox(x, y).getPiece() != null)
                 break
@@ -78,7 +86,9 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
 
         while (++x < 8){
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -92,7 +102,9 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
 
         while (++y < 8){
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -106,7 +118,9 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
 
         while (--x >= 0){
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -120,7 +134,9 @@ class Rook(white: Boolean) : Piece(white, PieceType.ROOK, 5, Int.MAX_VALUE) {
 
         while (--y >= 0){
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)

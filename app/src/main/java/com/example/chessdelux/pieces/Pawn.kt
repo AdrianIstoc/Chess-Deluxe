@@ -63,6 +63,12 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 15) {
             val spot = board.getBox(start.getX() + direction, start.getY())
             if (spot.getPiece() == null)
                 options.add(spot)
+            else if(spot.getPiece() is RiverBridge)
+                if(start.getX() + 2 * direction in 0 .. 7) {
+                    val spot2 = board.getBox(start.getX() + 2 * direction, start.getY())
+                    if (spot2.getPiece() == null)
+                        options.add(spot2)
+                }
         }
 
         // check if the pawn can move two spaces forward if it hasn't moved yet
@@ -86,7 +92,8 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 15) {
             spot = board.getBox(start.getX() + direction, start.getY() + 1)
             if (spot.getPiece() != null &&
                 spot.getPiece()?.isWhite() == !isWhite() &&
-                spot.getPiece() !is Fortress
+                spot.getPiece() !is Fortress &&
+                spot.getPiece()?.isRiver() == false
             )
                 options.add(spot)
         }
@@ -96,7 +103,8 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 15) {
             spot = board.getBox(start.getX() + direction, start.getY() - 1)
             if (spot.getPiece() != null &&
                 spot.getPiece()?.isWhite() == !isWhite() &&
-                spot.getPiece() !is Fortress
+                spot.getPiece() !is Fortress &&
+                spot.getPiece()?.isRiver() == false
             )
                 options.add(spot)
         }
@@ -179,6 +187,7 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 15) {
             if(start.getY()-1 in 0 .. 7 && board.getBox(start.getX(), start.getY()-1).getPiece() is Pawn)
                 if((board.getBox(start.getX(), start.getY()-1).getPiece() as Pawn).pawnSkipped)
                     if(end.getX()==start.getX()-1 && end.getY() == start.getY()-1) {
+                        board.getBox(start.getX(), start.getY()).getPiece()?.addExp(1)
                         board.getBox(start.getX(), start.getY() - 1).getPiece()?.setKilled(true)
                         board.getBox(start.getX(), start.getY() - 1).setPiece(null)
                         return
@@ -189,6 +198,7 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 15) {
             if(start.getY()-1 in 0 .. 7 && board.getBox(start.getX(), start.getY()-1).getPiece() is Pawn)
                 if((board.getBox(start.getX(), start.getY()-1).getPiece() as Pawn).pawnSkipped)
                     if(end.getX() == start.getX()+1 && end.getY() == start.getY()-1){
+                        board.getBox(start.getX(), start.getY()).getPiece()?.addExp(1)
                         board.getBox(start.getX(), start.getY()-1).getPiece()?.setKilled(true)
                         board.getBox(start.getX(), start.getY() - 1).setPiece(null)
                         return
@@ -198,6 +208,7 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 15) {
             if(start.getY()+1 in 0 .. 7 && board.getBox(start.getX(), start.getY()+1).getPiece() is Pawn)
                 if((board.getBox(start.getX(), start.getY()+1).getPiece() as Pawn).pawnSkipped)
                     if(end.getX() == start.getX()-1 && end.getY() == start.getY()+1){
+                        board.getBox(start.getX(), start.getY()).getPiece()?.addExp(1)
                         board.getBox(start.getX(), start.getY()+1).getPiece()?.setKilled(true)
                         board.getBox(start.getX(), start.getY() + 1).setPiece(null)
                         return
@@ -208,6 +219,7 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 15) {
             if(start.getY()+1 in 0 .. 7 && board.getBox(start.getX(), start.getY()+1).getPiece() is Pawn)
                 if((board.getBox(start.getX(), start.getY()+1).getPiece() as Pawn).pawnSkipped)
                     if(end.getX() == start.getX()+1 && end.getY() == start.getY()+1){
+                        board.getBox(start.getX(), start.getY()).getPiece()?.addExp(1)
                         board.getBox(start.getX(), start.getY()+1).getPiece()?.setKilled(true)
                         board.getBox(start.getX(), start.getY() + 1).setPiece(null)
                         return

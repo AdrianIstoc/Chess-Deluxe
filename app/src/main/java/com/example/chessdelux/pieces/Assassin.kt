@@ -16,7 +16,9 @@ class Assassin(white: Boolean) : Piece(white, PieceType.ASSASSIN, 4, Int.MAX_VAL
 
         while (++x <= start.getX() + 2)
             if(x < 8)
-                if(board.getBox(x, y).getPiece() != null)
+                if(board.getBox(x, y).getPiece() is RiverBridge)
+                    continue
+                else if(board.getBox(x, y).getPiece() != null)
                     break
                 else options.add(board.getBox(x, y))
 
@@ -32,7 +34,9 @@ class Assassin(white: Boolean) : Piece(white, PieceType.ASSASSIN, 4, Int.MAX_VAL
 
         while (--x >= start.getX() - 2)
             if(x >= 0)
-                if(board.getBox(x, y).getPiece() != null)
+                if(board.getBox(x, y).getPiece() is RiverBridge)
+                    continue
+                else if(board.getBox(x, y).getPiece() != null)
                     break
                 else options.add(board.getBox(x, y))
 
@@ -61,16 +65,16 @@ class Assassin(white: Boolean) : Piece(white, PieceType.ASSASSIN, 4, Int.MAX_VAL
 
         for(direction in directions){
             when (dir) {
-                0 -> if (x -1 in 0..7 && y in 0..7 && board.getBox(x-1, y).getPiece() != null) {dir++; continue}
-                1 -> if (x in 0..7 && y+1 in 0..7 && board.getBox(x, y+1).getPiece() != null) {dir++; continue}
-                2 -> if (x+1 in 0..7 && y in 0..7 && board.getBox(x+1, y).getPiece() != null) {dir++; continue}
-                3 -> if (x in 0..7 && y-1 in 0..7 && board.getBox(x, y-1).getPiece() != null) {dir++; continue}
+                0 -> if (x -1 in 0..7 && y in 0..7 && board.getBox(x-1, y).getPiece() != null && board.getBox(x-1, y).getPiece() !is RiverBridge) {dir++; continue}
+                1 -> if (x in 0..7 && y+1 in 0..7 && board.getBox(x, y+1).getPiece() != null && board.getBox(x-1, y).getPiece() !is RiverBridge) {dir++; continue}
+                2 -> if (x+1 in 0..7 && y in 0..7 && board.getBox(x+1, y).getPiece() != null && board.getBox(x-1, y).getPiece() !is RiverBridge) {dir++; continue}
+                3 -> if (x in 0..7 && y-1 in 0..7 && board.getBox(x, y-1).getPiece() != null && board.getBox(x-1, y).getPiece() !is RiverBridge) {dir++; continue}
                 else -> {}
             }
             for((dx, dy) in direction) {
                 if (x + dx in 0..7 && y + dy in 0..7) {
                     val spot = board.getBox(x + dx, y + dy)
-                    if (spot.getPiece() !is Fortress)
+                    if (spot.getPiece() !is Fortress && spot.getPiece()?.isRiver() == false)
                         if (spot.getPiece()?.isWhite() == !isWhite())
                             options.add(board.getBox(x + dx, y + dy))
                 }

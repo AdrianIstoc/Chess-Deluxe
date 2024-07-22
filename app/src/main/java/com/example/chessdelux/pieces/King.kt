@@ -29,6 +29,9 @@ class King(white: Boolean) : Piece(white, PieceType.KING, 90, Int.MAX_VALUE) {
     fun isInCheck(): Boolean{
         return isInCheck
     }
+    fun setInCheck(value: Boolean){
+        isInCheck = value
+    }
 
     // return the king possible moves
     override fun moveOptions(board: Board, start: Spot): MutableList<Spot> {
@@ -62,6 +65,24 @@ class King(white: Boolean) : Piece(white, PieceType.KING, 90, Int.MAX_VALUE) {
                         options.add(spot)
             }
         }
+
+        if(x+1 in 0 .. 7)
+            if(board.getBox(x+1, y).getPiece() is RiverBridge)
+                if(x+2 in 0 .. 7){
+                    val spot = board.getBox(x+2, y)
+                    if(spot.getPiece() == null)
+                        if(!checkIfKingMoveInCheck(board, spot))
+                            options.add(spot)
+                }
+
+        if(x-1 in 0 .. 7)
+            if(board.getBox(x-1, y).getPiece() is RiverBridge)
+                if(x-2 in 0 .. 7) {
+                    val spot = board.getBox(x - 2, y)
+                    if (spot.getPiece() == null)
+                        if (!checkIfKingMoveInCheck(board, spot))
+                            options.add(spot)
+                }
 
         // castling
         if (!kingMoved && !isInCheck) {
@@ -116,7 +137,6 @@ class King(white: Boolean) : Piece(white, PieceType.KING, 90, Int.MAX_VALUE) {
                 }
             }
         }
-        isInCheck = false
         return options
     }
 
@@ -135,7 +155,7 @@ class King(white: Boolean) : Piece(white, PieceType.KING, 90, Int.MAX_VALUE) {
             if (x+dx in 0 .. 7 && y+dy in 0 .. 7){
                 val spot = board.getBox(x+dx, y+dy)
                 // check arrival spot to not be a fortress
-                if(spot.getPiece() !is Fortress)
+                if(spot.getPiece() !is Fortress && spot.getPiece()?.isRiver() == false)
                     // check arrival spot to not be a white piece
                     if (spot.getPiece()?.isWhite() == !isWhite())
                         // check if the king will be in check after the move
@@ -144,7 +164,26 @@ class King(white: Boolean) : Piece(white, PieceType.KING, 90, Int.MAX_VALUE) {
             }
         }
 
-        isInCheck = false
+        if(x+1 in 0 .. 7)
+            if(board.getBox(x+1, y).getPiece() is RiverBridge)
+                if(x+2 in 0 .. 7){
+                    val spot = board.getBox(x+2, y)
+                    if(spot.getPiece() !is Fortress && spot.getPiece()?.isRiver() == false)
+                        if(spot.getPiece()?.isWhite() == !isWhite())
+                            if(!checkIfKingMoveInCheck(board, spot))
+                                options.add(spot)
+                }
+
+        if(x-1 in 0 .. 7)
+            if(board.getBox(x-1, y).getPiece() is RiverBridge)
+                if(x-2 in 0 .. 7) {
+                    val spot = board.getBox(x - 2, y)
+                    if(spot.getPiece() !is Fortress && spot.getPiece()?.isRiver() == false)
+                        if (spot.getPiece()?.isWhite() == !isWhite())
+                            if (!checkIfKingMoveInCheck(board, spot))
+                                options.add(spot)
+                }
+
         return options
     }
 
@@ -182,12 +221,10 @@ class King(white: Boolean) : Piece(white, PieceType.KING, 90, Int.MAX_VALUE) {
                     if (piece != null && piece.isWhite() != isWhite() && piece !is King) {
                         for (options in piece.killOptions(board, pieceSpot))
                             if (options.getX() == kingSpot.getX() && options.getY() == kingSpot.getY()){
-                                isInCheck = true
                                 return true
                             }
                     } else if (piece is King && piece.isWhite() != isWhite()) {
                         if (abs(kingSpot.getX() - pieceSpot.getX()) <= 1 && abs(kingSpot.getY() - pieceSpot.getY()) <= 1){
-                            isInCheck= true
                             return true
                         }
                     }
@@ -196,7 +233,6 @@ class King(white: Boolean) : Piece(white, PieceType.KING, 90, Int.MAX_VALUE) {
                 }
             }
         }
-        isInCheck = false
         return false
     }
 

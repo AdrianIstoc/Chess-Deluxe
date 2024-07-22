@@ -111,6 +111,18 @@ abstract class Piece(private var white: Boolean, private var type: PieceType, pr
             }
     }
 
+    fun isRiver(): Boolean {
+        return this is RiverHorizontal ||
+                this is RiverStart ||
+                this is RiverLeftUp ||
+                this is RiverLeftDown ||
+                this is RiverEnd ||
+                this is RiverVertical ||
+                this is RiverRightUp ||
+                this is RiverRightDown ||
+                this is RiverBridge
+    }
+
 
     // return the piece possible moves
     abstract fun moveOptions(board: Board, start: Spot): MutableList<Spot>

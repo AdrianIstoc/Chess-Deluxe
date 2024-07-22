@@ -63,7 +63,7 @@ class Game {
 
 
         // check if selected spot has a piece of the current player
-        if (selectedSpot != null && selectedSpot?.getPiece()?.isWhite() == currentTurn.isWhiteSide()) {
+        if (selectedSpot != null && selectedSpot?.getPiece()?.isWhite() == currentTurn.isWhiteSide() && selectedSpot?.getPiece()?.isRiver() == false) {
             currentPieceSpot = selectedSpot                 // set current piece spot as the selected spot
             val currentPiece = currentPieceSpot?.getPiece()
             if(currentPiece != null) {
@@ -117,6 +117,7 @@ class Game {
                     val cell = chessboard.getChildAt(i*8+j) as ImageView
 
                     cell.setOnClickListener {
+                        checkAndSetInCheck(currentTurn.isWhiteSide())
                         // set the selected spot
                         try {
                             setSelectedSpot(i, j)
@@ -150,6 +151,7 @@ class Game {
 
                         // check if any player won
                         try{
+                            checkAndSetInCheck(currentTurn.isWhiteSide())
                             checkWin(context)
                         }catch (e: Exception){
                             Log.e("ObscureMove", "checkWin problem e -> ${e.message}")
@@ -160,6 +162,19 @@ class Game {
                         }
                     }
                 }
+            }
+    }
+
+    private fun checkAndSetInCheck(white: Boolean) {
+        for (i in 0 until 8)
+            for (j in 0 until 8) {
+                val piece = board.getBox(i, j).getPiece()
+                if (piece is King && piece.isWhite() == white)
+                    if(piece.checkIfKingInCheck(board, board.getKingSpot(piece.isWhite()))) {
+                        piece.setInCheck(true); return
+                    }else {
+                        piece.setInCheck(false); return
+                    }
             }
     }
 
@@ -194,6 +209,7 @@ class Game {
     private fun checkWin(context: MainActivity) {
         val white = currentTurn.isWhiteSide()
         val king = board.getKingSpot(white).getPiece() as King
+        king.checkIfKingInCheck(board, board.getKingSpot(white))
 
         var options = 0
         for (i in 0 until 8)
@@ -436,6 +452,16 @@ fun makePiece(pieceType: PieceType, white: Boolean): Piece {
         PieceType.ASSASSIN -> Assassin(white)
         PieceType.CARDINAL -> Cardinal(white)
         PieceType.PALADIN -> Paladin(white)
+        PieceType.RIVER_START -> RiverStart(white)
+        PieceType.RIVER_END -> RiverEnd(white)
+        PieceType.RIVER_HORIZONTAL -> RiverHorizontal(white)
+        PieceType.RIVER_VERTICAL -> RiverVertical(white)
+        PieceType.RIVER_LEFT_UP -> RiverLeftUp(white)
+        PieceType.RIVER_LEFT_DOWN -> RiverLeftDown(white)
+        PieceType.RIVER_RIGHT_UP -> RiverRightUp(white)
+        PieceType.RIVER_RIGHT_DOWN -> RiverRightDown(white)
+        PieceType.RIVER_BRIDGE -> RiverBridge(white)
+        PieceType.CAPRICORN_QUEEN -> CapricornQueen(white)
         else -> Pawn(!white)
     }
 }
@@ -551,6 +577,7 @@ fun checkIfMovePutsPlayerInCheck(start: Spot, end: Spot, board: Board, currentTu
     }
     val kingSpot = board.getKingSpot(currentTurn)   // get the king
     val king = kingSpot.getPiece() as King
+    val inCheck = king.isInCheck()
     // check if the player is in check
     if(king.checkIfKingInCheck(board, kingSpot)){
         // if not, reset the move and declare that the move is a valid move
@@ -594,6 +621,7 @@ fun checkIfMovePutsPlayerInCheck(start: Spot, end: Spot, board: Board, currentTu
                     board.getBox(ex,ey-1).setPiece(null)
             }
         end.getPiece()?.setKilled(false)
+        king.setInCheck(inCheck)
         return true
     }
     else {
@@ -631,6 +659,7 @@ fun checkIfMovePutsPlayerInCheck(start: Spot, end: Spot, board: Board, currentTu
                     board.getBox(ex,ey-1).setPiece(null)
             }
         end.getPiece()?.setKilled(false)
+        king.setInCheck(inCheck)
         return false
     }
 }

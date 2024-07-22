@@ -44,19 +44,19 @@ class MainActivity : ComponentActivity() {
                 }
 
                 d3Button.setOnClickListener {
-                    startGame(true, 4)
+                    startGame(true, 3)
                 }
 
                 d5Button.setOnClickListener {
-                    startGame(true, 6)
+                    startGame(true, 4)
                 }
 
                 d7Button.setOnClickListener {
-                    startGame(true, 8)
+                    startGame(true, 5)
                 }
 
                 d9Button.setOnClickListener {
-                    startGame(true, 10)
+                    startGame(true, 6)
                 }
 
             }
@@ -80,6 +80,8 @@ class MainActivity : ComponentActivity() {
             val assassinButton = findViewById<Button>(R.id.assassin_button)
             val cardinalButton = findViewById<Button>(R.id.cardinal_button)
             val paladinButton = findViewById<Button>(R.id.paladin_button)
+            val riverButton = findViewById<Button>(R.id.river_button)
+            val capricornButton = findViewById<Button>(R.id.capricorn_button)
 
             backButton.setOnClickListener {
                 finish()
@@ -517,6 +519,86 @@ class MainActivity : ComponentActivity() {
                 restartButton.setOnClickListener {
                     game.initialize(humanPlayer, player2)
                     game.getBoard().paladinTutorial()
+                    game.renderGameBoard(chessboard, this)
+                    game.proceedWithTheGame(chessboard, this)
+
+                    text = findViewById<TextView>(R.id.game_text)
+                    text.text = null
+                    text.visibility = View.INVISIBLE
+                }
+            }
+
+            riverButton.setOnClickListener {
+                setContentView(R.layout.activity_game)
+
+                backButton = findViewById<Button>(R.id.back)
+                val restartButton = findViewById<Button>(R.id.restart)
+
+                var text = findViewById<TextView>(R.id.tutorial_text)
+                text.text = getString(R.string.river_tutorial_text)
+                text.visibility = View.VISIBLE
+
+                val game = Game()
+                val humanPlayer = HumanPlayer(true)
+                val player2 = HumanPlayer(false)
+
+                val chessboard = findViewById<GridLayout>(R.id.chess_board)
+                val cellSize = resources.displayMetrics.widthPixels / 8
+
+                game.setCellSize(cellSize)
+                game.initialize(humanPlayer, player2)
+                game.getBoard().riverTutorial()
+                game.renderGameBoard(chessboard, this)
+                game.proceedWithTheGame(chessboard, this)
+
+                backButton.setOnClickListener {
+                    finish()
+                    startActivity(intent)
+                }
+
+                restartButton.setOnClickListener {
+                    game.initialize(humanPlayer, player2)
+                    game.getBoard().riverTutorial()
+                    game.renderGameBoard(chessboard, this)
+                    game.proceedWithTheGame(chessboard, this)
+
+                    text = findViewById<TextView>(R.id.game_text)
+                    text.text = null
+                    text.visibility = View.INVISIBLE
+                }
+            }
+
+            capricornButton.setOnClickListener {
+                setContentView(R.layout.activity_game)
+
+                backButton = findViewById<Button>(R.id.back)
+                val restartButton = findViewById<Button>(R.id.restart)
+
+                var text = findViewById<TextView>(R.id.tutorial_text)
+                text.text = getString(R.string.capricorn_queen_tutorial_text)
+                text.visibility = View.VISIBLE
+
+                val game = Game()
+                val humanPlayer = HumanPlayer(true)
+                val player2 = HumanPlayer(false)
+
+                val chessboard = findViewById<GridLayout>(R.id.chess_board)
+                val cellSize = resources.displayMetrics.widthPixels / 8
+
+                game.setCellSize(cellSize)
+                game.initialize(humanPlayer, player2)
+                game.getBoard().capricornTutorial()
+                game.renderGameBoard(chessboard, this)
+                game.proceedWithTheGame(chessboard, this)
+
+                backButton.setOnClickListener {
+                    finish()
+                    startActivity(intent)
+                }
+
+                restartButton.setOnClickListener {
+                    game.initialize(humanPlayer, player2)
+                    game.getBoard().capricornTutorial()
                     game.renderGameBoard(chessboard, this)
                     game.proceedWithTheGame(chessboard, this)
 

@@ -20,7 +20,9 @@ class Cardinal(white: Boolean) : Piece(white, PieceType.CARDINAL, 6, Int.MAX_VAL
                 x++
             y++
             loop++
-            if (board.getBox(x, y).getPiece() != null)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if (board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
         }
@@ -34,7 +36,9 @@ class Cardinal(white: Boolean) : Piece(white, PieceType.CARDINAL, 6, Int.MAX_VAL
                 x++
             y--
             loop++
-            if (board.getBox(x, y).getPiece() != null)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if (board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
         }
@@ -48,7 +52,9 @@ class Cardinal(white: Boolean) : Piece(white, PieceType.CARDINAL, 6, Int.MAX_VAL
                 x--
             y++
             loop++
-            if (board.getBox(x, y).getPiece() != null)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if (board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
         }
@@ -62,7 +68,9 @@ class Cardinal(white: Boolean) : Piece(white, PieceType.CARDINAL, 6, Int.MAX_VAL
                 x--
             y--
             loop++
-            if (board.getBox(x, y).getPiece() != null)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if (board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
         }
@@ -76,7 +84,9 @@ class Cardinal(white: Boolean) : Piece(white, PieceType.CARDINAL, 6, Int.MAX_VAL
                 y++
             x++
             loop++
-            if (board.getBox(x, y).getPiece() != null)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if (board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
         }
@@ -90,7 +100,9 @@ class Cardinal(white: Boolean) : Piece(white, PieceType.CARDINAL, 6, Int.MAX_VAL
                 y++
             x--
             loop++
-            if (board.getBox(x, y).getPiece() != null)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if (board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
         }
@@ -104,7 +116,9 @@ class Cardinal(white: Boolean) : Piece(white, PieceType.CARDINAL, 6, Int.MAX_VAL
                 y--
             x++
             loop++
-            if (board.getBox(x, y).getPiece() != null)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if (board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
         }
@@ -118,7 +132,9 @@ class Cardinal(white: Boolean) : Piece(white, PieceType.CARDINAL, 6, Int.MAX_VAL
                 y--
             x--
             loop++
-            if (board.getBox(x, y).getPiece() != null)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if (board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
         }
@@ -138,7 +154,9 @@ class Cardinal(white: Boolean) : Piece(white, PieceType.CARDINAL, 6, Int.MAX_VAL
             y++
             loop++
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -158,7 +176,9 @@ class Cardinal(white: Boolean) : Piece(white, PieceType.CARDINAL, 6, Int.MAX_VAL
             y--
             loop++
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -178,7 +198,9 @@ class Cardinal(white: Boolean) : Piece(white, PieceType.CARDINAL, 6, Int.MAX_VAL
             y++
             loop++
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -198,7 +220,9 @@ class Cardinal(white: Boolean) : Piece(white, PieceType.CARDINAL, 6, Int.MAX_VAL
             y--
             loop++
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -218,7 +242,9 @@ class Cardinal(white: Boolean) : Piece(white, PieceType.CARDINAL, 6, Int.MAX_VAL
             x++
             loop++
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -238,7 +264,9 @@ class Cardinal(white: Boolean) : Piece(white, PieceType.CARDINAL, 6, Int.MAX_VAL
             x--
             loop++
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -258,7 +286,9 @@ class Cardinal(white: Boolean) : Piece(white, PieceType.CARDINAL, 6, Int.MAX_VAL
             x++
             loop++
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -278,7 +308,9 @@ class Cardinal(white: Boolean) : Piece(white, PieceType.CARDINAL, 6, Int.MAX_VAL
             x--
             loop++
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)

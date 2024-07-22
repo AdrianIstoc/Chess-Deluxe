@@ -41,6 +41,70 @@ class Board {
         return fortressSpot
     }
 
+    fun getRiverSpots(): MutableList<Spot> {
+        val riverSpot = mutableListOf<Spot>()        // set the spot of the king as null
+        for(i in 0 until 8){
+            for(j in 0 until 8){
+                val pieceSpot = this.getBox(i, j)
+                val piece = pieceSpot.getPiece()
+                if(piece is RiverStart ||
+                    piece is RiverEnd ||
+                    piece is RiverHorizontal ||
+                    piece is RiverVertical ||
+                    piece is RiverLeftUp ||
+                    piece is RiverLeftDown ||
+                    piece is RiverRightUp ||
+                    piece is RiverRightDown ||
+                    piece is RiverBridge){
+                    riverSpot.add(pieceSpot)
+                }
+            }
+        }
+
+        return riverSpot
+    }
+
+    fun isRiverOnBoard():Boolean{
+        for(i in 0 until 8){
+            for(j in 0 until 8){
+                val pieceSpot = this.getBox(i, j)
+                val piece = pieceSpot.getPiece()
+                if(piece is RiverStart ||
+                    piece is RiverEnd ||
+                    piece is RiverHorizontal ||
+                    piece is RiverVertical ||
+                    piece is RiverLeftUp ||
+                    piece is RiverLeftDown ||
+                    piece is RiverRightUp ||
+                    piece is RiverRightDown ||
+                    piece is RiverBridge){
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    fun getPieceSpotThatChecks(white: Boolean, board: Board): Spot? {
+        val kingSpot = getKingSpot(white)
+        val king = kingSpot.getPiece() as King
+        if(king.isInCheck()){
+            for(i in 0 until 8){
+                for(j in 0 until 8){
+                    val pieceSpot = getBox(i,j)
+                    val piece = pieceSpot.getPiece()
+                    if(piece?.isWhite() == !white){
+                        val kills = piece.killOptions(board, pieceSpot)
+                        for(kill in kills)
+                            if(kill == kingSpot)
+                                return pieceSpot
+                    }
+                }
+            }
+        }
+        return null
+    }
+
     // move a piece
     fun movePiece(start: Spot, end: Spot){
         val piece = start.getPiece()            // get the piece
@@ -113,25 +177,28 @@ class Board {
             for (j in 0 until 8)
                 boxes[i][j] = Spot(i, j, null)
 
-        boxes[7][0] = Spot(7, 0, King(false))
+        boxes[0][0] = Spot(0, 0, King(false))
         boxes[7][7] = Spot(7,7,King(true))
 
-        boxes[3][4] = Spot(3,4, Assassin(true))
+        boxes[3][0] = Spot(3,0, RiverStart(true))
+        boxes[3][1] = Spot(3,1, RiverHorizontal(true))
+        boxes[3][2] = Spot(3,2, RiverLeftDown(true))
+        boxes[4][2] = Spot(4,2, RiverRightUp(true))
+        boxes[4][3] = Spot(4,3, RiverBridge(true))
+        boxes[4][4] = Spot(4,4, RiverHorizontal(true))
+        boxes[4][5] = Spot(4,5, RiverLeftUp(true))
+        boxes[3][5] = Spot(3,5, RiverVertical(true))
+        boxes[2][5] = Spot(2,5, RiverRightDown(true))
+        boxes[2][6] = Spot(2,6, RiverHorizontal(true))
+        boxes[2][7] = Spot(2,7, RiverEnd(true))
 
         boxes[1][3] = Spot(1,3, Rook(false))
-        boxes[1][4] = Spot(1,4, Rook(false))
-        boxes[1][5] = Spot(1,5, Rook(false))
-        boxes[2][2] = Spot(2,2, Rook(false))
-        boxes[2][4] = Spot(2,4, Rook(false))
-        boxes[2][6] = Spot(2,6, Rook(false))
-        boxes[3][2] = Spot(3,2, Rook(false))
-        boxes[3][5] = Spot(3,5, Rook(false))
-        boxes[3][6] = Spot(3,6, Rook(false))
-        boxes[4][2] = Spot(4,2, Rook(false))
-        boxes[4][6] = Spot(4,6, Rook(false))
-        boxes[5][3] = Spot(5,3, Rook(false))
-        boxes[5][4] = Spot(5,4, Rook(false))
-        boxes[5][5] = Spot(5,5, Rook(false))
+        boxes[1][5] = Spot(1,5, Thief(false))
+        boxes[3][3] = Spot(3,3, Bishop(false))
+
+        boxes[5][3] = Spot(5,3, Rook(true))
+        boxes[5][2] = Spot(5,2, Bishop(true))
+        boxes[3][7] = Spot(3,7, CapricornQueen(true))
     }
 
     fun pawnTutorial(){
@@ -364,6 +431,48 @@ class Board {
         boxes[4][3] = Spot(4,3, Pawn(false))
         boxes[4][6] = Spot(4,6, Rook(false))
         boxes[6][4] = Spot(6,4, Pawn(false))
+    }
+
+    fun riverTutorial() {
+        for (i in 0 until 8)
+            for (j in 0 until 8)
+                boxes[i][j] = Spot(i, j, null)
+
+        boxes[0][0] = Spot(0, 0, King(false))
+        boxes[7][0] = Spot(7,0,King(true))
+
+        boxes[3][0] = Spot(3,0, RiverStart(true))
+        boxes[3][1] = Spot(3,1, RiverHorizontal(true))
+        boxes[3][2] = Spot(3,2, RiverLeftDown(true))
+        boxes[4][2] = Spot(4,2, RiverRightUp(true))
+        boxes[4][3] = Spot(4,3, RiverBridge(true))
+        boxes[4][4] = Spot(4,4, RiverHorizontal(true))
+        boxes[4][5] = Spot(4,5, RiverLeftUp(true))
+        boxes[3][5] = Spot(3,5, RiverVertical(true))
+        boxes[2][5] = Spot(2,5, RiverRightDown(true))
+        boxes[2][6] = Spot(2,6, RiverHorizontal(true))
+        boxes[2][7] = Spot(2,7, RiverEnd(true))
+
+        boxes[6][4] = Spot(6,4, Cardinal(false))
+
+        boxes[5][3] = Spot(5,3, Pawn(true))
+        boxes[5][2] = Spot(5,2, Bishop(true))
+    }
+
+    fun capricornTutorial() {
+        for (i in 0 until 8)
+            for (j in 0 until 8)
+                boxes[i][j] = Spot(i, j, null)
+
+        boxes[7][0] = Spot(7, 0, King(false))
+        boxes[7][7] = Spot(7,7, King(true))
+
+        boxes[4][4] = Spot(4,4, RiverStart(false))
+        boxes[4][5] = Spot(4,5, RiverBridge(false))
+        boxes[4][6] = Spot(4,6, RiverEnd(false))
+        boxes[0][6] = Spot(0,6, Rook(false))
+
+        boxes[4][3] = Spot(4,3, CapricornQueen(true))
     }
 
     fun evaluate(maximizingColor: Boolean): Int {

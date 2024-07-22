@@ -3,10 +3,10 @@ package com.example.chessdelux.pieces
 import com.example.chessdelux.R
 import com.example.chessdelux.board.*
 
-class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, Int.MAX_VALUE) {
+class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, 30) {
     override var imageResource: Int? = if (white) R.drawable.queen_white else R.drawable.queen_black
 
-    override val evolutionOptions: List<PieceType> = listOf()
+    override val evolutionOptions: List<PieceType> = listOf(PieceType.CAPRICORN_QUEEN)
 
     override fun moveOptions(board: Board, start: Spot): MutableList<Spot> {
         val options = mutableListOf<Spot>()
@@ -14,7 +14,9 @@ class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, Int.MAX_VALUE) {
         var y = start.getY()
 
         while (++x < 8 && ++y < 8)
-            if(board.getBox(x, y).getPiece() != null)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
 
@@ -22,7 +24,9 @@ class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, Int.MAX_VALUE) {
         y = start.getY()
 
         while (++x < 8 && --y >= 0)
-            if(board.getBox(x, y).getPiece() != null)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
 
@@ -30,7 +34,9 @@ class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, Int.MAX_VALUE) {
         y = start.getY()
 
         while (--x >= 0 && ++y < 8)
-            if(board.getBox(x, y).getPiece() != null)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
 
@@ -38,7 +44,9 @@ class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, Int.MAX_VALUE) {
         y = start.getY()
 
         while (--x >= 0 && --y >= 0)
-            if(board.getBox(x, y).getPiece() != null)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
 
@@ -46,28 +54,36 @@ class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, Int.MAX_VALUE) {
         y = start.getY()
 
         while (++x < 8)
-            if(board.getBox(x, y).getPiece() != null)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
 
         x = start.getX()
 
         while (--x >= 0)
-            if(board.getBox(x, y).getPiece() != null)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
 
         x = start.getX()
 
         while (++y < 8)
-            if(board.getBox(x, y).getPiece() != null)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
 
         y = start.getY()
 
         while (--y >= 0)
-            if(board.getBox(x, y).getPiece() != null)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(board.getBox(x, y).getPiece() != null)
                 break
             else options.add(board.getBox(x, y))
 
@@ -83,7 +99,9 @@ class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, Int.MAX_VALUE) {
 
         while (++x < 8 && ++y < 8){
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -98,7 +116,9 @@ class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, Int.MAX_VALUE) {
 
         while (++x < 8 && --y >= 0){
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -113,7 +133,9 @@ class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, Int.MAX_VALUE) {
 
         while (--x >= 0 && ++y < 8){
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -128,7 +150,9 @@ class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, Int.MAX_VALUE) {
 
         while (--x >= 0 && --y >= 0){
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -143,7 +167,9 @@ class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, Int.MAX_VALUE) {
 
         while (++x < 8){
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -157,7 +183,9 @@ class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, Int.MAX_VALUE) {
 
         while (--x >= 0){
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -171,7 +199,9 @@ class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, Int.MAX_VALUE) {
 
         while (++y < 8){
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)
@@ -185,7 +215,9 @@ class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, Int.MAX_VALUE) {
 
         while (--y >= 0){
             val spot = board.getBox(x, y)
-            if(spot.getPiece() is Fortress)
+            if(board.getBox(x, y).getPiece() is RiverBridge)
+                continue
+            else if(spot.getPiece() is Fortress || spot.getPiece()?.isRiver() == true)
                 break
             else if (spot.getPiece()?.isWhite() == !isWhite()) {
                 options.add(spot)

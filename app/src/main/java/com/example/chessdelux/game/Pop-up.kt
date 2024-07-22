@@ -46,6 +46,7 @@ fun getImgResource(type: PieceType, white: Boolean): Int {
         PieceType.ASSASSIN -> if (white) R.drawable.assassin_white else R.drawable.assassin_black
         PieceType.CARDINAL -> if (white) R.drawable.cardinal_white else R.drawable.cardinal_black
         PieceType.PALADIN -> if (white) R.drawable.paladin_white else R.drawable.paladin_black
+        PieceType.CAPRICORN_QUEEN -> if (white) R.drawable.capricorn_queen_white else R.drawable.capricorn_queen_black
         else -> R.drawable.chess_delux_icon
     }
 }

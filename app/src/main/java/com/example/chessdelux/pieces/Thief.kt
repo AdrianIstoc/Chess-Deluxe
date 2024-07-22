@@ -16,7 +16,9 @@ class Thief(white: Boolean) : Piece(white, PieceType.THIEF, 4, Int.MAX_VALUE) {
 
         while (++x <= start.getX() + 2)
             if(x < 8)
-                if(board.getBox(x, y).getPiece() != null)
+                if(board.getBox(x, y).getPiece() is RiverBridge)
+                    continue
+                else if(board.getBox(x, y).getPiece() != null)
                     break
                 else options.add(board.getBox(x, y))
 
@@ -24,7 +26,9 @@ class Thief(white: Boolean) : Piece(white, PieceType.THIEF, 4, Int.MAX_VALUE) {
 
         while (++y <= start.getY() + 2)
             if(y < 8)
-                if(board.getBox(x, y).getPiece() != null)
+                if(board.getBox(x, y).getPiece() is RiverBridge)
+                    continue
+                else if(board.getBox(x, y).getPiece() != null)
                     break
                 else options.add(board.getBox(x, y))
 
@@ -32,7 +36,9 @@ class Thief(white: Boolean) : Piece(white, PieceType.THIEF, 4, Int.MAX_VALUE) {
 
         while (--x >= start.getX() - 2)
             if(x >= 0)
-                if(board.getBox(x, y).getPiece() != null)
+                if(board.getBox(x, y).getPiece() is RiverBridge)
+                    continue
+                else if(board.getBox(x, y).getPiece() != null)
                     break
                 else options.add(board.getBox(x, y))
 
@@ -40,7 +46,9 @@ class Thief(white: Boolean) : Piece(white, PieceType.THIEF, 4, Int.MAX_VALUE) {
 
         while (--y >= start.getY() - 2)
             if(y >= 0)
-                if(board.getBox(x, y).getPiece() != null)
+                if(board.getBox(x, y).getPiece() is RiverBridge)
+                    continue
+                else if(board.getBox(x, y).getPiece() != null)
                     break
                 else options.add(board.getBox(x, y))
 
@@ -85,28 +93,36 @@ class Thief(white: Boolean) : Piece(white, PieceType.THIEF, 4, Int.MAX_VALUE) {
 
         //checking diagonals
         if (++x < 8 && ++y < 8)
-            if(board.getBox(x, y).getPiece() !is Fortress && board.getBox(x, y).getPiece()?.isWhite() == !isWhite())
+            if(board.getBox(x, y).getPiece() !is Fortress &&
+                board.getBox(x, y).getPiece()?.isWhite() == !isWhite()
+                && board.getBox(x,y).getPiece()?.isRiver() == false)
                 options.add(board.getBox(x, y))
 
         x = start.getX()
         y = start.getY()
 
         if(++x < 8 && --y >= 0)
-            if(board.getBox(x, y).getPiece() !is Fortress && board.getBox(x, y).getPiece()?.isWhite() == !isWhite())
+            if(board.getBox(x, y).getPiece() !is Fortress &&
+                board.getBox(x, y).getPiece()?.isWhite() == !isWhite()
+                && board.getBox(x,y).getPiece()?.isRiver() == false)
                 options.add(board.getBox(x, y))
 
         x = start.getX()
         y = start.getY()
 
         if(--x >= 0 && ++y < 8)
-            if(board.getBox(x, y).getPiece() !is Fortress && board.getBox(x, y).getPiece()?.isWhite() == !isWhite())
+            if(board.getBox(x, y).getPiece() !is Fortress &&
+                board.getBox(x, y).getPiece()?.isWhite() == !isWhite()
+                && board.getBox(x,y).getPiece()?.isRiver() == false)
                 options.add(board.getBox(x, y))
 
         x = start.getX()
         y = start.getY()
 
         if(--x >= 0 && --y >= 0)
-            if(board.getBox(x, y).getPiece() !is Fortress && board.getBox(x, y).getPiece()?.isWhite() == !isWhite())
+            if(board.getBox(x, y).getPiece() !is Fortress &&
+                board.getBox(x, y).getPiece()?.isWhite() == !isWhite()
+                && board.getBox(x,y).getPiece()?.isRiver() == false)
                 options.add(board.getBox(x, y))
 
         return options
