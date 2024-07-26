@@ -141,6 +141,8 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 15) {
     fun checkIfPawnPromoting(end: Spot, context: MainActivity, cellSize: Int, board: Board, chessboard: GridLayout, promotingDone: () -> Unit){
         val pawn = end.getPiece() as Pawn
         if((end.getX() == 0 && pawn.isWhite()) || (end.getX() == 7 && !pawn.isWhite())){
+            pawn.setPromoting(true)
+
             val builder = AlertDialog.Builder(context)
             val popUpView = context.createPopUpView()
             builder.setView(popUpView)
