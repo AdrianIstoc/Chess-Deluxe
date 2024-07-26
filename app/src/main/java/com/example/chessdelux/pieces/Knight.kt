@@ -44,7 +44,7 @@ class Knight(white: Boolean) : Piece(white, PieceType.KNIGHT, 3, 30) {
         for ((dx, dy) in directions) {
             if (x + dx in 0 .. 7 && y + dy in 0 .. 7){
                 val spot = board.getBox(x + dx, y + dy)
-                if(spot.getPiece() !is Fortress)
+                if(spot.getPiece() !is Fortress && spot.getPiece()?.isRiver() == false)
                     if (spot.getPiece()?.isWhite() == !isWhite())
                         options.add(board.getBox(x + dx, y + dy))
             }

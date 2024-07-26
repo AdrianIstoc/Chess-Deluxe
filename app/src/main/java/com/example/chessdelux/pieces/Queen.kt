@@ -6,7 +6,7 @@ import com.example.chessdelux.board.*
 class Queen(white: Boolean) : Piece(white, PieceType.QUEEN, 9, 30) {
     override var imageResource: Int? = if (white) R.drawable.queen_white else R.drawable.queen_black
 
-    override val evolutionOptions: List<PieceType> = listOf(PieceType.CAPRICORN_QUEEN)
+    override val evolutionOptions: List<PieceType> = listOf(PieceType.CAPRICORN_QUEEN, PieceType.AQUARIUS_QUEEN)
 
     override fun moveOptions(board: Board, start: Spot): MutableList<Spot> {
         val options = mutableListOf<Spot>()

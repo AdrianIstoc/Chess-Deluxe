@@ -260,6 +260,13 @@ class Game {
                 resetPawnSkipped(piece.isWhite())
             }
 
+            var isSpilling = false
+            if(piece is AquariusQueen)
+                if(!board.isRiverOnBoard()){
+                    piece.checkIfSummonRiver(end, board)
+                    isSpilling = true
+                }
+
             // check if the king is castling
             // if so, move the king and the rook properly
             if(piece is King)
@@ -285,8 +292,10 @@ class Game {
                 piece.checkIfPushing(start, end, board)
 
             // move piece
-            board.movePiece(start, end)
-            piece?.addExp(endPieceValue)
+            if(!isSpilling) {
+                board.movePiece(start, end)
+                piece?.addExp(endPieceValue)
+            }
             setMoveIndication(start, end)
             addExpPerTurn()
 
@@ -453,7 +462,11 @@ fun makePiece(pieceType: PieceType, white: Boolean): Piece {
         PieceType.CARDINAL -> Cardinal(white)
         PieceType.PALADIN -> Paladin(white)
         PieceType.RIVER_START -> RiverStart(white)
+        PieceType.RIVER_START_UP -> RiverStartUp(white)
+        PieceType.RIVER_START_DOWN -> RiverStartDown(white)
         PieceType.RIVER_END -> RiverEnd(white)
+        PieceType.RIVER_END_UP -> RiverEndUp(white)
+        PieceType.RIVER_END_DOWN -> RiverEndDown(white)
         PieceType.RIVER_HORIZONTAL -> RiverHorizontal(white)
         PieceType.RIVER_VERTICAL -> RiverVertical(white)
         PieceType.RIVER_LEFT_UP -> RiverLeftUp(white)
@@ -462,6 +475,7 @@ fun makePiece(pieceType: PieceType, white: Boolean): Piece {
         PieceType.RIVER_RIGHT_DOWN -> RiverRightDown(white)
         PieceType.RIVER_BRIDGE -> RiverBridge(white)
         PieceType.CAPRICORN_QUEEN -> CapricornQueen(white)
+        PieceType.AQUARIUS_QUEEN -> AquariusQueen(white)
         else -> Pawn(!white)
     }
 }

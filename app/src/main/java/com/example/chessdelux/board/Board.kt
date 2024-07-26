@@ -48,7 +48,11 @@ class Board {
                 val pieceSpot = this.getBox(i, j)
                 val piece = pieceSpot.getPiece()
                 if(piece is RiverStart ||
+                    piece is RiverStartUp ||
+                    piece is RiverStartDown ||
                     piece is RiverEnd ||
+                    piece is RiverEndUp ||
+                    piece is RiverEndDown ||
                     piece is RiverHorizontal ||
                     piece is RiverVertical ||
                     piece is RiverLeftUp ||
@@ -70,7 +74,11 @@ class Board {
                 val pieceSpot = this.getBox(i, j)
                 val piece = pieceSpot.getPiece()
                 if(piece is RiverStart ||
+                    piece is RiverStartUp ||
+                    piece is RiverStartDown ||
                     piece is RiverEnd ||
+                    piece is RiverEndUp ||
+                    piece is RiverEndDown ||
                     piece is RiverHorizontal ||
                     piece is RiverVertical ||
                     piece is RiverLeftUp ||
@@ -180,25 +188,17 @@ class Board {
         boxes[0][0] = Spot(0, 0, King(false))
         boxes[7][7] = Spot(7,7,King(true))
 
-        boxes[3][0] = Spot(3,0, RiverStart(true))
-        boxes[3][1] = Spot(3,1, RiverHorizontal(true))
-        boxes[3][2] = Spot(3,2, RiverLeftDown(true))
-        boxes[4][2] = Spot(4,2, RiverRightUp(true))
-        boxes[4][3] = Spot(4,3, RiverBridge(true))
-        boxes[4][4] = Spot(4,4, RiverHorizontal(true))
-        boxes[4][5] = Spot(4,5, RiverLeftUp(true))
-        boxes[3][5] = Spot(3,5, RiverVertical(true))
-        boxes[2][5] = Spot(2,5, RiverRightDown(true))
-        boxes[2][6] = Spot(2,6, RiverHorizontal(true))
-        boxes[2][7] = Spot(2,7, RiverEnd(true))
+        boxes[0][3] = Spot(0,3, AquariusQueen(false))
+        boxes[3][2] = Spot(3,2, Knight(false))
+        boxes[4][1] = Spot(4,1, Knight(false))
+        boxes[4][2] = Spot(4,2, Pawn(false))
+        boxes[5][2] = Spot(5,2, Rook(false))
 
-        boxes[1][3] = Spot(1,3, Rook(false))
-        boxes[1][5] = Spot(1,5, Thief(false))
-        boxes[3][3] = Spot(3,3, Bishop(false))
-
-        boxes[5][3] = Spot(5,3, Rook(true))
-        boxes[5][2] = Spot(5,2, Bishop(true))
-        boxes[3][7] = Spot(3,7, CapricornQueen(true))
+        boxes[1][6] = Spot(1,6, Rook(true))
+        boxes[2][7] = Spot(2,7, Knight(true))
+        boxes[3][6] = Spot(3,6, Rook(true))
+        boxes[4][4] = Spot(4,4, Pawn(true))
+        boxes[7][4] = Spot(7,4, AquariusQueen(true))
     }
 
     fun pawnTutorial(){
@@ -473,6 +473,28 @@ class Board {
         boxes[0][6] = Spot(0,6, Rook(false))
 
         boxes[4][3] = Spot(4,3, CapricornQueen(true))
+    }
+
+    fun aquariusTutorial(){
+        for (i in 0 until 8)
+            for (j in 0 until 8)
+                boxes[i][j] = Spot(i, j, null)
+
+        boxes[7][0] = Spot(7, 0, King(false))
+        boxes[7][7] = Spot(7,7, King(true))
+
+        boxes[0][3] = Spot(0,3, AquariusQueen(false))
+        boxes[3][2] = Spot(3,2, Knight(false))
+        boxes[4][1] = Spot(4,1, Knight(false))
+        boxes[4][2] = Spot(4,2, Pawn(false))
+        boxes[5][2] = Spot(5,2, Rook(false))
+
+        boxes[1][6] = Spot(1,6, Rook(true))
+        boxes[2][7] = Spot(2,7, Knight(true))
+        boxes[3][6] = Spot(3,6, Rook(true))
+        boxes[4][4] = Spot(4,4, Pawn(true))
+        boxes[7][4] = Spot(7,4, AquariusQueen(true))
+
     }
 
     fun evaluate(maximizingColor: Boolean): Int {
