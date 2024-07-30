@@ -30,8 +30,8 @@ class Game {
         players[0] = p1
         players[1] = p2
 
-        board.resetBoard()                              // reset the board for a fresh start
-        //board.testWin()
+        //board.resetBoard()                              // reset the board for a fresh start
+        board.testWin()
 
         currentTurn = if (p1.isWhiteSide()) {           // set the current player
             p1
@@ -301,7 +301,7 @@ class Game {
 
             if(piece is Pawn){
                 if(currentTurn !is ComputerPlayer)
-                    piece.checkIfPawnPromoting(end, context, cellSize, board, chessboard) {
+                    piece.checkIfPawnPromoting(currentTurn, end, context, cellSize, board, chessboard) {
                         // change the turn of the players
                         currentTurn = if (currentTurn.isWhiteSide()) {
                             players[1]!!
@@ -312,7 +312,7 @@ class Game {
                         triggerComputerTurn(context, chessboard)
                     }
                 else{
-                    piece.checkIfPawnPromoting(end, context, cellSize, board, chessboard) {}
+                    piece.checkIfPawnPromoting(currentTurn, end, context, cellSize, board, chessboard) {}
                     currentTurn = if(currentTurn.isWhiteSide()) {
                         players[1]!!
                     }else{

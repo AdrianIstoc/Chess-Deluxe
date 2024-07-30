@@ -188,17 +188,10 @@ class Board {
         boxes[0][0] = Spot(0, 0, King(false))
         boxes[7][7] = Spot(7,7,King(true))
 
-        boxes[0][3] = Spot(0,3, AquariusQueen(false))
-        boxes[3][2] = Spot(3,2, Knight(false))
-        boxes[4][1] = Spot(4,1, Knight(false))
-        boxes[4][2] = Spot(4,2, Pawn(false))
-        boxes[5][2] = Spot(5,2, Rook(false))
+        boxes[2][1] = Spot(2,1, Rook(true))
+        boxes[1][2] = Spot(1,2, Rook(true))
 
-        boxes[1][6] = Spot(1,6, Rook(true))
-        boxes[2][7] = Spot(2,7, Knight(true))
-        boxes[3][6] = Spot(3,6, Rook(true))
-        boxes[4][4] = Spot(4,4, Pawn(true))
-        boxes[7][4] = Spot(7,4, AquariusQueen(true))
+        boxes[6][4] = Spot(6,4, Pawn(false))
     }
 
     fun pawnTutorial(){

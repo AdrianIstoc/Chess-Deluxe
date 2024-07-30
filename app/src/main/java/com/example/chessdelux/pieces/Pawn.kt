@@ -138,47 +138,54 @@ class Pawn(white: Boolean) : Piece(white, PieceType.PAWN, 1, 15) {
     }
 
     // promote the pawn
-    fun checkIfPawnPromoting(end: Spot, context: MainActivity, cellSize: Int, board: Board, chessboard: GridLayout, promotingDone: () -> Unit){
-        val pawn = end.getPiece() as Pawn
-        if((end.getX() == 0 && pawn.isWhite()) || (end.getX() == 7 && !pawn.isWhite())){
-            pawn.setPromoting(true)
+    fun checkIfPawnPromoting(currentTurn:Player, end: Spot, context: MainActivity, cellSize: Int, board: Board, chessboard: GridLayout, promotingDone: () -> Unit){
+        if(currentTurn is HumanPlayer) {
+            val pawn = end.getPiece() as Pawn
+            if ((end.getX() == 0 && pawn.isWhite()) || (end.getX() == 7 && !pawn.isWhite())) {
+                pawn.setPromoting(true)
 
-            val builder = AlertDialog.Builder(context)
-            val popUpView = context.createPopUpView()
-            builder.setView(popUpView)
-            builder.setCancelable(false)
+                val builder = AlertDialog.Builder(context)
+                val popUpView = context.createPopUpView()
+                builder.setView(popUpView)
+                builder.setCancelable(false)
 
-            val promotions = pawn.getPromoteOptions()
-            val grid = popUpView.findViewById<GridLayout>(R.id.popup_grid)
-            grid?.let { createPopUp(it, promotions, pawn.isWhite(), context, cellSize) }
+                val promotions = pawn.getPromoteOptions()
+                val grid = popUpView.findViewById<GridLayout>(R.id.popup_grid)
+                grid?.let { createPopUp(it, promotions, pawn.isWhite(), context, cellSize) }
 
-            val dialog = builder.create()
-            try{
-                dialog.show()
-            }catch (e: Exception){
-                Log.e("ObscureMove", "checkIfPawnPromoting problem e -> ${e.message}")
-            }
-
-            for(i in 0 until grid!!.rowCount)
-                for(j in 0 until grid.columnCount) {
-                    try{
-                        val child = grid.getChildAt(i * grid.columnCount + j)
-                        child.setOnClickListener {
-                            val pieceType = promotions[i * grid.columnCount + j]
-                            val piece = makePiece(pieceType, pawn.isWhite())
-                            board.getBox(end.getX(), end.getY()).setPiece(piece)
-                            // render pieces after any move for a better preview when a piece changes types
-                            renderPieces(chessboard, board)
-                            // change the turn of the players
-                            promotingDone()
-                            dialog.dismiss()
-                        }
-                    }catch (e: Exception){
-                        Log.e("ObscureMove", "setOnClickListener (checkIfPawnPromoting) problem e -> ${e.message}")
-                    }
+                val dialog = builder.create()
+                try {
+                    dialog.show()
+                } catch (e: Exception) {
+                    Log.e("ObscureMove", "checkIfPawnPromoting problem e -> ${e.message}")
                 }
+
+                for (i in 0 until grid!!.rowCount)
+                    for (j in 0 until grid.columnCount) {
+                        try {
+                            val child = grid.getChildAt(i * grid.columnCount + j)
+                            child.setOnClickListener {
+                                val pieceType = promotions[i * grid.columnCount + j]
+                                val piece = makePiece(pieceType, pawn.isWhite())
+                                board.getBox(end.getX(), end.getY()).setPiece(piece)
+                                // render pieces after any move for a better preview when a piece changes types
+                                renderPieces(chessboard, board)
+                                // change the turn of the players
+                                promotingDone()
+                                dialog.dismiss()
+                            }
+                        } catch (e: Exception) {
+                            Log.e(
+                                "ObscureMove",
+                                "setOnClickListener (checkIfPawnPromoting) problem e -> ${e.message}"
+                            )
+                        }
+                    }
+            } else promotingDone()
         }
-        else promotingDone()
+        else{
+            end.setPiece(Queen(currentTurn.isWhiteSide()))
+        }
     }
 
 
